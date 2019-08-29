@@ -4,16 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.themovie.dao.MoviesDao
 import com.themovie.dao.TrendingDao
+import com.themovie.dao.TvDao
 import com.themovie.dao.UpcomingDao
+import com.themovie.model.local.MoviesLocal
 import com.themovie.model.local.Trending
+import com.themovie.model.local.TvLocal
 import com.themovie.model.local.Upcoming
 
-@Database(entities = arrayOf(Trending::class, Upcoming::class), version = 2)
+@Database(entities = [Trending::class, Upcoming::class, TvLocal::class, MoviesLocal::class], version = 2)
 abstract class TheMovieDatabase : RoomDatabase() {
 
     abstract fun trendingDao(): TrendingDao
     abstract fun upcomingDao(): UpcomingDao
+    abstract fun discoverMovies(): MoviesDao
+    abstract fun discoverTv(): TvDao
 
     companion object {
         @Volatile

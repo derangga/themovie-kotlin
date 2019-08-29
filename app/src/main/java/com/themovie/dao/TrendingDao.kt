@@ -9,7 +9,7 @@ import com.themovie.model.local.Trending
 
 @Dao
 interface TrendingDao {
-    @Query("select * from tbl_trending order by id ASC")
+    @Query("select * from tbl_trending order by id asc limit 6")
     fun getAllTrendingTv(): LiveData<List<Trending>>
 
     @Insert

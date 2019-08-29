@@ -1,4 +1,4 @@
-package com.themovie.ui
+package com.themovie.ui.main.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.themovie.R
+import com.themovie.helper.ImageCache
 import com.themovie.model.local.Upcoming
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_upcoming.view.*
@@ -24,7 +24,7 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
             }
 
             override fun areContentsTheSame(oldItem: Upcoming, newItem: Upcoming): Boolean {
-                return oldItem.title == newItem.title && oldItem.imgPath == newItem.imgPath
+                return oldItem.title == newItem.title && oldItem.backDropPath == newItem.backDropPath
             }
         }
     }
@@ -39,13 +39,13 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val upcoming = getItem(position)
-        holder.itemView.up_title.text = upcoming.title
-        holder.itemView.up_release.text = upcoming.dateRelease
-        val urlImg = ApiUrl.IMG_BACK + upcoming.imgPath
-        Glide.with(context)
-            .load(urlImg)
-            .error(R.drawable.no_image)
-            .into(holder.itemView.up_bg)
+        val backImg = ApiUrl.IMG_BACK + upcoming.backDropPath
+        val posterImg = ApiUrl.IMG_POSTER + upcoming.posterPath
+
+        ImageCache.setRoundedImageUrl(context, posterImg, holder.itemView.mupco_poster)
+        ImageCache.setImageViewUrl(context, backImg, holder.itemView.mupco_background)
+        holder.itemView.mupco_title.text = upcoming.title
+        holder.itemView.mupco_date.text = upcoming.dateRelease
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

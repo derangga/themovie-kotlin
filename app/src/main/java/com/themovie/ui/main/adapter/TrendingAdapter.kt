@@ -1,4 +1,4 @@
-package com.themovie.ui
+package com.themovie.ui.main.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.themovie.R
+import com.themovie.helper.ImageCache
 import com.themovie.model.local.Trending
 import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_trending.view.*
+import kotlinx.android.synthetic.main.item_header_main.view.*
 
 class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -24,24 +24,22 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
             }
 
             override fun areContentsTheSame(oldItem: Trending, newItem: Trending): Boolean {
-                return oldItem.title == newItem.title && oldItem.imgPath == newItem.imgPath
+                return oldItem.title == newItem.title && oldItem.backDropPath == newItem.backDropPath
             }
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val trending = getItem(position)
-        holder.itemView.tr_title.text = trending.title
-        val urlImg = ApiUrl.IMG_BACK + trending.imgPath
-        Glide.with(context)
-            .load(urlImg)
-            .error(R.drawable.no_image)
-            .into(holder.itemView.tr_bg)
+
+        val urlImg = ApiUrl.IMG_BACK + trending.backDropPath
+        ImageCache.setImageViewUrl(context, urlImg, holder.itemView.v_img)
+        holder.itemView.v_title.text = trending.title
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_trending, parent, false)
+            .inflate(R.layout.item_header_main, parent, false)
         context = parent.context
         return ViewHolder(view)
     }

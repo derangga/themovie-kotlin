@@ -8,4 +8,4 @@ import androidx.room.PrimaryKey
 class Trending(@PrimaryKey @ColumnInfo(name = "id") val id: Int?,
                @ColumnInfo(name = "tv_id") val tvId: Int,
                @ColumnInfo(name = "title") val title: String,
-               @ColumnInfo(name = "img_path") val imgPath: String?)
+               @ColumnInfo(name = "backdrop_path") val backDropPath: String?)

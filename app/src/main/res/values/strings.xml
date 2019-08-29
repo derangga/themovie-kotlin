@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">The Movie</string>
+
+    <!-- Transition -->
+    <string name="transition_name">selectedItem</string>
+    <string name="transition_poster">selectedPoster</string>
+    <string name="transition_cast">selectCrew</string>
+
+    <!-- Main Activity -->
+    <string name="title_main_1">Now Trending on TV</string>
+    <string name="title_main_2">Upcoming Movies</string>
+    <string name="title_main_3">Discover Tv</string>
+    <string name="title_main_4">Discover Movies</string>
+    <string name="title_main_5">See All</string>
 </resources>
