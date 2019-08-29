@@ -5,10 +5,13 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.themovie.model.local.Trending
 import com.themovie.model.local.Upcoming
 import com.themovie.model.online.MainData
 import com.themovie.model.online.Movies
+import com.themovie.model.online.Tv
 import com.themovie.repos.MainRepos
+import com.themovie.repos.TrendingLocalRepos
 import com.themovie.repos.UpcomingLocalRepos
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -19,6 +22,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val composite: CompositeDisposable = CompositeDisposable()
     private val mainRepos: MainRepos = MainRepos()
     private val upcomingLocalRepos: UpcomingLocalRepos = UpcomingLocalRepos(application)
+    private val trendingLocalRepos: TrendingLocalRepos = TrendingLocalRepos(application)
     private val onlineLiveData: MutableLiveData<MainData> = MutableLiveData()
 
     fun getDataRequest(token: String): MutableLiveData<MainData>{
@@ -50,7 +54,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 imgPath = upcomingList[i].backdropPath.toString()
             )
             upcomingLocalRepos.insert(upcoming)
-            Log.e("tag", upcomingList[i].backdropPath.toString())
         }
     }
 
@@ -66,8 +69,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun insertLocalTrending(trendingList: List<Tv>){
+        for(i in trendingList.indices){
+            val trending = Trending( i,
+                tvId = trendingList[i].id,
+                title = trendingList[i].name,
+                imgPath = trendingList[i].backdropPath.toString()
+            )
+            trendingLocalRepos.insert(trending)
+            Log.e("tag", trendingList[i].backdropPath.toString())
+        }
+    }
+
+    fun updateLocalTrending(trendingList: List<Tv>){
+        for(i in trendingList.indices){
+            val trending = Trending( i,
+                tvId = trendingList[i].id,
+                title = trendingList[i].name,
+                imgPath = trendingList[i].backdropPath.toString()
+            )
+            trendingLocalRepos.update(trending)
+        }
+    }
+
     fun getUpcomingLocalData(): LiveData<List<Upcoming>>{
         return upcomingLocalRepos.getAllUpcoming()
+    }
+
+    fun getTrendingLocalData(): LiveData<List<Trending>>{
+        return trendingLocalRepos.getTrendingList()
     }
 
     override fun onCleared() {

@@ -33,20 +33,4 @@ class UpcomingLocalRepos(application: Application) {
     fun getAllUpcoming(): LiveData<List<Upcoming>>{
         return allUpcomingMovie
     }
-
-    companion object{
-        private class InsertAsyncTask(private var upcomingDao: UpcomingDao): AsyncTask<Upcoming, Void, Void>() {
-            override fun doInBackground(vararg upcoming: Upcoming?): Void? {
-                upcomingDao.insertUpcoming(upcoming[0]!!)
-                return null
-            }
-        }
-
-        private class UpdateAsyncTask(private var upcomingDao: UpcomingDao): AsyncTask<Upcoming, Void, Void>(){
-            override fun doInBackground(vararg upcoming: Upcoming?): Void? {
-                upcomingDao.updateUpcoming(upcoming[0]!!)
-                return null
-            }
-        }
-    }
 }
