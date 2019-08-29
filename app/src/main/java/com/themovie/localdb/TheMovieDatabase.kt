@@ -1,0 +1,38 @@
+package com.themovie.localdb
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.themovie.dao.TrendingDao
+import com.themovie.dao.UpcomingDao
+import com.themovie.model.local.Trending
+import com.themovie.model.local.Upcoming
+
+@Database(entities = arrayOf(Trending::class, Upcoming::class), version = 2)
+abstract class TheMovieDatabase : RoomDatabase() {
+
+    abstract fun trendingDao(): TrendingDao
+    abstract fun upcomingDao(): UpcomingDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: TheMovieDatabase? = null
+
+        fun getDatabase(context: Context): TheMovieDatabase {
+            val tempInstance = INSTANCE
+            if (tempInstance != null) {
+                return tempInstance
+            }
+            synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    TheMovieDatabase::class.java,
+                    "TheMovieDatabase"
+                ).build()
+                INSTANCE = instance
+                return instance
+            }
+        }
+    }
+}
