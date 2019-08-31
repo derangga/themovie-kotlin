@@ -1,7 +1,6 @@
 package com.themovie.ui.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +9,14 @@ import com.themovie.model.local.MoviesLocal
 import com.themovie.model.local.Trending
 import com.themovie.model.local.TvLocal
 import com.themovie.model.local.Upcoming
-import com.themovie.model.online.MainData
+import com.themovie.model.online.FetchMainData
 import com.themovie.model.online.discovermv.Movies
 import com.themovie.model.online.discovertv.Tv
-import com.themovie.repos.*
+import com.themovie.repos.fromapi.MainRepos
+import com.themovie.repos.local.DiscoverMvLocalRepos
+import com.themovie.repos.local.DiscoverTvLocalRepos
+import com.themovie.repos.local.TrendingLocalRepos
+import com.themovie.repos.local.UpcomingLocalRepos
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -22,23 +25,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val composite: CompositeDisposable = CompositeDisposable()
     private val mainRepos: MainRepos = MainRepos()
-    private val upcomingLocalRepos: UpcomingLocalRepos = UpcomingLocalRepos(application)
-    private val trendingLocalRepos: TrendingLocalRepos = TrendingLocalRepos(application)
-    private val discoverTvLocalRepos: DiscoverTvLocalRepos = DiscoverTvLocalRepos(application)
-    private val discoverMvLocalRepos: DiscoverMvLocalRepos = DiscoverMvLocalRepos(application)
-    private val onlineLiveData: MutableLiveData<MainData> = MutableLiveData()
+    private val upcomingLocalRepos: UpcomingLocalRepos =
+        UpcomingLocalRepos(application)
+    private val trendingLocalRepos: TrendingLocalRepos =
+        TrendingLocalRepos(application)
+    private val discoverTvLocalRepos: DiscoverTvLocalRepos =
+        DiscoverTvLocalRepos(application)
+    private val discoverMvLocalRepos: DiscoverMvLocalRepos =
+        DiscoverMvLocalRepos(application)
+    private val onlineLiveDataFetch: MutableLiveData<FetchMainData> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
-    fun getDataRequest(token: String): MutableLiveData<MainData>{
+    fun getDataRequest(token: String): MutableLiveData<FetchMainData>{
         composite.add(
-            mainRepos.getDataMovide(token).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<MainData>(){
+            mainRepos.getDataMovie(token).observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object: DisposableObserver<FetchMainData>(){
                     override fun onComplete() {
 
                     }
 
-                    override fun onNext(t: MainData) {
-                        onlineLiveData.value = t
+                    override fun onNext(t: FetchMainData) {
+                        onlineLiveDataFetch.value = t
                         loadDataStatus.value = LoadDataState.LOADED
                     }
 
@@ -47,7 +54,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 })
         )
-        return onlineLiveData
+        return onlineLiveDataFetch
     }
 
     fun insertLocalTrending(trendingList: List<Tv>){

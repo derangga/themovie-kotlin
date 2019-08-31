@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.adapter_maindmv.view.*
 class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
+    private lateinit var onClickAdapterListener: OnClickAdapterListener
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<MoviesLocal> = object: DiffUtil.ItemCallback<MoviesLocal>(){
@@ -36,6 +38,10 @@ class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>
         return ViewHolder(view)
     }
 
+    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
+        this.onClickAdapterListener = onClickAdapterListener
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movies = getItem(position)
         val imgBack = ApiUrl.IMG_BACK + movies.backDropPath
@@ -44,8 +50,13 @@ class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>
         ImageCache.setRoundedImageUrl(context, imgPoster, holder.itemView.mdmv_poster)
         holder.itemView.mdmv_title.text = movies.title
         holder.itemView.mdmv_date.text = movies.dateRelease
+
+        holder.itemView.mdmv_card.setOnClickListener { view -> onClickAdapterListener.onClick(view, movies, holder.itemView.mdmv_background) }
     }
 
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    interface OnClickAdapterListener {
+        fun onClick(view: View?, moviesLocal: MoviesLocal, imageViewRes: ImageView)
+    }
 }

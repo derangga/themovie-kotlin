@@ -4,3 +4,4 @@
 - Room (for local database)
 - Kotlin Anko
 - Android Architecture Component
+- MVVM Pattern

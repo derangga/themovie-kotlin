@@ -46,7 +46,7 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <include android:id="@+id/shimmerTrending"
-                     layout="@layout/item_view_pager_header_shimmer" />
+                     layout="@layout/shimmer_header_main" />
 
             <me.relex.circleindicator.CircleIndicator2
                     android:id="@+id/indicator"
@@ -127,7 +127,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/upcomingtx"
                             android:layout_margin="10dp"
-                            layout="@layout/item_shimmer_content" />
+                            layout="@layout/shimmer_content_main" />
 
                 </RelativeLayout>
 

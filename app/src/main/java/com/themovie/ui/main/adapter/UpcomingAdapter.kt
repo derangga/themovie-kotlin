@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.adapter_upcoming.view.*
 class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
+    private lateinit var onClickAdapterListener: OnClickAdapterListener
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Upcoming> = object: DiffUtil.ItemCallback<Upcoming>(){
@@ -29,6 +30,9 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
         }
     }
 
+    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
+        this.onClickAdapterListener = onClickAdapterListener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -46,7 +50,14 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
         ImageCache.setImageViewUrl(context, backImg, holder.itemView.mupco_background)
         holder.itemView.mupco_title.text = upcoming.title
         holder.itemView.mupco_date.text = upcoming.dateRelease
+        holder.itemView.mupco_card.setOnClickListener {
+            onClickAdapterListener.onClick(it, upcoming)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    interface OnClickAdapterListener {
+        fun onClick(view: View?, upcoming: Upcoming)
+    }
 }

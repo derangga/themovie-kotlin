@@ -8,4 +8,5 @@
     <color name="colorGray">#424242</color>
     <color name="coloorGrayYoung">#9E9E9E</color>
     <color name="colorBlueGreen">#68BFC5</color>
+    <color name="shimmerLineColor">#9A9A9A</color>
 </resources>

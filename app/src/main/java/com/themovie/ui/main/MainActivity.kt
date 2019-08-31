@@ -2,6 +2,7 @@ package com.themovie.ui.main
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,8 +15,9 @@ import com.themovie.model.local.MoviesLocal
 import com.themovie.model.local.Trending
 import com.themovie.model.local.TvLocal
 import com.themovie.model.local.Upcoming
-import com.themovie.model.online.MainData
+import com.themovie.model.online.FetchMainData
 import com.themovie.restapi.ApiUrl
+import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.main.adapter.DiscoverMvAdapter
 import com.themovie.ui.main.adapter.DiscoverTvAdapter
 import com.themovie.ui.main.adapter.TrendingAdapter
@@ -49,17 +51,18 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         fetchData()
         showData()
         observeNetworkLoad()
+        adapterOnClick()
         main_swipe.setOnRefreshListener(this)
     }
 
     override fun onResume() {
-        super.onResume()
         startSliding()
+        super.onResume()
     }
 
     override fun onPause() {
-        super.onPause()
         stopSliding()
+        super.onPause()
     }
 
     override fun onRefresh() {
@@ -89,6 +92,36 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         trendingAdapter.registerAdapterDataObserver(indicator.adapterDataObserver)
     }
 
+    private fun adapterOnClick(){
+
+        trendingAdapter.setOnClickListener(object: TrendingAdapter.OnClickAdapterListener{
+            override fun onClick(view: View?, trending: Trending) {
+                showToastMessage(trending.title)
+            }
+        })
+
+        upcomingAdapter.setOnClickListener(object: UpcomingAdapter.OnClickAdapterListener{
+            override fun onClick(view: View?, upcoming: Upcoming) {
+                showToastMessage(upcoming.title)
+            }
+        })
+
+        discoverTvAdapter.setOnClickListener(object: DiscoverTvAdapter.OnClickAdapterListener{
+            override fun onClick(view: View?, tvLocal: TvLocal) {
+                showToastMessage(tvLocal.title)
+            }
+        })
+
+        discoverMvAdapter.setOnClickListener(object: DiscoverMvAdapter.OnClickAdapterListener {
+            override fun onClick(view: View?, moviesLocal: MoviesLocal, imageViewRes: ImageView) {
+                val bundle = Bundle()
+                bundle.putInt("id", moviesLocal.mvId)
+                bundle.putString("image", moviesLocal.backDropPath)
+                changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
+            }
+        })
+    }
+
     private fun showData(){
 
         mainViewModel.getTrendingLocalData().observe(this,
@@ -104,44 +137,57 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         mainViewModel.getUpcomingLocalData().observe(this,
             Observer<List<Upcoming>> { t ->
                 isUpcomingEmpty = t!!.isEmpty()
-                upcomingAdapter.submitList(t)
+                if(!isUpcomingEmpty)
+                    upcomingAdapter.submitList(t)
             })
 
         mainViewModel.getDiscoverTvLocalData().observe(this,
             Observer<List<TvLocal>> { t ->
                 isDiscoverTvEmpty = t!!.isEmpty()
-                discoverTvAdapter.submitList(t)
-                disctv_card.visibility = View.VISIBLE
+                if(!isDiscoverTvEmpty){
+                    discoverTvAdapter.submitList(t)
+                    disctv_card.visibility = View.VISIBLE
+                }
             })
 
         mainViewModel.getDiscoverMvLocalData().observe(this,
             Observer<List<MoviesLocal>> { t ->
                 isDiscoverMvEmpty = t!!.isEmpty()
-                discoverMvAdapter.submitList(t)
-                discmv_card.visibility = View.VISIBLE
+                if(!isDiscoverMvEmpty){
+                    discoverMvAdapter.submitList(t)
+                    discmv_card.visibility = View.VISIBLE
+                }
             })
     }
 
     private fun fetchData(){
-        mainViewModel.getDataRequest(ApiUrl.TOKEN).observe(this, object: Observer<MainData>{
-            override fun onChanged(t: MainData?) {
-                if(isTrendingEmpty || isUpcomingEmpty || isDiscoverTvEmpty || isDiscoverMvEmpty){
-                    mainViewModel.insertLocalUpcoming(t?.upcomingResponse!!.results)
-                    mainViewModel.insertLocalTrending(t.trending.results)
+        mainViewModel.getDataRequest(ApiUrl.TOKEN).observe(this,
+            Observer<FetchMainData> { t ->
+                if(isTrendingEmpty)
+                    mainViewModel.insertLocalTrending(t?.trending!!.results)
+                else
+                    mainViewModel.updateLocalTrending(t?.trending!!.results)
+
+                if(isUpcomingEmpty)
+                    mainViewModel.insertLocalUpcoming(t.upcomingResponse.results)
+                else
+                    mainViewModel.updateLocalUpComing(t.upcomingResponse.results)
+
+                if(isDiscoverTvEmpty)
                     mainViewModel.insertLocalTv(t.tvResponse.results)
-                    mainViewModel.insertLocalMovies(t.moviesResponse.movies)
-                    hideLoading()
-                }else{
-                    mainViewModel.updateLocalUpComing(t?.upcomingResponse!!.results)
-                    mainViewModel.updateLocalTrending(t.trending.results)
+                else
                     mainViewModel.updateLocalTv(t.tvResponse.results)
+
+                if(isDiscoverMvEmpty)
+                    mainViewModel.insertLocalMovies(t.moviesResponse.movies)
+                else
                     mainViewModel.updateLocalMovies(t.moviesResponse.movies)
-                }
-            }
-        })
+
+                hideLoading()
+            })
     }
 
-    fun observeNetworkLoad(){
+    private fun observeNetworkLoad(){
         mainViewModel.getLoadDataStatus().observe(this,
             Observer<LoadDataState>{
                 if(it == LoadDataState.ERROR) {

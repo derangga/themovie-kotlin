@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Developed by Haerul Muttaqin
-  Last modified 3/17/19 5:24 AM
-  Subscribe : https://www.youtube.com/haerulmuttaqin
-  Copyright (c) 2019. All rights reserved
-  -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -36,7 +30,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
-                    android:background="#DFDFDF" />
+                    android:background="@color/shimmerLineColor" />
                 <View
                     android:layout_marginBottom="15dp"
                     android:layout_marginStart="15dp"
@@ -44,7 +38,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:background="#DFDFDF" />
+                    android:background="@color/shimmerLineColor" />
             </RelativeLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
     </androidx.cardview.widget.CardView>

@@ -1,7 +1,7 @@
-package com.themovie.repos
+package com.themovie.repos.fromapi
 
 import com.themovie.helper.Constant
-import com.themovie.model.online.MainData
+import com.themovie.model.online.FetchMainData
 import com.themovie.model.online.discovermv.MoviesResponse
 import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.model.online.upcoming.UpcomingResponse
@@ -12,16 +12,16 @@ import io.reactivex.schedulers.Schedulers
 
 class MainRepos {
 
-    fun getDataMovide(token: String): Observable<MainData>{
+    fun getDataMovie(token: String): Observable<FetchMainData>{
         val trendingData: Observable<TvResponse> = ApiClient.getApiBuilder().getTrendingTv(token).subscribeOn(Schedulers.io())
         val upcomingData: Observable<UpcomingResponse> = ApiClient.getApiBuilder().getUpcomingMovies(token, 1, "").subscribeOn(Schedulers.io())
         val discoverTv: Observable<TvResponse> = ApiClient.getApiBuilder().getDiscoverTvs(token, Constant.LANGUAGE, Constant.SORTING, 1, "US").subscribeOn(Schedulers.io())
         val discoverMv: Observable<MoviesResponse> = ApiClient.getApiBuilder().getDiscoverMovies(token, Constant.LANGUAGE, Constant.SORTING, 1, "2019", "").subscribeOn(Schedulers.io())
 
-        val call: Observable<MainData> = Observable.zip(trendingData, upcomingData, discoverTv, discoverMv,
-            object: Function4<TvResponse, UpcomingResponse, TvResponse, MoviesResponse, MainData>{
-                override fun apply(trending: TvResponse, upcoming: UpcomingResponse, discoverTv: TvResponse, discoverMovies: MoviesResponse): MainData {
-                    return MainData(trending, upcoming, discoverTv, discoverMovies)
+        val call: Observable<FetchMainData> = Observable.zip(trendingData, upcomingData, discoverTv, discoverMv,
+            object: Function4<TvResponse, UpcomingResponse, TvResponse, MoviesResponse, FetchMainData>{
+                override fun apply(trending: TvResponse, upcoming: UpcomingResponse, discoverTv: TvResponse, discoverMovies: MoviesResponse): FetchMainData {
+                    return FetchMainData(trending, upcoming, discoverTv, discoverMovies)
                 }
             })
         return call

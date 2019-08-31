@@ -39,7 +39,7 @@
 
                 <View
                     android:id="@+id/shimmer_title"
-                    android:background="#DFDFDF"
+                    android:background="@color/shimmerLineColor"
                     android:layout_width="200dp"
                     android:layout_height="15dp"
                     android:layout_marginStart="10dp"
@@ -48,7 +48,7 @@
 
                 <View
                     android:id="@+id/shimmer_content1"
-                    android:background="#DFDFDF"
+                    android:background="@color/shimmerLineColor"
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
                     android:layout_marginStart="10dp"
@@ -59,7 +59,7 @@
 
                 <View
                     android:id="@+id/shimmer_content2"
-                    android:background="#DFDFDF"
+                    android:background="@color/shimmerLineColor"
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
                     android:layout_marginStart="10dp"

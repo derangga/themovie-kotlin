@@ -13,6 +13,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
+                android:name=".ui.detail.DetailActivity"
+                android:label="@string/title_activity_detail_movie"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
                 android:name=".ui.main.MainActivity"
                 android:theme="@style/AppThemeNew">
             <intent-filter>
