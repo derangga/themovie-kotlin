@@ -23,6 +23,12 @@ abstract class BaseFragment : Fragment() {
         startActivity(intent)
     }
 
+    fun changeActivity(bundle: Bundle, activityTarget: Class<*>){
+        val intent = Intent(context, activityTarget)
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
     fun setLog(tag: String, message: String){
         Log.e(tag, message)
     }

@@ -1,13 +1,16 @@
 package com.themovie.ui.main
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.helper.LoadDataState
@@ -38,6 +41,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var trendingAdapter: TrendingAdapter
     private lateinit var discoverTvAdapter: DiscoverTvAdapter
     private lateinit var discoverMvAdapter: DiscoverMvAdapter
+    private lateinit var snackbar: Snackbar
     private var currentPosition: Int = 0
     private var sizeOfHeader = 0
 
@@ -47,6 +51,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun setOnMain(savedInstanceState: Bundle?) {
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
         upcomingListSetup()
         fetchData()
         showData()
@@ -101,8 +106,12 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         })
 
         upcomingAdapter.setOnClickListener(object: UpcomingAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, upcoming: Upcoming) {
-                showToastMessage(upcoming.title)
+            override fun onClick(view: View?, upcoming: Upcoming, imageViewRes: ImageView) {
+                val bundle = Bundle()
+                snackbar.dismiss()
+                bundle.putInt("id", upcoming.mvId)
+                bundle.putString("image", upcoming.backDropPath)
+                changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
 
@@ -115,6 +124,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         discoverMvAdapter.setOnClickListener(object: DiscoverMvAdapter.OnClickAdapterListener {
             override fun onClick(view: View?, moviesLocal: MoviesLocal, imageViewRes: ImageView) {
                 val bundle = Bundle()
+                snackbar.dismiss()
                 bundle.putInt("id", moviesLocal.mvId)
                 bundle.putString("image", moviesLocal.backDropPath)
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
@@ -191,8 +201,13 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         mainViewModel.getLoadDataStatus().observe(this,
             Observer<LoadDataState>{
                 if(it == LoadDataState.ERROR) {
-                    showToastMessage("Please check your internet connection")
                     main_swipe.isRefreshing = false
+                    val view = snackbar.view
+                    view.setBackgroundColor(getColor(R.color.colorBlackTransparent))
+                    snackbar.setAction(getString(R.string.detail_title_12), View.OnClickListener {
+                        fetchData()
+                        snackbar.dismiss()
+                    }).show()
                 }
             })
     }

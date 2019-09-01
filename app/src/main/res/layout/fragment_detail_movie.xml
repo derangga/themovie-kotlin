@@ -24,7 +24,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:visibility="invisible">
+                    android:visibility="gone">
 
                 <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -343,7 +343,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
                                 android:text="@string/detail_title_9"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginBottom="8dp"
                                 android:textAlignment="center"
                                 android:visibility="gone"/>
 
@@ -377,7 +377,7 @@
                                 android:background="@color/colorPrimary"/>
 
                         <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/dt_review"
+                                android:id="@+id/dt_reviewList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
@@ -388,8 +388,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
-                                android:text="@string/detail_title_9"
-                                android:layout_marginBottom="5dp"
+                                android:text="@string/detail_title_13"
+                                android:layout_marginBottom="8dp"
                                 android:textAlignment="center"
                                 android:visibility="gone"/>
 
@@ -402,6 +402,38 @@
             <include
                     android:id="@+id/dt_shimmer"
                     layout="@layout/shimmer_detail"/>
+
+            <LinearLayout
+                    android:id="@+id/dt_no_internet"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true">
+
+                <ImageView
+                        android:src="@drawable/no_internet"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"/>
+
+                <TextView
+                        android:layout_marginTop="@dimen/small_space"
+                        android:text="@string/detail_title_11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"/>
+
+                <Button
+                        android:id="@+id/dt_retry"
+                        android:layout_marginTop="@dimen/small_space"
+                        android:text="@string/detail_title_12"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:textColor="@color/colorWhite"
+                        android:background="@drawable/btn_rounded"
+                        android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
 
         </RelativeLayout>
 

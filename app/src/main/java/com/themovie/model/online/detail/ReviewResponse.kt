@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class ReviewResponse(
     @SerializedName("id") val id: Int,
     @SerializedName("page") val totalPages: Int,
-    @SerializedName("results") val reviews: List<Reviews>
+    @SerializedName("results") val reviewList: List<Reviews>
 )
 
 data class Reviews(

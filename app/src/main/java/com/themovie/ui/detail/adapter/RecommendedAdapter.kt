@@ -30,6 +30,10 @@ class RecommendedAdapter : ListAdapter<Movies, RecommendedAdapter.ViewHolder>(DI
         }
     }
 
+    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
+        this.onClickAdapterListener = onClickAdapterListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_recomended, parent, false)
         context = parent.context
@@ -41,10 +45,13 @@ class RecommendedAdapter : ListAdapter<Movies, RecommendedAdapter.ViewHolder>(DI
         val imgUrl = ApiUrl.IMG_POSTER + movies.posterPath.toString()
         holder.itemView.recom_title.text = movies.title
         ImageCache.setImageViewUrl(context, imgUrl, holder.itemView.recom_img)
+        holder.itemView.recom_card.setOnClickListener {
+            onClickAdapterListener.onClick(it, movies)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     interface OnClickAdapterListener {
-        fun onClick(view: View?, moviesLocal: Movies)
+        fun onClick(view: View?, movies: Movies)
     }
 }

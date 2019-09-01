@@ -1,6 +1,8 @@
 package com.themovie.ui.detail
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +18,13 @@ import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailMovieBinding
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchDetailData
+import com.themovie.model.online.detail.Credits
+import com.themovie.model.online.detail.Reviews
+import com.themovie.model.online.discovermv.Movies
 import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
+import com.themovie.ui.detail.adapter.ReviewsAdapter
 import kotlinx.android.synthetic.main.fragment_detail_movie.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,6 +38,7 @@ class DetailMovieFragment : BaseFragment() {
     private lateinit var detailViewModel: DetailViewModel
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
+    private lateinit var reviewsAdapter: ReviewsAdapter
     private val tagline: String = DetailMovieFragment::class.java.simpleName
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,6 +55,7 @@ class DetailMovieFragment : BaseFragment() {
         initRecyclerView()
         getAllDetailData()
         observeNetworkLoad()
+        adapterOnClick()
     }
 
     private fun getAllDetailData(){
@@ -56,6 +64,13 @@ class DetailMovieFragment : BaseFragment() {
                 detailViewModel.setDetailMovieData(it.detailMovieResponse)
                 creditsAdapter.submitList(it.castResponse.credits)
                 recommendedAdapter.submitList(it.moviesResponse.movies)
+                reviewsAdapter.submitList(it.reviewResponse.reviewList)
+
+                if(it.moviesResponse.movies.isEmpty()) dt_recom_empty.visibility = View.VISIBLE
+                else dt_recom_empty.visibility = View.GONE
+
+                if(it.reviewResponse.reviewList.isEmpty()) dt_review_empty.visibility = View.VISIBLE
+                else dt_review_empty.visibility = View.GONE
             }
         )
     }
@@ -63,21 +78,71 @@ class DetailMovieFragment : BaseFragment() {
     private fun observeNetworkLoad(){
         detailViewModel.getLoadDataStatus().observe(this, Observer<LoadDataState>{
             if(it == LoadDataState.LOADED) {
-                dt_shimmer.visibility = View.GONE
-                dt_layout.visibility = View.VISIBLE
-            } else
-                showToastMessage("Please check your internet connection")
+                hideLoading()
+            } else{
+                showErrorConnection()
+                dt_retry.setOnClickListener {
+                    showLoading()
+                    getAllDetailData()
+                }
+            }
         })
     }
 
     private fun initRecyclerView(){
         creditsAdapter = CreditsAdapter()
         recommendedAdapter = RecommendedAdapter()
+        reviewsAdapter = ReviewsAdapter()
 
         dt_castList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         dt_recomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        dt_reviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         dt_castList.adapter = creditsAdapter
         dt_recomList.adapter = recommendedAdapter
+        dt_reviewList.adapter = reviewsAdapter
+    }
+
+    private fun adapterOnClick(){
+        creditsAdapter.setOnClickListener(object: CreditsAdapter.OnClickAdapterListener{
+            override fun onClick(view: View?, credits: Credits) {
+
+            }
+        })
+
+        recommendedAdapter.setOnClickListener(object: RecommendedAdapter.OnClickAdapterListener{
+            override fun onClick(view: View?, movies: Movies) {
+                val bundle = Bundle()
+                bundle.putInt("id", movies.id)
+                bundle.putString("image", movies.backdropPath.toString())
+                changeActivity(bundle, DetailActivity::class.java)
+            }
+        })
+
+        reviewsAdapter.setOnClickListener(object: ReviewsAdapter.OnClickAdapterListener{
+            override fun onClick(view: View?, reviews: Reviews) {
+                val uri: Uri = Uri.parse(reviews.url)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                context?.startActivity(intent)
+            }
+        })
+    }
+
+    private fun showLoading(){
+        dt_shimmer.visibility = View.VISIBLE
+        dt_layout.visibility = View.GONE
+        dt_no_internet.visibility = View.GONE
+    }
+
+    private fun hideLoading(){
+        dt_shimmer.visibility = View.GONE
+        dt_layout.visibility = View.VISIBLE
+        dt_no_internet.visibility = View.GONE
+    }
+
+    private fun showErrorConnection(){
+        dt_layout.visibility = View.GONE
+        dt_shimmer.visibility = View.INVISIBLE
+        dt_no_internet.visibility = View.VISIBLE
     }
 }

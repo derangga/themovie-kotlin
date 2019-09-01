@@ -46,10 +46,13 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
         ImageCache.setImageViewUrl(context, imgUrl, holder.itemView.crew_img)
         holder.itemView.crew_name.text = credits.name
         holder.itemView.crew_char.text = credits.character
+        holder.itemView.crew_card.setOnClickListener {
+            onClickAdapterListener.onClick(it, credits)
+        }
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, moviesLocal: Credits)
+        fun onClick(view: View?, credits: Credits)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

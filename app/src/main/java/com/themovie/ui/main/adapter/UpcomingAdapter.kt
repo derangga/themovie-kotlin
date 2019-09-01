@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -51,13 +52,13 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
         holder.itemView.mupco_title.text = upcoming.title
         holder.itemView.mupco_date.text = upcoming.dateRelease
         holder.itemView.mupco_card.setOnClickListener {
-            onClickAdapterListener.onClick(it, upcoming)
+            onClickAdapterListener.onClick(it, upcoming, holder.itemView.mupco_background)
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, upcoming: Upcoming)
+        fun onClick(view: View?, upcoming: Upcoming, imageViewRes: ImageView)
     }
 }

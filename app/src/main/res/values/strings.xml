@@ -31,5 +31,8 @@
     <string name="detail_title_8">Recommended for you</string>
     <string name="detail_title_9">No Recommended Movie</string>
     <string name="detail_title_10">Movie Reviews</string>
+    <string name="detail_title_11">No internet connection found.\nCheck your internet connection or try again.</string>
+    <string name="detail_title_12">Retry</string>
+    <string name="detail_title_13">No Movie Review</string>
 
 </resources>

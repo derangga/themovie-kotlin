@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/crew_card"
         android:layout_width="120dp"
-        android:layout_height="264dp"
+        android:layout_height="272dp"
         app:cardCornerRadius="5dp"
         android:layout_margin="4dp">
 

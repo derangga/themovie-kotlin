@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.themovie.helper.DateConverter
 import com.themovie.helper.LoadDataState
 import com.themovie.model.local.MoviesLocal
 import com.themovie.model.local.Trending
@@ -73,7 +74,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val upcoming = Upcoming(i,
                 mvId = upcomingList[i].id,
                 title = upcomingList[i].title,
-                dateRelease = upcomingList[i].releaseDate,
+                dateRelease = DateConverter.convert(upcomingList[i].releaseDate),
                 posterPath = upcomingList[i].posterPath.toString(),
                 backDropPath = upcomingList[i].backdropPath.toString()
             )
@@ -99,7 +100,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
            val movies = MoviesLocal( i,
                mvId = movieList[i].id,
                title = movieList[i].title,
-               dateRelease = movieList[i].releaseDate,
+               dateRelease = DateConverter.convert(movieList[i].releaseDate),
                rating = movieList[i].voteAverage,
                posterPath = movieList[i].posterPath.toString(),
                backDropPath = movieList[i].backdropPath.toString()
@@ -124,7 +125,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val upcoming = Upcoming(i,
                 mvId = upcomingList[i].id,
                 title = upcomingList[i].title,
-                dateRelease = upcomingList[i].releaseDate,
+                dateRelease = DateConverter.convert(upcomingList[i].releaseDate),
                 posterPath = upcomingList[i].posterPath.toString(),
                 backDropPath = upcomingList[i].backdropPath.toString()
             )
@@ -150,7 +151,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val movies = MoviesLocal( i,
                 mvId = movieList[i].id,
                 title = movieList[i].title,
-                dateRelease = movieList[i].releaseDate,
+                dateRelease = DateConverter.convert(movieList[i].releaseDate),
                 rating = movieList[i].voteAverage,
                 posterPath = movieList[i].posterPath.toString(),
                 backDropPath = movieList[i].backdropPath.toString()
