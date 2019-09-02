@@ -6,11 +6,11 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/mdtv_card"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_width="280dp"
+        android:layout_height="180dp"
         android:elevation="6dp"
         app:cardCornerRadius="5dp"
-        android:layout_margin="5dp">
+        android:layout_margin="4dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/mdtv_poster"
-                android:layout_width="70dp"
+                android:layout_width="72dp"
                 android:layout_height="100dp"
                 android:src="@drawable/no_image"
                 android:scaleType="centerCrop"
@@ -44,7 +44,7 @@
                 android:layout_marginBottom="12dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="13dp" />
+                android:layout_marginStart="12dp" />
 
             <TextView
                 android:id="@+id/mdtv_title"
@@ -52,14 +52,14 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginTop="6dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textSize="18sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#ffffff"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="4dp"
                 android:layout_alignTop="@+id/mdtv_poster"
                 android:layout_toEndOf="@id/mdtv_poster"/>
 
@@ -69,9 +69,8 @@
                 android:orientation="horizontal"
                 android:layout_below="@+id/mdtv_title"
                 android:layout_toEndOf="@+id/mdtv_poster"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_marginTop="2dp">
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -80,7 +79,7 @@
                     android:text="Rating :  "
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"
-                    android:layout_marginEnd="5dp"/>
+                    android:layout_marginEnd="4dp"/>
 
                 <TextView
                     android:id="@+id/mdtv_rate"

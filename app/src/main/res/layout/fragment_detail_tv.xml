@@ -5,14 +5,14 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="vm" type="com.themovie.ui.detail.DetailMvViewModel"/>
+        <variable name="vm" type="com.themovie.ui.detail.DetailTvViewModel"/>
         <import type="android.view.View"/>
     </data>
 
     <androidx.core.widget.NestedScrollView
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               tools:context=".ui.detail.DetailMovieFragment">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.detail.DetailMovieFragment">
 
         <!-- TODO: Update blank fragment layout -->
         <RelativeLayout
@@ -21,10 +21,10 @@
 
             <LinearLayout
                     android:id="@+id/dt_layout"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -96,9 +96,9 @@
                                 </LinearLayout>
 
                                 <TextView
+                                        android:text="@{vm.totalVote}"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@{vm.totalVote}"
                                         android:layout_gravity="center"/>
 
                             </LinearLayout>
@@ -122,10 +122,10 @@
                                         android:text="@string/detail_title_2"/>
 
                                 <TextView
+                                        android:text="@{vm.popularity}"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="@{vm.popularity}"
                                         android:textColor="@color/colorBlack"/>
 
                             </LinearLayout>
@@ -149,10 +149,10 @@
                                         android:text="@string/detail_title_3"/>
 
                                 <TextView
+                                        android:text="@{vm.releaseDate}"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="@{vm.releaseDate}"
                                         android:textColor="@color/colorBlack"/>
 
                             </LinearLayout>
@@ -181,17 +181,17 @@
                                 android:orientation="horizontal">
 
                             <ImageView
+                                    posterImage="@{vm.imageUrl}"
                                     android:id="@+id/dt_poster"
                                     android:layout_width="100dp"
                                     android:layout_height="148dp"
                                     android:scaleType="centerCrop"
-                                    android:layout_marginEnd="@dimen/small_space"
-                                    posterImage="@{vm.imageUrl}"/>
+                                    android:layout_marginEnd="@dimen/small_space"/>
 
                             <TextView
+                                    android:text="@{vm.description}"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@{vm.description}"/>
+                                    android:layout_height="wrap_content"/>
 
                         </LinearLayout>
 
@@ -205,23 +205,24 @@
                         <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/very_small_space"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="5dp">
 
                             <TextView
                                     android:layout_width="0dp"
                                     android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/colorPrimary"
-                                    android:text="@string/detail_title_5"/>
+                                    android:text="@string/detail_title_5"
+                                    android:textColor="@color/colorPrimary"/>
 
                             <TextView
+                                    android:id="@+id/detTv_status"
+                                    android:text="@{vm.status}"
                                     android:layout_width="0dp"
                                     android:layout_weight="1"
                                     android:layout_height="wrap_content"
                                     android:textAlignment="textEnd"
                                     android:gravity="end"
-                                    android:text="@{vm.status}"
                                     android:textStyle="italic"/>
 
                         </LinearLayout>
@@ -230,25 +231,114 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:layout_marginBottom="@dimen/very_small_space">
+                                android:layout_marginBottom="5dp">
 
                             <TextView
                                     android:layout_width="0dp"
                                     android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/colorPrimary"
-                                    android:text="@string/detail_title_6"/>
+                                    android:text="@string/detail_title_6"
+                                    android:textColor="@color/colorPrimary"/>
 
                             <TextView
+                                    android:id="@+id/detTv_genre"
+                                    android:text="@{vm.genre}"
                                     android:layout_width="0dp"
                                     android:layout_weight="1"
                                     android:layout_height="wrap_content"
                                     android:textAlignment="textEnd"
                                     android:gravity="end"
-                                    android:text="@{vm.genre}"
                                     android:textStyle="italic"/>
 
                         </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="5dp">
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/detail_title_14"
+                                    android:textColor="@color/colorPrimary"/>
+
+                            <TextView
+                                    android:id="@+id/detTv_eps"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:textAlignment="textEnd"
+                                    android:gravity="end"
+                                    android:text="@{vm.totalEps}"
+                                    android:textStyle="italic"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/detail_title_15"
+                                    android:textColor="@color/colorPrimary"/>
+
+                            <TextView
+                                    android:id="@+id/detTv_season"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:textAlignment="textEnd"
+                                    android:gravity="end"
+                                    android:text="@{vm.totalSeason}"
+                                    android:textStyle="italic"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/small_space">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/detail_title_16"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:layout_margin="@dimen/small_space"
+                                android:textColor="@color/colorPrimary"/>
+
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/small_space"
+                                android:layout_marginStart="@dimen/small_space"
+                                android:layout_marginEnd="@dimen/small_space"
+                                android:background="@color/colorPrimary"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/dt_seasonList"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp">
+
+                        </androidx.recyclerview.widget.RecyclerView>
 
                     </LinearLayout>
 
@@ -288,6 +378,16 @@
                                 android:layout_marginBottom="8dp">
 
                         </androidx.recyclerview.widget.RecyclerView>
+
+                        <TextView
+                                android:id="@+id/dt_cast_empty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:text="@string/detail_title_17"
+                                android:layout_marginBottom="8dp"
+                                android:textAlignment="center"
+                                android:visibility="gone"/>
 
                     </LinearLayout>
 

@@ -21,17 +21,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:src="@drawable/ic_circle"/>
+                <View
+                        android:layout_marginTop="24dp"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/ic_rectangle_rounded"/>
 
-                <com.makeramen.roundedimageview.RoundedImageView
+                <View
                     android:id="@+id/shimmer_poster"
                     android:layout_width="70dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_circle"
-                    android:scaleType="centerCrop"
+                    android:background="@drawable/ic_rectangle_rounded"
                     android:layout_marginBottom="12dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"

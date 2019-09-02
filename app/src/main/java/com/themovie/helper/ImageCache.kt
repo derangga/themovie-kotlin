@@ -11,6 +11,7 @@ class ImageCache {
         fun setImageViewUrl(context: Context, url: String, imageViewRes: ImageView){
             Glide.with(context)
                 .load(url)
+                .placeholder(R.drawable.no_image)
                 .error(R.drawable.no_image)
                 .into(imageViewRes)
         }

@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.themovie.R
 import com.themovie.base.BaseActivity
+import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.local.MoviesLocal
 import com.themovie.model.local.Trending
@@ -111,13 +112,19 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
                 snackbar.dismiss()
                 bundle.putInt("id", upcoming.mvId)
                 bundle.putString("image", upcoming.backDropPath)
+                bundle.putString("detail", Constant.MOVIE)
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
 
         discoverTvAdapter.setOnClickListener(object: DiscoverTvAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, tvLocal: TvLocal) {
-                showToastMessage(tvLocal.title)
+            override fun onClick(view: View?, tvLocal: TvLocal, imageViewRes: ImageView) {
+                val bundle = Bundle()
+                snackbar.dismiss()
+                bundle.putInt("id", tvLocal.tvId)
+                bundle.putString("image", tvLocal.backDropPath)
+                bundle.putString("detail", Constant.TV)
+                changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
 
@@ -127,6 +134,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
                 snackbar.dismiss()
                 bundle.putInt("id", moviesLocal.mvId)
                 bundle.putString("image", moviesLocal.backDropPath)
+                bundle.putString("detail", Constant.MOVIE)
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })

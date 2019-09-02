@@ -5,7 +5,7 @@ import com.themovie.model.online.detail.DetailMovieResponse
 import com.themovie.model.online.detail.ReviewResponse
 import com.themovie.model.online.discovermv.MoviesResponse
 
-data class FetchDetailData(
+data class FetchDetailMovieData(
     val detailMovieResponse: DetailMovieResponse,
     val castResponse: CastResponse,
     val moviesResponse: MoviesResponse,

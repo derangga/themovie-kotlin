@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +51,7 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
         holder.itemView.mdtv_rate.text = tvLocal.rating
 
         holder.itemView.mdtv_card.setOnClickListener { view ->
-            onClickAdapterListener.onClick(view, tvLocal)
+            onClickAdapterListener.onClick(view, tvLocal, holder.itemView.mdtv_background)
         }
     }
 
@@ -58,6 +59,6 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, tvLocal: TvLocal)
+        fun onClick(view: View?, tvLocal: TvLocal, imageViewRes: ImageView)
     }
 }

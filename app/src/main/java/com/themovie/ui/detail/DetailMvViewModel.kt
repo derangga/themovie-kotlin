@@ -11,20 +11,20 @@ import androidx.lifecycle.MutableLiveData
 import com.themovie.helper.DateConverter
 import com.themovie.helper.ImageCache
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.FetchDetailData
+import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.DetailMovieResponse
 import com.themovie.model.online.detail.Genre
-import com.themovie.repos.fromapi.DetailRepos
+import com.themovie.repos.fromapi.DetailMovieRepos
 import com.themovie.restapi.ApiUrl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 
-class DetailViewModel(application: Application) : AndroidViewModel(application) {
+class DetailMvViewModel(application: Application) : AndroidViewModel(application) {
 
     private val composite: CompositeDisposable = CompositeDisposable()
-    private val detailRepos: DetailRepos = DetailRepos()
-    private val detailLiveData: MutableLiveData<FetchDetailData> = MutableLiveData()
+    private val detailMovieRepos: DetailMovieRepos = DetailMovieRepos()
+    private val detailLiveMovieData: MutableLiveData<FetchDetailMovieData> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
     // Data Movie
@@ -38,16 +38,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private val genre: MutableLiveData<String> = MediatorLiveData()
     private var imageUrl: MutableLiveData<String> = MediatorLiveData()
 
-    fun getDetailMovieRequest(movieId: Int, token: String): MutableLiveData<FetchDetailData> {
+    fun getDetailMovieRequest(movieId: Int, token: String): MutableLiveData<FetchDetailMovieData> {
         composite.add(
-            detailRepos.getDetailData(token, movieId).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<FetchDetailData>(){
+            detailMovieRepos.getDetailData(token, movieId).observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object: DisposableObserver<FetchDetailMovieData>(){
                     override fun onComplete() {
 
                     }
 
-                    override fun onNext(t: FetchDetailData) {
-                        detailLiveData.value = t
+                    override fun onNext(t: FetchDetailMovieData) {
+                        detailLiveMovieData.value = t
                         loadDataStatus.value = LoadDataState.LOADED
                     }
 
@@ -57,7 +57,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 })
         )
-        return detailLiveData
+        return detailLiveMovieData
     }
 
     fun getLoadDataStatus(): MutableLiveData<LoadDataState> {
@@ -113,7 +113,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     companion object {
-        @BindingAdapter("imageUrl")
+        @BindingAdapter("posterImage")
         @JvmStatic
         fun loadImage(view: ImageView, imageUrl: String?){
             ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)

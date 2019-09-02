@@ -16,8 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailMovieBinding
+import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.FetchDetailData
+import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.online.discovermv.Movies
@@ -25,6 +26,7 @@ import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
+import com.themovie.ui.person.PersonActivity
 import kotlinx.android.synthetic.main.fragment_detail_movie.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,7 +37,7 @@ import kotlinx.android.synthetic.main.fragment_detail_movie.*
  */
 class DetailMovieFragment : BaseFragment() {
 
-    private lateinit var detailViewModel: DetailViewModel
+    private lateinit var detailMvViewModel: DetailMvViewModel
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
@@ -45,8 +47,8 @@ class DetailMovieFragment : BaseFragment() {
         val binding: FragmentDetailMovieBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_movie, container, false)
         val view: View = binding.root
-        detailViewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
-        binding.vm = detailViewModel
+        detailMvViewModel = ViewModelProviders.of(this).get(DetailMvViewModel::class.java)
+        binding.vm = detailMvViewModel
         binding.lifecycleOwner = this
         return view
     }
@@ -59,9 +61,9 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailViewModel.getDetailMovieRequest(getBundle()!!.getInt("filmId"), ApiUrl.TOKEN).observe (
-            this, Observer<FetchDetailData>{
-                detailViewModel.setDetailMovieData(it.detailMovieResponse)
+        detailMvViewModel.getDetailMovieRequest(getBundle()!!.getInt("filmId"), ApiUrl.TOKEN).observe (
+            this, Observer<FetchDetailMovieData>{
+                detailMvViewModel.setDetailMovieData(it.detailMovieResponse)
                 creditsAdapter.submitList(it.castResponse.credits)
                 recommendedAdapter.submitList(it.moviesResponse.movies)
                 reviewsAdapter.submitList(it.reviewResponse.reviewList)
@@ -76,7 +78,7 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun observeNetworkLoad(){
-        detailViewModel.getLoadDataStatus().observe(this, Observer<LoadDataState>{
+        detailMvViewModel.getLoadDataStatus().observe(this, Observer<LoadDataState>{
             if(it == LoadDataState.LOADED) {
                 hideLoading()
             } else{
@@ -106,7 +108,9 @@ class DetailMovieFragment : BaseFragment() {
     private fun adapterOnClick(){
         creditsAdapter.setOnClickListener(object: CreditsAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, credits: Credits) {
-
+                val bundle = Bundle()
+                bundle.putInt("person", credits.id)
+                changeActivity(bundle, PersonActivity::class.java)
             }
         })
 
@@ -115,6 +119,7 @@ class DetailMovieFragment : BaseFragment() {
                 val bundle = Bundle()
                 bundle.putInt("id", movies.id)
                 bundle.putString("image", movies.backdropPath.toString())
+                bundle.putString("detail", Constant.MOVIE)
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })

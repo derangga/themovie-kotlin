@@ -1,14 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".ui.detail.VideoFragment">
+<layout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="vm" type="com.themovie.ui.detail.VideoViewModel"/>
+    </data>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+            tools:context=".ui.detail.VideoFragment">
 
-</FrameLayout>
+        <RelativeLayout
+                android:padding="@dimen/small_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/dt_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <include
+                    android:id="@+id/shimmer_video"
+                    layout="@layout/shimmer_video"/>
+
+            <LinearLayout
+                    android:id="@+id/dt_no_internet"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true">
+
+                <ImageView
+                        android:src="@drawable/no_internet"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"/>
+
+                <TextView
+                        android:layout_marginTop="@dimen/small_space"
+                        android:text="@string/detail_title_11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"/>
+
+                <Button
+                        android:id="@+id/dt_retry"
+                        android:layout_marginTop="@dimen/small_space"
+                        android:text="@string/detail_title_12"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:textColor="@color/colorWhite"
+                        android:background="@drawable/btn_rounded"
+                        android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>
