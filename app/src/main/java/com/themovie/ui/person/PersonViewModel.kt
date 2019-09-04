@@ -61,9 +61,9 @@ class PersonViewModel(application: Application) : AndroidViewModel(application) 
     fun setPersonData(personData: PersonResponse){
         Log.e("vm", personData.name)
         name.value = personData.name
-        birthday.value = DateConverter.convert(personData.birthday)
-        place.value = personData.placeOfBirth
-        biography.value = personData.biography
+        birthday.value = if(personData.birthday != null) DateConverter.convert(personData.birthday) else ""
+        place.value = if(personData.placeOfBirth != null) personData.placeOfBirth else ""
+        biography.value = if(personData.biography != null) personData.biography else ""
         photoUrl.value = ApiUrl.IMG_POSTER + personData.profilePath.toString()
     }
 
