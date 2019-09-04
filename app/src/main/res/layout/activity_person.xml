@@ -14,104 +14,57 @@
             android:layout_height="match_parent"
             tools:context=".ui.person.PersonActivity">
 
-        <LinearLayout
+        <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
+                    android:id="@+id/person_layout"
+                    android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/small_space">
+                    android:orientation="vertical">
 
-                <LinearLayout
-                        android:id="@+id/per_layout"
+                <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="@dimen/small_space"
-                        android:layout_marginBottom="10dp">
-
-                    <TextView
-                            android:text="@{vm.name}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:textColor="@color/colorPrimary"/>
-
-                    <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="@dimen/small_space"
-                            android:layout_marginBottom="@dimen/small_space"
-                            android:background="@color/colorPrimary"/>
+                        android:layout_marginBottom="@dimen/small_space">
 
                     <LinearLayout
+                            android:id="@+id/per_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="vertical"
+                            android:padding="@dimen/small_space"
+                            android:layout_marginBottom="10dp">
 
-                        <ImageView
-                                android:id="@+id/per_photo"
-                                android:layout_width="120dp"
-                                android:layout_height="180dp"
-                                android:layout_marginEnd="@dimen/small_space"
-                                android:transitionName="@string/transition_cast"
-                                profilePict="@{vm.photoUrl}"/>
+                        <TextView
+                                android:text="@{vm.name}"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="20sp"
+                                android:textColor="@color/colorPrimary"/>
+
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="@dimen/small_space"
+                                android:layout_marginBottom="@dimen/small_space"
+                                android:background="@color/colorPrimary"/>
 
                         <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:orientation="horizontal">
 
-                            <TextView
-                                    android:text="@{vm.biography}"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:maxLines="6"
-                                    android:textColor="@color/colorBlack"
-                                    android:layout_marginBottom="20dp"/>
-
-                            <TextView
-                                    android:text="@{vm.birthday}"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/colorBlack"/>
-
-                            <TextView
-                                    android:text="@{vm.place}"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/colorBlack"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    <LinearLayout
-                            android:id="@+id/per_film_l"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                        <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:padding="@dimen/small_space">
+                            <ImageView
+                                    android:id="@+id/per_photo"
+                                    android:layout_width="120dp"
+                                    android:layout_height="180dp"
+                                    android:layout_marginEnd="@dimen/small_space"
+                                    android:transitionName="@string/transition_cast"
+                                    profilePict="@{vm.photoUrl}"/>
 
                             <LinearLayout
                                     android:layout_width="match_parent"
@@ -119,48 +72,139 @@
                                     android:orientation="vertical">
 
                                 <TextView
-                                        android:text="@string/person_title_2"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textStyle="bold"
-                                        android:textSize="16sp"
-                                        android:textColor="@color/colorPrimary"/>
-
-                                <View
+                                        android:text="@{vm.biography}"
                                         android:layout_width="match_parent"
-                                        android:layout_height="1dp"
-                                        android:layout_marginTop="@dimen/small_space"
-                                        android:layout_marginBottom="@dimen/small_space"
-                                        android:background="@color/colorPrimary"/>
+                                        android:layout_height="wrap_content"
+                                        android:maxLines="6"
+                                        android:textColor="@color/colorBlack"
+                                        android:layout_marginBottom="20dp"/>
+
+                                <TextView
+                                        android:text="@{vm.birthday}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/colorBlack"/>
+
+                                <TextView
+                                        android:text="@{vm.place}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/colorBlack"/>
 
                             </LinearLayout>
 
                         </LinearLayout>
 
-                        <TextView
-                                android:id="@+id/cast_empty"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/person_title_3"
-                                android:textSize="20sp"
-                                android:textAlignment="center"
-                                android:visibility="gone"
-                                android:layout_marginBottom="20dp"/>
-
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/cast_recycler"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                        </androidx.recyclerview.widget.RecyclerView>
-
                     </LinearLayout>
 
-                </RelativeLayout>
+                </androidx.cardview.widget.CardView>
 
-            </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-        </LinearLayout>
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <LinearLayout
+                                android:id="@+id/per_film_l"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="@dimen/small_space">
+
+                                <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                    <TextView
+                                            android:text="@string/person_title_2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textStyle="bold"
+                                            android:textSize="16sp"
+                                            android:textColor="@color/colorPrimary"/>
+
+                                    <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1dp"
+                                            android:layout_marginTop="@dimen/small_space"
+                                            android:layout_marginBottom="@dimen/small_space"
+                                            android:background="@color/colorPrimary"/>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <TextView
+                                    android:id="@+id/cast_empty"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/person_title_3"
+                                    android:textSize="20sp"
+                                    android:textAlignment="center"
+                                    android:visibility="gone"
+                                    android:layout_marginBottom="20dp"/>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/cast_recycler"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <include
+                    android:id="@+id/shimmer_person"
+                    layout="@layout/shimmer_person"/>
+
+            <LinearLayout
+                    android:id="@+id/pr_no_internet"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true">
+
+                <ImageView
+                        android:src="@drawable/no_internet"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"/>
+
+                <TextView
+                        android:layout_marginTop="@dimen/small_space"
+                        android:text="@string/detail_title_11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"/>
+
+                <Button
+                        android:id="@+id/pr_retry"
+                        android:layout_marginTop="@dimen/small_space"
+                        android:text="@string/detail_title_12"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:textColor="@color/colorWhite"
+                        android:background="@drawable/btn_rounded"
+                        android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </ScrollView>
 </layout>

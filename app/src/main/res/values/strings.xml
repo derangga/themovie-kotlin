@@ -40,8 +40,12 @@
     <string name="detail_title_17">No Cast Available</string>
 
     <!-- Person Activity -->
-    <string name="person_title_1">Born : </string>
+    <string name="person_title_1">Born :</string>
     <string name="person_title_2">Filmography</string>
     <string name="person_title_3">No Filmography</string>
+
+    <!-- Discover Movie -->
+    <string name="movie_title_1">Release date :</string>
+    <string name="movie_title_2">Connection Error\nTap to retry.</string>
 
 </resources>

@@ -128,4 +128,12 @@ interface ApiInterface {
         @Path("person_id") person_id: Int,
         @Query("api_key") api_key: String
     ) : Observable<PersonResponse>
+
+    @GET("search/movie")
+    fun getSearchMovie (
+        @Query("api_key") api_key: String,
+        @Query("language") language: String,
+        @Query("query") movie_name: String,
+        @Query("page") page: Int
+    ) : Single<MoviesResponse>
 }

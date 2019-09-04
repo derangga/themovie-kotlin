@@ -13,11 +13,9 @@ class DetailActivity : BaseActivity() {
 
     private val tag: String = DetailActivity::class.java.simpleName
 
-    override fun getView(): Int {
-        return R.layout.activity_detail
-    }
-
-    override fun setOnMain(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_detail)
         setSupportActionBar(toolbar)
         val urlImg = ApiUrl.IMG_BACK + getBundle()?.getString("image")
         val detailFor = getBundle()?.getString("detail")
@@ -26,6 +24,8 @@ class DetailActivity : BaseActivity() {
         supportActionBar?.title = getString(R.string.detail_title_1)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
+
+
 
     override fun onSupportNavigateUp(): Boolean {
         super.onBackPressed()

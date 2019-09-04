@@ -15,8 +15,10 @@ import com.themovie.base.BaseFragment
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.video.VideoResponse
+import com.themovie.model.online.video.Videos
 import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.VideoAdapter
+import com.themovie.ui.youtube.YoutubeActivity
 import kotlinx.android.synthetic.main.fragment_video.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -30,6 +32,7 @@ class VideoFragment : BaseFragment() {
 
     private lateinit var videoViewModel: VideoViewModel
     private lateinit var videoAdapter: VideoAdapter
+    private lateinit var videoFor: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         videoViewModel = ViewModelProviders.of(this).get(VideoViewModel::class.java)
@@ -37,7 +40,7 @@ class VideoFragment : BaseFragment() {
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        val videoFor = getBundle()?.getString("video")
+        videoFor = getBundle()?.getString("video").toString()
         setupRecycler()
         if(videoFor.equals(Constant.MOVIE)){
             getVideoMovie()
@@ -49,6 +52,14 @@ class VideoFragment : BaseFragment() {
         videoAdapter = VideoAdapter()
         dt_video.layoutManager = LinearLayoutManager(context)
         dt_video.adapter = videoAdapter
+
+        videoAdapter.setOnClickAdapter(object: VideoAdapter.OnClickAdapterListener{
+            override fun onClick(view: View?, videos: Videos) {
+                val bundle = Bundle()
+                bundle.putString("key", videos.key)
+                changeActivity(bundle, YoutubeActivity::class.java)
+            }
+        })
     }
 
     private fun getVideoMovie(){
@@ -71,7 +82,15 @@ class VideoFragment : BaseFragment() {
         videoViewModel.getLoadDataStatus().observe(
             this, Observer<LoadDataState> {
                 if(it == LoadDataState.LOADED) hideLoading()
-                else showNetworkError()
+                else {
+                    showNetworkError()
+                    dt_retry.setOnClickListener {
+                        showLoading()
+                        if(videoFor.equals(Constant.MOVIE)){
+                            getVideoMovie()
+                        } else getVideoTv()
+                    }
+                }
             }
         )
     }

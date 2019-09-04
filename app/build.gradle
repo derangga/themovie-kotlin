@@ -7,6 +7,16 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+
+    signingConfigs {
+        release {
+            keyAlias 'keyrelease'
+            keyPassword 'h4sg4rd14n'
+            storeFile file('themoviekey.jks')
+            storePassword 'h4sg4rd14n'
+        }
+    }
+
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -21,6 +31,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            zipAlignEnabled true
+            lintOptions {
+                disable 'MissingTranslation'
+                checkReleaseBuilds false
+                abortOnError false
+            }
         }
     }
 
@@ -94,5 +114,6 @@ dependencies {
 
     // Rounded image
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
 }

@@ -11,15 +11,6 @@ import com.themovie.R
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(getView())
-        setOnMain(savedInstanceState)
-    }
-
-    abstract fun getView(): Int
-    abstract fun setOnMain(savedInstanceState: Bundle?)
-
     fun changeActivity(activityTarget: Class<*>){
         val intent = Intent(this, activityTarget)
         startActivity(intent)

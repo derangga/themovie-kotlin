@@ -22,6 +22,8 @@ import com.themovie.model.local.Upcoming
 import com.themovie.model.online.FetchMainData
 import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.DetailActivity
+import com.themovie.ui.discover.DiscoverMovieActivity
+import com.themovie.ui.discover.DiscoverTvActivity
 import com.themovie.ui.main.adapter.DiscoverMvAdapter
 import com.themovie.ui.main.adapter.DiscoverTvAdapter
 import com.themovie.ui.main.adapter.TrendingAdapter
@@ -46,18 +48,16 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     private var currentPosition: Int = 0
     private var sizeOfHeader = 0
 
-    override fun getView(): Int {
-        return R.layout.activity_main
-    }
-
-    override fun setOnMain(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
         upcomingListSetup()
         fetchData()
         showData()
         observeNetworkLoad()
-        adapterOnClick()
+        onClick()
         main_swipe.setOnRefreshListener(this)
     }
 
@@ -98,11 +98,15 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         trendingAdapter.registerAdapterDataObserver(indicator.adapterDataObserver)
     }
 
-    private fun adapterOnClick(){
+    private fun onClick(){
 
         trendingAdapter.setOnClickListener(object: TrendingAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, trending: Trending) {
-                showToastMessage(trending.title)
+            override fun onClick(view: View?, trending: Trending, imageViewRes: ImageView) {
+                val bundle = Bundle()
+                bundle.putInt("id", trending.tvId)
+                bundle.putString("image", trending.backDropPath)
+                bundle.putString("detail", Constant.TV)
+                changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
 
@@ -138,6 +142,15 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
+
+        see_discotv.setOnClickListener {
+            changeActivity(DiscoverTvActivity::class.java)
+        }
+
+        see_discomv.setOnClickListener {
+            changeActivity(DiscoverMovieActivity::class.java)
+        }
+
     }
 
     private fun showData(){

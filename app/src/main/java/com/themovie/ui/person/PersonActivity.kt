@@ -1,6 +1,7 @@
 package com.themovie.ui.person
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -14,7 +15,7 @@ import com.themovie.model.online.FetchPersonData
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.activity_person.*
 
-class PersonActivity : AppCompatActivity() {
+class PersonActivity : BaseActivity() {
 
     private lateinit var personfilmAdapter: PersonFilmAdapter
     private lateinit var personViewModel: PersonViewModel
@@ -32,6 +33,11 @@ class PersonActivity : AppCompatActivity() {
         getLoadStatus()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        super.onBackPressed()
+        return true
+    }
+
     private fun setupRecycler(){
         personfilmAdapter = PersonFilmAdapter()
 
@@ -40,7 +46,7 @@ class PersonActivity : AppCompatActivity() {
     }
 
     private fun getPersonData(){
-        personViewModel.getPersonData(ApiUrl.TOKEN, intent.extras!!.getInt("person")).observe(
+        personViewModel.getPersonData(ApiUrl.TOKEN, getBundle()!!.getInt("person")).observe(
             this, Observer<FetchPersonData> {
                 personViewModel.setPersonData(it.personResponse)
                 personfilmAdapter.submitList(it.personFilmResponse.filmographies)
@@ -51,9 +57,34 @@ class PersonActivity : AppCompatActivity() {
     private fun getLoadStatus(){
         personViewModel.getLoadStatus().observe(
             this, Observer<LoadDataState> {
-
+                if(it == LoadDataState.LOADED) hideLoading()
+                else {
+                    showNetworkError()
+                    pr_retry.setOnClickListener {
+                        showLoading()
+                        getPersonData()
+                    }
+                }
             }
         )
+    }
+
+    private fun showLoading(){
+        shimmer_person.visibility = View.VISIBLE
+        person_layout.visibility = View.INVISIBLE
+        pr_no_internet.visibility = View.GONE
+    }
+
+    private fun hideLoading(){
+        shimmer_person.visibility = View.GONE
+        person_layout.visibility = View.VISIBLE
+        pr_no_internet.visibility = View.GONE
+    }
+
+    private fun showNetworkError(){
+        shimmer_person.visibility = View.GONE
+        person_layout.visibility = View.INVISIBLE
+        pr_no_internet.visibility = View.VISIBLE
     }
 
 }

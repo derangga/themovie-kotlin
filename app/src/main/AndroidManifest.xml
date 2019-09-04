@@ -12,6 +12,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".ui.discover.DiscoverTvActivity">
+        </activity>
+        <activity android:name=".ui.discover.DiscoverMovieActivity">
+        </activity>
+        <activity android:name=".ui.youtube.YoutubeActivity">
+        </activity>
         <activity android:name=".ui.person.PersonActivity">
         </activity>
         <activity

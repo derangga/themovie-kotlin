@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -48,13 +49,13 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
         ImageCache.setImageViewUrl(context, urlImg, holder.itemView.v_img)
         holder.itemView.v_title.text = trending.title
         holder.itemView.v_card.setOnClickListener {
-            onClickAdapterListener.onClick(it, trending)
+            onClickAdapterListener.onClick(it, trending, holder.itemView.v_img)
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, trending: Trending)
+        fun onClick(view: View?, trending: Trending, imageViewRes: ImageView)
     }
 }
