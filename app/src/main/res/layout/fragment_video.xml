@@ -4,7 +4,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="vm" type="com.themovie.ui.detail.VideoViewModel"/>
+        <variable name="vm" type="com.themovie.ui.detail.viewmodel.VideoViewModel"/>
     </data>
 
     <androidx.core.widget.NestedScrollView

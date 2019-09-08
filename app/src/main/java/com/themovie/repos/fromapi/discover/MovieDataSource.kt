@@ -43,24 +43,26 @@ class MovieDataSource(private val composite: CompositeDisposable): PageKeyedData
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
-        updateState(LoadDataState.LOADING)
-        composite.add(
-            ApiClient.getApiBuilder().getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
-                Constant.SORTING, params.key, "2019", "")
-                .subscribe(object: Consumer<MoviesResponse> {
-                    override fun accept(t: MoviesResponse?) {
-                        updateState(LoadDataState.LOADED)
-                        val key = params.key + 1
-                        if(key < pageSize)
-                            callback.onResult(t!!.movies, key)
-                    }
-                }, object: Consumer<Throwable>{
-                    override fun accept(t: Throwable?) {
-                        updateState(LoadDataState.ERROR)
-                        setRetry(Action { loadAfter(params, callback) })
-                    }
-                })
-        )
+        if(params.key <= pageSize){
+            updateState(LoadDataState.LOADING)
+            composite.add(
+                ApiClient.getApiBuilder().getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
+                    Constant.SORTING, params.key, "2019", "")
+                    .subscribe(object: Consumer<MoviesResponse> {
+                        override fun accept(t: MoviesResponse?) {
+                            updateState(LoadDataState.LOADED)
+                            val key = params.key + 1
+                            if(key <= pageSize)
+                                callback.onResult(t!!.movies, key)
+                        }
+                    }, object: Consumer<Throwable>{
+                        override fun accept(t: Throwable?) {
+                            updateState(LoadDataState.ERROR)
+                            setRetry(Action { loadAfter(params, callback) })
+                        }
+                    })
+            )
+        }
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {

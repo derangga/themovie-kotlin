@@ -6,5 +6,7 @@ class Constant {
         const val SORTING = "popularity.desc"
         const val TV = "tv"
         const val MOVIE = "movie"
+        const val UPCOMING = "upcoming"
+        const val DISCOVER = "discover"
     }
 }

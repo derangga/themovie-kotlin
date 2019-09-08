@@ -1,13 +1,9 @@
-package com.themovie.ui.detail
+package com.themovie.ui.detail.viewmodel
 
-import android.app.Application
 import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.themovie.helper.DateConverter
 import com.themovie.helper.ImageCache
 import com.themovie.helper.LoadDataState
@@ -20,7 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 
-class DetailTvViewModel(application: Application) : AndroidViewModel(application) {
+class DetailTvViewModel(private val filmId: Int) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
     private val detailTvRepos: DetailTvRepos = DetailTvRepos()
@@ -40,9 +36,9 @@ class DetailTvViewModel(application: Application) : AndroidViewModel(application
     private val totalSeason: MutableLiveData<String> = MediatorLiveData()
     private val imageUrl: MutableLiveData<String> = MediatorLiveData()
 
-    fun getDetailTvRequest(tvId: Int, token: String): MutableLiveData<FetchDetailTvData> {
+    fun getDetailTvRequest(): MutableLiveData<FetchDetailTvData> {
         composite.add(
-            detailTvRepos.getDetailData(token, tvId).observeOn(AndroidSchedulers.mainThread())
+            detailTvRepos.getDetailData(ApiUrl.TOKEN, filmId).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object: DisposableObserver<FetchDetailTvData>(){
                     override fun onComplete() {
 

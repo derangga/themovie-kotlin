@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="vm" type="com.themovie.ui.detail.DetailMvViewModel"/>
+        <variable name="vm" type="com.themovie.ui.detail.viewmodel.DetailMvViewModel"/>
         <import type="android.view.View"/>
     </data>
 
@@ -186,7 +186,7 @@
                                     android:layout_height="148dp"
                                     android:scaleType="centerCrop"
                                     android:layout_marginEnd="@dimen/small_space"
-                                    posterImage="@{vm.imageUrl}"/>
+                                    app:posterImage="@{vm.imageUrl}"/>
 
                             <TextView
                                     android:layout_width="match_parent"

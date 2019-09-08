@@ -97,7 +97,7 @@ interface ApiInterface {
         @Query("api_key") api_key: String
     ) : Observable<CastResponse>
 
-    @GET("tv/{tv_id}/credits")
+    @GET(ApiUrl.CREDITS_TV)
     fun getCreditsTv(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") api_key: String

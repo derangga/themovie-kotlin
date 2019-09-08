@@ -27,6 +27,8 @@ import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedTvAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
 import com.themovie.ui.detail.adapter.SeasonAdapter
+import com.themovie.ui.detail.viewmodel.DetailTvViewModel
+import com.themovie.ui.detail.viewmodel.DetailViewModelFactory
 import com.themovie.ui.person.PersonActivity
 import kotlinx.android.synthetic.main.fragment_detail_tv.*
 
@@ -50,7 +52,8 @@ class DetailTvFragment : BaseFragment() {
         val binding: FragmentDetailTvBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_tv, container, false)
         val view: View = binding.root
-        detailTvViewModel = ViewModelProviders.of(this).get(DetailTvViewModel::class.java)
+        val viewModelFactory = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
+        detailTvViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailTvViewModel::class.java)
         binding.vm = detailTvViewModel
         binding.lifecycleOwner = this
 
@@ -83,7 +86,7 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailTvViewModel.getDetailTvRequest(getBundle()!!.getInt("filmId"), ApiUrl.TOKEN).observe(
+        detailTvViewModel.getDetailTvRequest().observe(
             this, Observer<FetchDetailTvData> {
                 detailTvViewModel.setDetailTvData(it.detailTvResponse)
                 seasonAdapter.submitList(it.detailTvResponse.seasons)

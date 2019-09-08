@@ -143,12 +143,20 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
+        see_upco.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("fetch", Constant.UPCOMING)
+            changeActivity(bundle, DiscoverMovieActivity::class.java)
+        }
+
         see_discotv.setOnClickListener {
             changeActivity(DiscoverTvActivity::class.java)
         }
 
         see_discomv.setOnClickListener {
-            changeActivity(DiscoverMovieActivity::class.java)
+            val bundling = Bundle()
+            bundling.putString("fetch", Constant.DISCOVER)
+            changeActivity(bundling, DiscoverMovieActivity::class.java)
         }
 
     }

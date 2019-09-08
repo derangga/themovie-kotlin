@@ -26,6 +26,8 @@ import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
+import com.themovie.ui.detail.viewmodel.DetailMvViewModel
+import com.themovie.ui.detail.viewmodel.DetailViewModelFactory
 import com.themovie.ui.person.PersonActivity
 import kotlinx.android.synthetic.main.fragment_detail_movie.*
 
@@ -47,7 +49,8 @@ class DetailMovieFragment : BaseFragment() {
         val binding: FragmentDetailMovieBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_movie, container, false)
         val view: View = binding.root
-        detailMvViewModel = ViewModelProviders.of(this).get(DetailMvViewModel::class.java)
+        val viewModelFactory = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
+        detailMvViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.vm = detailMvViewModel
         binding.lifecycleOwner = this
         return view
@@ -61,7 +64,7 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailMvViewModel.getDetailMovieRequest(getBundle()!!.getInt("filmId"), ApiUrl.TOKEN).observe (
+        detailMvViewModel.getDetailMovieRequest().observe (
             this, Observer<FetchDetailMovieData>{
                 detailMvViewModel.setDetailMovieData(it.detailMovieResponse)
                 creditsAdapter.submitList(it.castResponse.credits)

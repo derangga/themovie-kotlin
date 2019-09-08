@@ -14,6 +14,7 @@ class ApiUrl {
         const val REVIEWS = "movie/{movie_id}/reviews"
         const val REVIEWS_TV = "tv/{tv_id}/reviews"
         const val CREDITS = "movie/{movie_id}/credits"
+        const val CREDITS_TV = "tv/{tv_id}/credits"
         const val TOKEN = "98e5a808562ae58e4db7aecb3a0eda01"
         const val YT_API = "AIzaSyB79JGvfJLIPLy6yLECjghWD3_1FfB1PlQ"
         const val IMG_BACK = "https://image.tmdb.org/t/p/w780"

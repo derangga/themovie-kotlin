@@ -14,7 +14,7 @@ import com.themovie.helper.Constant
 import com.themovie.model.online.discovertv.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
-import kotlinx.android.synthetic.main.activity_dicover_tv.*
+import kotlinx.android.synthetic.main.activity_discover.*
 
 class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -23,7 +23,7 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dicover_tv)
+        setContentView(R.layout.activity_discover)
         supportActionBar?.title = "Discover Tv"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -31,7 +31,7 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
         setupRecycler()
         getDiscoverTv()
         getLoadStatus()
-        tv_swipe.setOnRefreshListener(this)
+        dc_swipe.setOnRefreshListener(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -41,8 +41,8 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
 
     private fun setupRecycler(){
         tvAdapter = TvAdapter()
-        tv_recycler.layoutManager = LinearLayoutManager(this)
-        tv_recycler.adapter = tvAdapter
+        dc_recycler.layoutManager = LinearLayoutManager(this)
+        dc_recycler.adapter = tvAdapter
 
         tvAdapter.setOnClickAdapter(object: TvAdapter.OnClickAdapterListener{
             override fun onItemClick(view: View?, tv: Tv, imageViewRes: ImageView) {
@@ -65,7 +65,7 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
         viewModel.getTvLiveData().observe( this,
             Observer<PagedList<Tv>> {
                 tvAdapter.submitList(it)
-                tv_swipe.isRefreshing = false
+                dc_swipe.isRefreshing = false
             }
         )
     }

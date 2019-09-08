@@ -16,6 +16,12 @@ abstract class BaseActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun changeActivity(bundle: Bundle, activityTarget: Class<*>){
+        val intent = Intent(this, activityTarget)
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
     fun changeActivityTransitionBundle(activityTarget: Class<*>, bundle: Bundle, imageViewRes: ImageView){
         val intent = Intent(this, activityTarget)
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,

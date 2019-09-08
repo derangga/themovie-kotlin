@@ -18,6 +18,8 @@ import com.themovie.model.online.video.VideoResponse
 import com.themovie.model.online.video.Videos
 import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.VideoAdapter
+import com.themovie.ui.detail.viewmodel.DetailViewModelFactory
+import com.themovie.ui.detail.viewmodel.VideoViewModel
 import com.themovie.ui.youtube.YoutubeActivity
 import kotlinx.android.synthetic.main.fragment_video.*
 
@@ -35,7 +37,8 @@ class VideoFragment : BaseFragment() {
     private lateinit var videoFor: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        videoViewModel = ViewModelProviders.of(this).get(VideoViewModel::class.java)
+        val viewModelFacotry = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
+        videoViewModel = ViewModelProviders.of(this, viewModelFacotry).get(VideoViewModel::class.java)
         return inflater.inflate(R.layout.fragment_video, container, false)
     }
 
@@ -63,7 +66,7 @@ class VideoFragment : BaseFragment() {
     }
 
     private fun getVideoMovie(){
-        videoViewModel.getVideoMovie(getBundle()!!.getInt("filmId"), ApiUrl.TOKEN).observe(
+        videoViewModel.getVideoMovie().observe(
             this, Observer<VideoResponse> {
                 videoAdapter.submitList(it.videos)
             }
@@ -71,7 +74,7 @@ class VideoFragment : BaseFragment() {
     }
 
     private fun getVideoTv(){
-        videoViewModel.getVideoTv(getBundle()!!.getInt("filmId"), ApiUrl.TOKEN).observe(
+        videoViewModel.getVideoTv().observe(
             this, Observer<VideoResponse> {
                 videoAdapter.submitList(it.videos)
             }

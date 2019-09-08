@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivityPersonBinding
+import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchPersonData
+import com.themovie.model.online.person.Filmography
 import com.themovie.restapi.ApiUrl
+import com.themovie.ui.detail.DetailActivity
 import kotlinx.android.synthetic.main.activity_person.*
 
 class PersonActivity : BaseActivity() {
@@ -43,6 +46,16 @@ class PersonActivity : BaseActivity() {
 
         cast_recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         cast_recycler.adapter = personfilmAdapter
+
+        personfilmAdapter.setOnItemCLickListener(object: PersonFilmAdapter.OnClickItemListener{
+            override fun onClick(view: View?, personFilm: Filmography) {
+                val bundle = Bundle()
+                bundle.putInt("id", personFilm.id)
+                bundle.putString("image", personFilm.backdrop_path.toString())
+                bundle.putString("detail", Constant.MOVIE)
+                changeActivity(bundle, DetailActivity::class.java)
+            }
+        })
     }
 
     private fun getPersonData(){

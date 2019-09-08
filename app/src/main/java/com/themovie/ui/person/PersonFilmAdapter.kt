@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.adapter_recomended.view.*
 class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
+    private lateinit var onClickItemListener: OnClickItemListener
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Filmography> = object: DiffUtil.ItemCallback<Filmography>(){
@@ -29,6 +30,10 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
         }
     }
 
+    fun setOnItemCLickListener(onClickItemListener: OnClickItemListener){
+        this.onClickItemListener = onClickItemListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_recomended, parent, false)
         context = parent.context
@@ -40,7 +45,14 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
         val imgUrl = ApiUrl.IMG_POSTER + film.posterPath.toString()
         holder.itemView.recom_title.text = film.title
         ImageCache.setImageViewUrl(context, imgUrl, holder.itemView.recom_img)
+        holder.itemView.recom_card.setOnClickListener {
+            onClickItemListener.onClick(it, film)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    interface OnClickItemListener {
+        fun onClick(view: View?, personFilm: Filmography)
+    }
 }
