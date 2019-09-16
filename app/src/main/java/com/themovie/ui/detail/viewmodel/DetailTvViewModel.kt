@@ -120,14 +120,6 @@ class DetailTvViewModel(private val filmId: Int) : ViewModel() {
         return imageUrl
     }
 
-    companion object {
-        @BindingAdapter("posterImage")
-        @JvmStatic
-        fun loadImage(view: ImageView, imageUrl: String?){
-            ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)
-        }
-    }
-
     private fun concateGenres(genreList: List<Genre>): String {
         val genre = StringBuilder()
         for(i in genreList.indices){

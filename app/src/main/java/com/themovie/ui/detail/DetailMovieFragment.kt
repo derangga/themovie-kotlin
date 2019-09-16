@@ -22,7 +22,6 @@ import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.online.discovermv.Movies
-import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
@@ -43,7 +42,6 @@ class DetailMovieFragment : BaseFragment() {
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
-    private val tagline: String = DetailMovieFragment::class.java.simpleName
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDetailMovieBinding = DataBindingUtil.inflate(inflater,

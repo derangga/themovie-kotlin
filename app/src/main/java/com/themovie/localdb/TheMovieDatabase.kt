@@ -13,7 +13,7 @@ import com.themovie.model.local.Trending
 import com.themovie.model.local.TvLocal
 import com.themovie.model.local.Upcoming
 
-@Database(entities = [Trending::class, Upcoming::class, TvLocal::class, MoviesLocal::class], version = 2)
+@Database(entities = [Trending::class, Upcoming::class, TvLocal::class, MoviesLocal::class], version = 2, exportSchema = false)
 abstract class TheMovieDatabase : RoomDatabase() {
 
     abstract fun trendingDao(): TrendingDao

@@ -1,6 +1,5 @@
 package com.themovie.ui.detail.viewmodel
 
-import android.app.Application
 import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -107,14 +106,6 @@ class DetailMvViewModel(private val filmId: Int) : ViewModel() {
 
     fun getImageUrl(): LiveData<String> {
         return imageUrl
-    }
-
-    companion object {
-        @BindingAdapter("posterImage")
-        @JvmStatic
-        fun loadImage(view: ImageView, imageUrl: String?){
-            ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)
-        }
     }
 
     private fun concateGenres(genreList: List<Genre>): String {

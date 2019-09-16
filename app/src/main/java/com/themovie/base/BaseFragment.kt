@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 
 abstract class BaseFragment : Fragment() {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         onMain(savedInstanceState)
     }
 

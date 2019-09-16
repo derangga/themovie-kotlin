@@ -79,21 +79,12 @@ class PersonViewModel(application: Application) : AndroidViewModel(application) 
         return place
     }
 
-    fun getPhotoUrl(): LiveData<String> {
-        return photoUrl
-    }
-
     fun getBiography(): LiveData<String> {
         return biography
     }
 
-    companion object {
-        @BindingAdapter("profilePict")
-        @JvmStatic
-        fun loadImage(view: ImageView, photoUrl: String?){
-            Log.e("vm", photoUrl.toString())
-            ImageCache.setImageViewUrl(view.context, photoUrl.toString(), view)
-        }
+    fun getPhotoUrl(): LiveData<String> {
+        return photoUrl
     }
 
     override fun onCleared() {
