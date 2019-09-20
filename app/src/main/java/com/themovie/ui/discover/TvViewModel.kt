@@ -1,6 +1,7 @@
 package com.themovie.ui.discover
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
@@ -14,6 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 class TvViewModel: ViewModel() {
 
     private var tvLiveData: LiveData<PagedList<Tv>>
+    private val uiList = MediatorLiveData<PagedList<Tv>>()
     private val composite: CompositeDisposable = CompositeDisposable()
     private val tvSourceFactory: TvDataSourceFactory
 
@@ -27,8 +29,11 @@ class TvViewModel: ViewModel() {
         tvLiveData = LivePagedListBuilder(tvSourceFactory, pageConfig).build()
     }
 
-    fun getTvLiveData(): LiveData<PagedList<Tv>> {
-        return tvLiveData
+    fun getTvLiveData(): MediatorLiveData<PagedList<Tv>> {
+        uiList.addSource(tvLiveData){
+            uiList.value = it
+        }
+        return uiList
     }
 
 

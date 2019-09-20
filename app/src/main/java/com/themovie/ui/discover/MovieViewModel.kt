@@ -11,6 +11,7 @@ import io.reactivex.disposables.CompositeDisposable
 
 class MovieViewModel : ViewModel() {
     private var movieLiveData: LiveData<PagedList<Movies>>
+    private val uiList = MediatorLiveData<PagedList<Movies>>()
     private val composite: CompositeDisposable = CompositeDisposable()
     private val moviesSourceFactory: MovieDataSourceFactory
 
@@ -22,10 +23,14 @@ class MovieViewModel : ViewModel() {
             .build()
 
         movieLiveData = LivePagedListBuilder(moviesSourceFactory, pageConfig).build()
+
     }
 
-    fun getMovieLiveData(): LiveData<PagedList<Movies>>{
-        return movieLiveData
+    fun getMovieLiveData(): MediatorLiveData<PagedList<Movies>>{
+        uiList.addSource(movieLiveData){
+            uiList.value = it
+        }
+        return uiList
     }
 
 

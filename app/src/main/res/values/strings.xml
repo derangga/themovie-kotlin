@@ -12,7 +12,11 @@
     <string name="title_main_3">Discover Tv</string>
     <string name="title_main_4">Discover Movies</string>
     <string name="title_main_5">See All</string>
+    <string name="title_main_6">Search Movies</string>
     <string name="title_activity_detail_movie">DetailMovieActivity</string>
+
+    <!-- Discover Header Menu -->
+    <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->

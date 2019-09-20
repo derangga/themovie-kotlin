@@ -15,6 +15,7 @@ import com.themovie.model.online.discovermv.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.activity_discover.*
+import kotlinx.android.synthetic.main.header_layout.*
 
 class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -26,29 +27,40 @@ class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discover)
-        supportActionBar?.title = "Discover Movies"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         fetch = getBundle()?.getString("fetch").toString()
 
         if(fetch.equals(Constant.UPCOMING)){
+            h_title.visibility = View.VISIBLE
+            h_title_layout.visibility = View.GONE
             upViewModel = ViewModelProviders.of(this).get(UpComingViewModel::class.java)
-        } else dcViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
+        } else {
+            h_title.visibility = View.GONE
+            h_title_layout.visibility = View.VISIBLE
+            dcViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
+        }
 
+        onItemHeaderClick()
         setupRecycler()
         getDiscoverMovie()
         getLoadStatus()
         dc_swipe.setOnRefreshListener(this)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        super.onBackPressed()
-        return true
-    }
-
     override fun onRefresh() {
         if(fetch.equals(Constant.UPCOMING)){
             upViewModel.refresh()
         } else dcViewModel.refresh()
+    }
+
+    private fun onItemHeaderClick(){
+        h_back.setOnClickListener{
+            super.onBackPressed()
+        }
+        
+        h_title_layout.setOnClickListener {
+
+        }
     }
 
     private fun setupRecycler(){

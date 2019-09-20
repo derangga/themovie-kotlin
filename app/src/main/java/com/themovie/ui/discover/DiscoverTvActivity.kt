@@ -15,6 +15,7 @@ import com.themovie.model.online.discovertv.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
 import kotlinx.android.synthetic.main.activity_discover.*
+import kotlinx.android.synthetic.main.header_layout.*
 
 class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -24,19 +25,22 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discover)
-        supportActionBar?.title = "Discover Tv"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = ViewModelProviders.of(this).get(TvViewModel::class.java)
+        onItemHeaderClick()
         setupRecycler()
         getDiscoverTv()
         getLoadStatus()
         dc_swipe.setOnRefreshListener(this)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        super.onBackPressed()
-        return true
+    private fun onItemHeaderClick(){
+        h_back.setOnClickListener{
+            super.onBackPressed()
+        }
+        h_search.setOnClickListener {
+
+        }
     }
 
     private fun setupRecycler(){

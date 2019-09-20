@@ -2,6 +2,7 @@ package com.themovie.ui.main
 
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
@@ -40,6 +41,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     private var isDiscoverTvEmpty: Boolean = true
     private var isDiscoverMvEmpty: Boolean = true
     private var isSliding: Boolean = false
+    private var isFirstTouch: Boolean = true
     private lateinit var upcomingAdapter: UpcomingAdapter
     private lateinit var trendingAdapter: TrendingAdapter
     private lateinit var discoverTvAdapter: DiscoverTvAdapter
@@ -62,6 +64,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onResume() {
+        isFirstTouch = true
         startSliding()
         super.onResume()
     }
@@ -107,6 +110,15 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
                 bundle.putString("image", trending.backDropPath)
                 bundle.putString("detail", Constant.TV)
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
+            }
+        })
+
+        trendingAdapter.setOnTouchListener(object: TrendingAdapter.OnTouchAdapterListener{
+            override fun onTouchItem(view: View?, motionEvent: MotionEvent?) {
+                if(motionEvent?.action == MotionEvent.ACTION_DOWN && isFirstTouch){
+                    isFirstTouch = false
+                    stopSliding()
+                }
             }
         })
 

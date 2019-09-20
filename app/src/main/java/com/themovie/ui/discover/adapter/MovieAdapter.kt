@@ -28,7 +28,9 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
             }
 
             override fun areContentsTheSame(oldItem: Movies, newItem: Movies): Boolean {
-                return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
+                return oldItem.title == newItem.title &&
+                        oldItem.posterPath == newItem.posterPath &&
+                         oldItem.backdropPath == newItem.backdropPath
             }
         }
     }

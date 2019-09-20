@@ -2,6 +2,7 @@ package com.themovie.ui.main.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -18,6 +19,7 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
 
     private lateinit var context: Context
     private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var onTouchAdapterListener: OnTouchAdapterListener
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Trending> = object: DiffUtil.ItemCallback<Trending>(){
@@ -33,6 +35,10 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
 
     fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
         this.onClickAdapterListener = onClickAdapterListener
+    }
+
+    fun setOnTouchListener(onTouchAdapterListener: OnTouchAdapterListener){
+        this.onTouchAdapterListener = onTouchAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,11 +57,22 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
         holder.itemView.v_card.setOnClickListener {
             onClickAdapterListener.onClick(it, trending, holder.itemView.v_img)
         }
+
+        holder.itemView.v_card.setOnTouchListener(object : View.OnTouchListener{
+            override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+                onTouchAdapterListener.onTouchItem(p0, p1)
+                return false
+            }
+        })
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     interface OnClickAdapterListener {
         fun onClick(view: View?, trending: Trending, imageViewRes: ImageView)
+    }
+
+    interface OnTouchAdapterListener {
+        fun onTouchItem(view: View?, motionEvent: MotionEvent?)
     }
 }
