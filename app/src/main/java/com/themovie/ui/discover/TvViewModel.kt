@@ -36,6 +36,10 @@ class TvViewModel: ViewModel() {
         return uiList
     }
 
+    fun stopSubscribing(){
+        uiList.removeSource(tvLiveData)
+    }
+
 
     fun getLoadState(): LiveData<LoadDataState> {
         return Transformations.switchMap<TvDataSource, LoadDataState>(tvSourceFactory.getTvDataSource(), TvDataSource::loadState)

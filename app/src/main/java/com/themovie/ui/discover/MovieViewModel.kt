@@ -33,6 +33,10 @@ class MovieViewModel : ViewModel() {
         return uiList
     }
 
+    fun stopSubscribing(){
+        uiList.removeSource(movieLiveData)
+    }
+
 
     fun getLoadState(): LiveData<LoadDataState> {
         return Transformations.switchMap<MovieDataSource, LoadDataState>(moviesSourceFactory.getMovieDataSource(), MovieDataSource::loadState)

@@ -34,6 +34,10 @@ class UpComingViewModel: ViewModel() {
         return uiList
     }
 
+    fun stopSubscribing(){
+        uiList.removeSource(upcomingLiveData)
+    }
+
     fun getLoadState(): LiveData<LoadDataState> {
         return Transformations.switchMap(upcomingSourceFactory.getUpcomingDataSource(), UpcomingDataSource::loadState)
     }

@@ -42,9 +42,25 @@ class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
 
         onItemHeaderClick()
         setupRecycler()
+        dc_swipe.setOnRefreshListener(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
         getDiscoverMovie()
         getLoadStatus()
-        dc_swipe.setOnRefreshListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if(fetch.equals(Constant.UPCOMING)){
+            upViewModel.stopSubscribing()
+        }
+
+        else {
+            dcViewModel.stopSubscribing()
+        }
     }
 
     override fun onRefresh() {

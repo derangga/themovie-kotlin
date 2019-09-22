@@ -29,9 +29,18 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
         viewModel = ViewModelProviders.of(this).get(TvViewModel::class.java)
         onItemHeaderClick()
         setupRecycler()
+        dc_swipe.setOnRefreshListener(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
         getDiscoverTv()
         getLoadStatus()
-        dc_swipe.setOnRefreshListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unsubscribeData()
     }
 
     private fun onItemHeaderClick(){
@@ -72,6 +81,10 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
                 dc_swipe.isRefreshing = false
             }
         )
+    }
+
+    private fun unsubscribeData(){
+        viewModel.stopSubscribing()
     }
 
     private fun getLoadStatus(){
