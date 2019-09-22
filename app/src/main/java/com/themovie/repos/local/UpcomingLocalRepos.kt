@@ -3,7 +3,7 @@ package com.themovie.repos.local
 import android.app.Application
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
-import com.themovie.dao.UpcomingDao
+import com.themovie.localdb.dao.UpcomingDao
 import com.themovie.localdb.TheMovieDatabase
 import com.themovie.model.local.Upcoming
 import org.jetbrains.anko.doAsync

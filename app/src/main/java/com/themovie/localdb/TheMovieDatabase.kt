@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.themovie.dao.MoviesDao
-import com.themovie.dao.TrendingDao
-import com.themovie.dao.TvDao
-import com.themovie.dao.UpcomingDao
+import com.themovie.localdb.dao.MoviesDao
+import com.themovie.localdb.dao.TrendingDao
+import com.themovie.localdb.dao.TvDao
+import com.themovie.localdb.dao.UpcomingDao
 import com.themovie.model.local.MoviesLocal
 import com.themovie.model.local.Trending
 import com.themovie.model.local.TvLocal

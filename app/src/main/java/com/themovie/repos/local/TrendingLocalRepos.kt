@@ -2,7 +2,7 @@ package com.themovie.repos.local
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import com.themovie.dao.TrendingDao
+import com.themovie.localdb.dao.TrendingDao
 import com.themovie.localdb.TheMovieDatabase
 import com.themovie.model.local.Trending
 import org.jetbrains.anko.doAsync

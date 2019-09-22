@@ -275,7 +275,6 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-
     inner class SliderTimer : TimerTask() {
         override fun run() {
             runOnUiThread {

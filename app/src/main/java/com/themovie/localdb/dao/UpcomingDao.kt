@@ -1,4 +1,4 @@
-package com.themovie.dao
+package com.themovie.localdb.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
