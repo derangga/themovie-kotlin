@@ -1,9 +1,9 @@
 package com.themovie.ui.main
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.themovie.helper.DateConverter
 import com.themovie.helper.LoadDataState
 import com.themovie.model.local.MoviesLocal
@@ -22,10 +22,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(private val mainRepos: MainRepos, application: Application) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
-    private val mainRepos: MainRepos = MainRepos()
     private val upcomingLocalRepos: UpcomingLocalRepos =
         UpcomingLocalRepos(application)
     private val trendingLocalRepos: TrendingLocalRepos =

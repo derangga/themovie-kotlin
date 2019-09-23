@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
+import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseActivity
+import com.themovie.base.di.AppComponent
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.local.MoviesLocal
@@ -31,8 +33,11 @@ import com.themovie.ui.main.adapter.TrendingAdapter
 import com.themovie.ui.main.adapter.UpcomingAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import javax.inject.Inject
 
 class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
+
+    @Inject lateinit var mainViewModelFactory: MainViewModelFactory
 
     private var timer: Timer? = null
     private lateinit var mainViewModel: MainViewModel
@@ -53,8 +58,12 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+        (application as MyApplication).getAppComponent().inject(this)
+
+        mainViewModel = ViewModelProviders.of(this, mainViewModelFactory).get(MainViewModel::class.java)
         snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
+
         upcomingListSetup()
         fetchData()
         showData()
