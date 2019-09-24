@@ -1,20 +1,15 @@
 package com.themovie.repos.local
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.TrendingDao
-import com.themovie.localdb.TheMovieDatabase
 import com.themovie.model.local.Trending
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
-class TrendingLocalRepos(application: Application) {
-    private var trendingDao: TrendingDao
-    private var trendingListTv: LiveData<List<Trending>>
-    init {
-        val theMovieDatabase = TheMovieDatabase.getDatabase(application)
-        trendingDao = theMovieDatabase.trendingDao()
-        trendingListTv = trendingDao.getAllTrendingTv()
-    }
+class TrendingLocalRepos
+    @Inject constructor(private val trendingDao: TrendingDao) {
+
+    private var trendingListTv: LiveData<List<Trending>> = trendingDao.getAllTrendingTv()
 
     fun insert(trending: Trending){
         doAsync {

@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.base.di.AppComponent
+import com.themovie.databinding.ActivityMainBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.local.MoviesLocal
@@ -52,6 +54,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var discoverTvAdapter: DiscoverTvAdapter
     private lateinit var discoverMvAdapter: DiscoverMvAdapter
     private lateinit var snackbar: Snackbar
+    private lateinit var binding: ActivityMainBinding
     private var currentPosition: Int = 0
     private var sizeOfHeader = 0
 
@@ -60,7 +63,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         setContentView(R.layout.activity_main)
 
         (application as MyApplication).getAppComponent().inject(this)
-
+        binding = DataBindingUtil.getBinding<>()
         mainViewModel = ViewModelProviders.of(this, mainViewModelFactory).get(MainViewModel::class.java)
         snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
 

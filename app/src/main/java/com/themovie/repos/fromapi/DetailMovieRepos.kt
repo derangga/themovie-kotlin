@@ -7,9 +7,11 @@ import com.themovie.model.online.detail.DetailMovieResponse
 import com.themovie.model.online.detail.ReviewResponse
 import com.themovie.model.online.discovermv.MoviesResponse
 import com.themovie.restapi.ApiClient
+import com.themovie.restapi.ApiInterface
 import io.reactivex.Observable
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class DetailMovieRepos {
 
@@ -24,5 +26,6 @@ class DetailMovieRepos {
             { t1, t2, t3, t4 -> FetchDetailMovieData(t1, t2, t3, t4) })
 
         return call
+
     }
 }

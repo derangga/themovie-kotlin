@@ -47,9 +47,10 @@ class DetailTvFragment : BaseFragment() {
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedTvAdapter: RecommendedTvAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
+    private lateinit var binding: FragmentDetailTvBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentDetailTvBinding = DataBindingUtil.inflate(inflater,
+        binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_tv, container, false)
         val view: View = binding.root
         val viewModelFactory = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
@@ -73,16 +74,15 @@ class DetailTvFragment : BaseFragment() {
         recommendedTvAdapter = RecommendedTvAdapter()
         reviewsAdapter = ReviewsAdapter()
 
-        dt_seasonList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        dt_castList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        dt_recomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        dt_reviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.dtSeasonList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-
-        dt_seasonList.adapter = seasonAdapter
-        dt_castList.adapter = creditsAdapter
-        dt_recomList.adapter = recommendedTvAdapter
-        dt_reviewList.adapter = reviewsAdapter
+        binding.dtSeasonList.adapter = seasonAdapter
+        binding.dtCastList.adapter = creditsAdapter
+        binding.dtRecomList.adapter = recommendedTvAdapter
+        binding.dtReviewList.adapter = reviewsAdapter
     }
 
     private fun getAllDetailData(){
@@ -151,21 +151,21 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun showLoading(){
-        dt_shimmer.visibility = View.VISIBLE
-        dt_layout.visibility = View.GONE
-        dt_no_internet.visibility = View.GONE
+        binding.dtShimmer.visibility = View.VISIBLE
+        binding.dtLayout.visibility = View.GONE
+        binding.dtNoInternet.visibility = View.GONE
     }
 
     private fun hideLoading(){
-        dt_shimmer.visibility = View.GONE
-        dt_layout.visibility = View.VISIBLE
-        dt_no_internet.visibility = View.GONE
+        binding.dtShimmer.visibility = View.GONE
+        binding.dtLayout.visibility = View.VISIBLE
+        binding.dtNoInternet.visibility = View.GONE
     }
 
     private fun showErrorConnection(){
-        dt_layout.visibility = View.GONE
-        dt_shimmer.visibility = View.INVISIBLE
-        dt_no_internet.visibility = View.VISIBLE
+        binding.dtShimmer.visibility = View.INVISIBLE
+        binding.dtLayout.visibility = View.GONE
+        binding.dtNoInternet.visibility = View.VISIBLE
     }
 
 }

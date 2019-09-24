@@ -1,20 +1,16 @@
 package com.themovie.repos.local
 
-import android.app.Application
+
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.MoviesDao
-import com.themovie.localdb.TheMovieDatabase
 import com.themovie.model.local.MoviesLocal
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
-class DiscoverMvLocalRepos(application: Application) {
-    private var moviesDao: MoviesDao
-    private var discoverMovieList: LiveData<List<MoviesLocal>>
-    init {
-        val theMovieDatabase = TheMovieDatabase.getDatabase(application)
-        moviesDao = theMovieDatabase.discoverMovies()
-        discoverMovieList = moviesDao.getAllDiscoverMovies()
-    }
+class DiscoverMvLocalRepos
+    @Inject constructor(private val moviesDao: MoviesDao) {
+
+    private var discoverMovieList: LiveData<List<MoviesLocal>> = moviesDao.getAllDiscoverMovies()
 
     fun insert(movies: MoviesLocal){
         doAsync {

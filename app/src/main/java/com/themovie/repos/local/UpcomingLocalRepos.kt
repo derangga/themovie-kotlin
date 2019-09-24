@@ -1,22 +1,15 @@
 package com.themovie.repos.local
 
-import android.app.Application
-import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.UpcomingDao
-import com.themovie.localdb.TheMovieDatabase
 import com.themovie.model.local.Upcoming
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
-class UpcomingLocalRepos(application: Application) {
+class UpcomingLocalRepos
+    @Inject constructor(private val upcomingDao: UpcomingDao) {
 
-    private var upcomingDao: UpcomingDao
-    private var allUpcomingMovie: LiveData<List<Upcoming>>
-    init {
-        val themovieDatabase =  TheMovieDatabase.getDatabase(application)
-        upcomingDao = themovieDatabase.upcomingDao()
-        allUpcomingMovie = upcomingDao.getAllUpcomingMv()
-    }
+    private var allUpcomingMovie: LiveData<List<Upcoming>> = upcomingDao.getAllUpcomingMv()
 
     fun insert(upcoming: Upcoming){
         doAsync {

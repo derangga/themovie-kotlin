@@ -1,10 +1,7 @@
 package com.themovie
 
 import android.app.Application
-import com.themovie.base.di.AppComponent
-import com.themovie.base.di.AppModule
-import com.themovie.base.di.DaggerAppComponent
-import com.themovie.base.di.NetworkModule
+import com.themovie.base.di.*
 
 class MyApplication : Application() {
 
@@ -12,7 +9,10 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.builder().networkModule(NetworkModule()).appModule(AppModule(this, this)).build()
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(this, this))
+            .networkModule(NetworkModule())
+            .roomModule(RoomModule(this)).build()
     }
 
     fun getAppComponent(): AppComponent {

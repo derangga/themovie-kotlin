@@ -28,20 +28,4 @@ class MainRepos
             })
         return call
     }
-
-//    fun getTrending(token: String) : Observable<TvResponse> {
-//        return apiInterface.getTrendingTv(token)
-//    }
-//
-//    fun getUpcomingData(token: String): Observable<UpcomingResponse> {
-//        return apiInterface.getUpcomingMovies(token, 1, "")
-//    }
-//
-//    fun getDiscoverTv(token: String): Observable<TvResponse> {
-//        return apiInterface.getDiscoverTvs(token, Constant.LANGUAGE, Constant.SORTING, 1, "US")
-//    }
-//
-//    fun getDiscoverMv(token: String): Observable<MoviesResponse> {
-//        return apiInterface.getDiscoverMovies(token, Constant.LANGUAGE, Constant.SORTING, 1, "2019", "")
-//    }
 }

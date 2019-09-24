@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
@@ -29,6 +30,7 @@ import com.themovie.ui.detail.viewmodel.DetailMvViewModel
 import com.themovie.ui.detail.viewmodel.DetailViewModelFactory
 import com.themovie.ui.person.PersonActivity
 import kotlinx.android.synthetic.main.fragment_detail_movie.*
+import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
 
@@ -42,11 +44,13 @@ class DetailMovieFragment : BaseFragment() {
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
+    private lateinit var binding: FragmentDetailMovieBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentDetailMovieBinding = DataBindingUtil.inflate(inflater,
+        binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_movie, container, false)
         val view: View = binding.root
+
         val viewModelFactory = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
         detailMvViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.vm = detailMvViewModel
@@ -97,13 +101,13 @@ class DetailMovieFragment : BaseFragment() {
         recommendedAdapter = RecommendedAdapter()
         reviewsAdapter = ReviewsAdapter()
 
-        dt_castList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        dt_recomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        dt_reviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        dt_castList.adapter = creditsAdapter
-        dt_recomList.adapter = recommendedAdapter
-        dt_reviewList.adapter = reviewsAdapter
+        binding.dtCastList.adapter = creditsAdapter
+        binding.dtRecomList.adapter = recommendedAdapter
+        binding.dtReviewList.adapter = reviewsAdapter
     }
 
     private fun adapterOnClick(){
@@ -135,20 +139,20 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun showLoading(){
-        dt_shimmer.visibility = View.VISIBLE
-        dt_layout.visibility = View.GONE
-        dt_no_internet.visibility = View.GONE
+        binding.dtShimmer.visibility = View.VISIBLE
+        binding.dtLayout.visibility = View.GONE
+        binding.dtNoInternet.visibility = View.GONE
     }
 
     private fun hideLoading(){
-        dt_shimmer.visibility = View.GONE
-        dt_layout.visibility = View.VISIBLE
-        dt_no_internet.visibility = View.GONE
+        binding.dtShimmer.visibility = View.GONE
+        binding.dtLayout.visibility = View.VISIBLE
+        binding.dtNoInternet.visibility = View.GONE
     }
 
     private fun showErrorConnection(){
-        dt_layout.visibility = View.GONE
-        dt_shimmer.visibility = View.INVISIBLE
-        dt_no_internet.visibility = View.VISIBLE
+        binding.dtShimmer.visibility = View.INVISIBLE
+        binding.dtLayout.visibility = View.GONE
+        binding.dtNoInternet.visibility = View.VISIBLE
     }
 }

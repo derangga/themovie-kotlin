@@ -25,8 +25,6 @@ class DetailActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-
-
     override fun onSupportNavigateUp(): Boolean {
         super.onBackPressed()
         return true

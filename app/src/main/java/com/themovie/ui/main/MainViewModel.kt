@@ -22,17 +22,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 
-class MainViewModel(private val mainRepos: MainRepos, application: Application) : ViewModel() {
+class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalRepos: TrendingLocalRepos,
+                    private val upcomingLocalRepos: UpcomingLocalRepos, private val discoverTvLocalRepos: DiscoverTvLocalRepos,
+                    private val discoverMvLocalRepos: DiscoverMvLocalRepos) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
-    private val upcomingLocalRepos: UpcomingLocalRepos =
-        UpcomingLocalRepos(application)
-    private val trendingLocalRepos: TrendingLocalRepos =
-        TrendingLocalRepos(application)
-    private val discoverTvLocalRepos: DiscoverTvLocalRepos =
-        DiscoverTvLocalRepos(application)
-    private val discoverMvLocalRepos: DiscoverMvLocalRepos =
-        DiscoverMvLocalRepos(application)
     private val onlineLiveDataFetch: MutableLiveData<FetchMainData> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 

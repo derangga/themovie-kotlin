@@ -1,8 +1,6 @@
 package com.themovie.localdb
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.themovie.localdb.dao.MoviesDao
 import com.themovie.localdb.dao.TrendingDao
@@ -20,25 +18,4 @@ abstract class TheMovieDatabase : RoomDatabase() {
     abstract fun upcomingDao(): UpcomingDao
     abstract fun discoverMovies(): MoviesDao
     abstract fun discoverTv(): TvDao
-
-    companion object {
-        @Volatile
-        private var INSTANCE: TheMovieDatabase? = null
-
-        fun getDatabase(context: Context): TheMovieDatabase {
-            val tempInstance = INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
-            }
-            synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    TheMovieDatabase::class.java,
-                    "TheMovieDatabase"
-                ).build()
-                INSTANCE = instance
-                return instance
-            }
-        }
-    }
 }
