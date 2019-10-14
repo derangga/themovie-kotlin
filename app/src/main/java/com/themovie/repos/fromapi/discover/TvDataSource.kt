@@ -7,6 +7,7 @@ import com.themovie.helper.LoadDataState
 import com.themovie.model.online.discovertv.Tv
 import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.restapi.ApiClient
+import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,16 +15,21 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TvDataSource(private val composite: CompositeDisposable) : PageKeyedDataSource<Int, Tv>() {
+@Singleton
+class TvDataSource
+    @Inject constructor(private val apiInterface: ApiInterface) : PageKeyedDataSource<Int, Tv>() {
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
     private var retryCompletable: Completable? = null
+    private val composite = CompositeDisposable()
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(LoadDataState.LOADING)
         composite.add(
-            ApiClient.getApiBuilder().getDiscoverTvs(
+            apiInterface.getDiscoverTvs(
                 ApiUrl.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, 1, "")
                 .subscribe(
@@ -46,7 +52,7 @@ class TvDataSource(private val composite: CompositeDisposable) : PageKeyedDataSo
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             composite.add(
-                ApiClient.getApiBuilder().getDiscoverTvs(
+                apiInterface.getDiscoverTvs(
                     ApiUrl.TOKEN, Constant.LANGUAGE,
                     Constant.SORTING, params.key, "")
                     .subscribe(object: Consumer<TvResponse> {
@@ -81,6 +87,10 @@ class TvDataSource(private val composite: CompositeDisposable) : PageKeyedDataSo
                     .subscribe()
             )
         }
+    }
+
+    fun clearComposite(){
+        composite.clear()
     }
 
     private fun setRetry(action: Action?) {

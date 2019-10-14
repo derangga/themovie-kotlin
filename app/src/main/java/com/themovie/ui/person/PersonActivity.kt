@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivityPersonBinding
@@ -17,20 +18,27 @@ import com.themovie.model.online.person.Filmography
 import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.DetailActivity
 import kotlinx.android.synthetic.main.activity_person.*
+import javax.inject.Inject
 
 class PersonActivity : BaseActivity() {
 
-    private lateinit var personfilmAdapter: PersonFilmAdapter
+    @Inject lateinit var viewmodelFactory: PersonViewModelFactory
+    private lateinit var personFilmAdapter: PersonFilmAdapter
     private lateinit var personViewModel: PersonViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title = "Biography"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        personViewModel = ViewModelProviders.of(this).get(PersonViewModel::class.java)
+        (application as MyApplication).getAppComponent().inject(this)
+        personViewModel = ViewModelProviders.of(this, viewmodelFactory).get(PersonViewModel::class.java)
         val binding: ActivityPersonBinding = DataBindingUtil.setContentView(this, R.layout.activity_person)
-        binding.vm = personViewModel
-        binding.lifecycleOwner = this
+
+        binding.let {
+            it.vm = personViewModel
+            it.lifecycleOwner = this
+        }
+
         setupRecycler()
         getPersonData()
         getLoadStatus()
@@ -42,17 +50,21 @@ class PersonActivity : BaseActivity() {
     }
 
     private fun setupRecycler(){
-        personfilmAdapter = PersonFilmAdapter()
+        personFilmAdapter = PersonFilmAdapter()
 
-        cast_recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        cast_recycler.adapter = personfilmAdapter
+        cast_recycler.apply {
+            layoutManager = LinearLayoutManager(this@PersonActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = personFilmAdapter
+        }
 
-        personfilmAdapter.setOnItemCLickListener(object: PersonFilmAdapter.OnClickItemListener{
+        personFilmAdapter.setOnItemCLickListener(object: PersonFilmAdapter.OnClickItemListener{
             override fun onClick(view: View?, personFilm: Filmography) {
-                val bundle = Bundle()
-                bundle.putInt("id", personFilm.id)
-                bundle.putString("image", personFilm.backdrop_path.toString())
-                bundle.putString("detail", Constant.MOVIE)
+                val bundle = Bundle().apply {
+                    putInt("id", personFilm.id)
+                    putString("image", personFilm.backdrop_path.toString())
+                    putString("detail", Constant.MOVIE)
+                }
+
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
@@ -62,7 +74,7 @@ class PersonActivity : BaseActivity() {
         personViewModel.getPersonData(ApiUrl.TOKEN, getBundle()!!.getInt("person")).observe(
             this, Observer<FetchPersonData> {
                 personViewModel.setPersonData(it.personResponse)
-                personfilmAdapter.submitList(it.personFilmResponse.filmographies)
+                personFilmAdapter.submitList(it.personFilmResponse.filmographies)
             }
         )
     }

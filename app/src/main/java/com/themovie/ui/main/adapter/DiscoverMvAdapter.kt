@@ -43,18 +43,22 @@ class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movies = getItem(position)
-        val imgBack = ApiUrl.IMG_BACK + movies.backDropPath
-        val imgPoster = ApiUrl.IMG_POSTER + movies.posterPath
-        ImageCache.setImageViewUrl(context, imgBack, holder.itemView.mdmv_background)
-        ImageCache.setRoundedImageUrl(context, imgPoster, holder.itemView.mdmv_poster)
-        holder.itemView.mdmv_title.text = movies.title
-        holder.itemView.mdmv_date.text = movies.dateRelease
-
-        holder.itemView.mdmv_card.setOnClickListener { view -> onClickAdapterListener.onClick(view, movies, holder.itemView.mdmv_background) }
+        holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(movies: MoviesLocal){
+            itemView.apply {
+                val imgBack = "${ApiUrl.IMG_BACK}${movies.backDropPath}"
+                val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
+                ImageCache.setImageViewUrl(context, imgBack, mdmv_background)
+                ImageCache.setRoundedImageUrl(context, imgPoster, mdmv_poster)
+                mdmv_title.text = movies.title
+                mdmv_date.text = movies.dateRelease
+                mdmv_card.setOnClickListener { view -> onClickAdapterListener.onClick(view, movies, mdmv_background) }
+            }
+        }
+    }
 
     interface OnClickAdapterListener {
         fun onClick(view: View?, moviesLocal: MoviesLocal, imageViewRes: ImageView)

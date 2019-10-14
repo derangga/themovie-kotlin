@@ -41,16 +41,21 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val film = getItem(position)
-        val imgUrl = ApiUrl.IMG_POSTER + film.posterPath.toString()
-        holder.itemView.recom_title.text = film.title
-        ImageCache.setImageViewUrl(context, imgUrl, holder.itemView.recom_img)
-        holder.itemView.recom_card.setOnClickListener {
-            onClickItemListener.onClick(it, film)
-        }
+        holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(item: Filmography){
+            itemView.apply {
+                val imgUrl = "${ApiUrl.IMG_POSTER}${item.posterPath.toString()}"
+                recom_title.text = item.title
+                ImageCache.setImageViewUrl(context, imgUrl, recom_img)
+            }
+            itemView.setOnClickListener {
+                onClickItemListener.onClick(it, item)
+            }
+        }
+    }
 
     interface OnClickItemListener {
         fun onClick(view: View?, personFilm: Filmography)

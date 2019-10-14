@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.helper.Constant
@@ -16,9 +17,12 @@ import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.activity_discover.*
 import kotlinx.android.synthetic.main.header_layout.*
+import javax.inject.Inject
 
 class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
+    @Inject lateinit var movieModelFactory: DiscoverMovieViewModelFactory
+    @Inject lateinit var upcoModelFactory: UpcomingViewModelFactory
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var dcViewModel: MovieViewModel
     private lateinit var upViewModel: UpComingViewModel
@@ -27,17 +31,17 @@ class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discover)
-
+        (application as MyApplication).getAppComponent().inject(this)
         fetch = getBundle()?.getString("fetch").toString()
 
-        if(fetch.equals(Constant.UPCOMING)){
+        if(fetch == Constant.UPCOMING){
             h_title.visibility = View.VISIBLE
             h_title_layout.visibility = View.GONE
-            upViewModel = ViewModelProviders.of(this).get(UpComingViewModel::class.java)
+            upViewModel = ViewModelProviders.of(this, upcoModelFactory).get(UpComingViewModel::class.java)
         } else {
             h_title.visibility = View.GONE
             h_title_layout.visibility = View.VISIBLE
-            dcViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
+            dcViewModel = ViewModelProviders.of(this, movieModelFactory).get(MovieViewModel::class.java)
         }
 
         onItemHeaderClick()
@@ -81,15 +85,18 @@ class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
 
     private fun setupRecycler(){
         movieAdapter = MovieAdapter()
-        dc_recycler.layoutManager = LinearLayoutManager(this)
-        dc_recycler.adapter = movieAdapter
+        dc_recycler.apply {
+            layoutManager = LinearLayoutManager(this@DiscoverMovieActivity)
+            adapter = movieAdapter
+        }
 
         movieAdapter.setOnClickAdapter(object: MovieAdapter.OnClickAdapterListener{
             override fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView) {
-                val bundle= Bundle()
-                bundle.putInt("id", movies.id)
-                bundle.putString("image", movies.backdropPath.toString())
-                bundle.putString("detail", Constant.MOVIE)
+                val bundle =  Bundle().apply {
+                    putInt("id", movies.id)
+                    putString("image", movies.backdropPath.toString())
+                    putString("detail", Constant.MOVIE)
+                }
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })

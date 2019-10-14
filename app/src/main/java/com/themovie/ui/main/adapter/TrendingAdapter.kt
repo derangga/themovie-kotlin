@@ -1,5 +1,6 @@
 package com.themovie.ui.main.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -49,24 +50,28 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val trending = getItem(position)
-
-        val urlImg = ApiUrl.IMG_BACK + trending.backDropPath
-        ImageCache.setImageViewUrl(context, urlImg, holder.itemView.v_img)
-        holder.itemView.v_title.text = trending.title
-        holder.itemView.v_card.setOnClickListener {
-            onClickAdapterListener.onClick(it, trending, holder.itemView.v_img)
-        }
-
-        holder.itemView.v_card.setOnTouchListener(object : View.OnTouchListener{
-            override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-                onTouchAdapterListener.onTouchItem(p0, p1)
-                return false
-            }
-        })
+        holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(trending: Trending){
+            itemView.apply {
+                val urlImg = "${ApiUrl.IMG_BACK}${trending.backDropPath}"
+                ImageCache.setImageViewUrl(context, urlImg, v_img)
+                v_title.text = trending.title
+                v_card.setOnClickListener {
+                    onClickAdapterListener.onClick(it, trending, v_img)
+                }
+                v_card.setOnTouchListener(object : View.OnTouchListener{
+                    @SuppressLint("ClickableViewAccessibility")
+                    override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+                        onTouchAdapterListener.onTouchItem(p0, p1)
+                        return false
+                    }
+                })
+            }
+        }
+    }
 
     interface OnClickAdapterListener {
         fun onClick(view: View?, trending: Trending, imageViewRes: ImageView)

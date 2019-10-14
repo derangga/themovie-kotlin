@@ -43,20 +43,25 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val upcoming = getItem(position)
-        val backImg = ApiUrl.IMG_BACK + upcoming.backDropPath
-        val posterImg = ApiUrl.IMG_POSTER + upcoming.posterPath
-
-        ImageCache.setRoundedImageUrl(context, posterImg, holder.itemView.mupco_poster)
-        ImageCache.setImageViewUrl(context, backImg, holder.itemView.mupco_background)
-        holder.itemView.mupco_title.text = upcoming.title
-        holder.itemView.mupco_date.text = upcoming.dateRelease
-        holder.itemView.mupco_card.setOnClickListener {
-            onClickAdapterListener.onClick(it, upcoming, holder.itemView.mupco_background)
-        }
+        holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(upcoming: Upcoming){
+            itemView.apply {
+                val backImg = "${ApiUrl.IMG_BACK}${upcoming.backDropPath}"
+                val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
+
+                ImageCache.setRoundedImageUrl(context, posterImg, mupco_poster)
+                ImageCache.setImageViewUrl(context, backImg, mupco_background)
+                mupco_title.text = upcoming.title
+                mupco_date.text = upcoming.dateRelease
+                mupco_card.setOnClickListener {
+                    onClickAdapterListener.onClick(it, upcoming, mupco_background)
+                }
+            }
+        }
+    }
 
     interface OnClickAdapterListener {
         fun onClick(view: View?, upcoming: Upcoming, imageViewRes: ImageView)

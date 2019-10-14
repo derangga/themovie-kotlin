@@ -16,10 +16,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 
-class DetailMvViewModel(private val filmId: Int) : ViewModel() {
+class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
-    private val detailMovieRepos: DetailMovieRepos = DetailMovieRepos()
     private val detailLiveMovieData: MutableLiveData<FetchDetailMovieData> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
@@ -34,7 +33,7 @@ class DetailMvViewModel(private val filmId: Int) : ViewModel() {
     private val genre: MutableLiveData<String> = MediatorLiveData()
     private var imageUrl: MutableLiveData<String> = MediatorLiveData()
 
-    fun getDetailMovieRequest(): MutableLiveData<FetchDetailMovieData> {
+    fun getDetailMovieRequest(filmId: Int): MutableLiveData<FetchDetailMovieData> {
         composite.add(
             detailMovieRepos.getDetailData(ApiUrl.TOKEN, filmId).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object: DisposableObserver<FetchDetailMovieData>(){

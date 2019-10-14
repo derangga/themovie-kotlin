@@ -12,14 +12,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 
-class VideoViewModel(private val filmId: Int) : ViewModel() {
+class VideoViewModel(private val videoRepos: VideoRepos) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
-    private val videoRepos: VideoRepos = VideoRepos()
     private val videoLiveData: MutableLiveData<VideoResponse> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
-    fun getVideoMovie(): MutableLiveData<VideoResponse> {
+    fun getVideoMovie(filmId: Int): MutableLiveData<VideoResponse> {
         composite.add(
             videoRepos.getMovieVideo(filmId, ApiUrl.TOKEN).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object: DisposableSingleObserver<VideoResponse>(){
@@ -36,7 +35,7 @@ class VideoViewModel(private val filmId: Int) : ViewModel() {
         return videoLiveData
     }
 
-    fun getVideoTv(): MutableLiveData<VideoResponse> {
+    fun getVideoTv(filmId: Int): MutableLiveData<VideoResponse> {
         composite.add(
             videoRepos.getTvVideo(filmId, ApiUrl.TOKEN).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object: DisposableSingleObserver<VideoResponse>(){

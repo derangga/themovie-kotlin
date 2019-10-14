@@ -36,11 +36,16 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val season = getItem(position)
-        val imgUrl = ApiUrl.IMG_POSTER + season.posterPath.toString()
-        ImageCache.setImageViewUrl(context, imgUrl, holder.itemView.recom_img)
-        holder.itemView.recom_title.text = season.name
+        holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(season: SeasonTv){
+            itemView.apply {
+                val imgUrl = "${ApiUrl.IMG_POSTER}${season.posterPath.toString()}"
+                ImageCache.setImageViewUrl(context, imgUrl, recom_img)
+                recom_title.text = season.name
+            }
+        }
+    }
 }

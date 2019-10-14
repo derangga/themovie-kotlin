@@ -39,16 +39,22 @@ class ReviewsAdapter : ListAdapter<Reviews, ReviewsAdapter.ViewHolder>(DIFF_CALL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val review = getItem(position)
-        holder.itemView.rev_author.text = review.author
-        holder.itemView.rev_content.text = review.content
-        holder.itemView.rev_card.setOnClickListener {
-            onClickAdapterListener.onClick(it, review)
-        }
+        holder.bindItem(getItem(position))
     }
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(review: Reviews){
+            itemView.apply {
+                rev_author.text = review.author
+                rev_content.text = review.content
+                rev_card.setOnClickListener {
+                    onClickAdapterListener.onClick(it, review)
+                }
+            }
+        }
+    }
+
     interface OnClickAdapterListener {
         fun onClick(view: View?, reviews: Reviews)
     }

@@ -26,8 +26,8 @@ import com.themovie.model.online.discovermv.Movies
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
+import com.themovie.ui.detail.viewmodel.DetailMovieViewModelFactory
 import com.themovie.ui.detail.viewmodel.DetailMvViewModel
-import com.themovie.ui.detail.viewmodel.DetailViewModelFactory
 import com.themovie.ui.person.PersonActivity
 import kotlinx.android.synthetic.main.fragment_detail_movie.*
 import javax.inject.Inject
@@ -46,12 +46,15 @@ class DetailMovieFragment : BaseFragment() {
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var binding: FragmentDetailMovieBinding
 
+    @Inject lateinit var viewModelFactory: DetailMovieViewModelFactory
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_movie, container, false)
         val view: View = binding.root
 
-        val viewModelFactory = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
+        //val viewModelFactory = DetailViewModelFactory()
+        (activity?.application as MyApplication).getAppComponent().inject(this)
         detailMvViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.vm = detailMvViewModel
         binding.lifecycleOwner = this
@@ -66,7 +69,7 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailMvViewModel.getDetailMovieRequest().observe (
+        detailMvViewModel.getDetailMovieRequest(getBundle()!!.getInt("filmId")).observe (
             this, Observer<FetchDetailMovieData>{
                 detailMvViewModel.setDetailMovieData(it.detailMovieResponse)
                 creditsAdapter.submitList(it.castResponse.credits)

@@ -1,11 +1,13 @@
 package com.themovie.repos.fromapi.discover
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.discovermv.Movies
 import com.themovie.model.online.upcoming.UpcomingResponse
 import com.themovie.restapi.ApiClient
+import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,17 +15,22 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UpcomingDataSource(private val composite: CompositeDisposable): PageKeyedDataSource<Int, Movies>() {
+@Singleton
+class UpcomingDataSource
+    @Inject constructor(private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
     private var retryCompletable: Completable? = null
+    private val composite = CompositeDisposable()
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
         updateState(LoadDataState.LOADING)
         composite.add(
-            ApiClient.getApiBuilder().getUpcomingMovies(ApiUrl.TOKEN, 1, "")
+            apiInterface.getUpcomingMovies(ApiUrl.TOKEN, 1, "")
                 .subscribe(
                     object: Consumer<UpcomingResponse> {
                         override fun accept(t: UpcomingResponse?) {
@@ -44,7 +51,7 @@ class UpcomingDataSource(private val composite: CompositeDisposable): PageKeyedD
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             composite.add(
-                ApiClient.getApiBuilder().getUpcomingMovies(ApiUrl.TOKEN, params.key, "")
+                apiInterface.getUpcomingMovies(ApiUrl.TOKEN, params.key, "")
                     .subscribe(object: Consumer<UpcomingResponse> {
                         override fun accept(t: UpcomingResponse?) {
                             updateState(LoadDataState.LOADED)
@@ -77,6 +84,10 @@ class UpcomingDataSource(private val composite: CompositeDisposable): PageKeyedD
                     .subscribe()
             )
         }
+    }
+
+    fun clearDisposable(){
+        composite.clear()
     }
 
     private fun setRetry(action: Action?) {

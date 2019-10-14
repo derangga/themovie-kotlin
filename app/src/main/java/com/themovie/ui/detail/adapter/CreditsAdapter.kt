@@ -41,19 +41,25 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val credits = getItem(position)
-        val imgUrl = ApiUrl.IMG_POSTER + credits.profilePath.toString()
-        ImageCache.setImageViewUrl(context, imgUrl, holder.itemView.crew_img)
-        holder.itemView.crew_name.text = credits.name
-        holder.itemView.crew_char.text = credits.character
-        holder.itemView.crew_card.setOnClickListener {
-            onClickAdapterListener.onClick(it, credits)
-        }
+        holder.bindItem(getItem(position))
     }
 
     interface OnClickAdapterListener {
         fun onClick(view: View?, credits: Credits)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(credits: Credits){
+            itemView.apply {
+                val imgUrl = "${ApiUrl.IMG_POSTER}${credits.profilePath.toString()}"
+                ImageCache.setImageViewUrl(context, imgUrl, crew_img)
+                crew_name.text = credits.name
+                crew_char.text = credits.character
+                crew_card.setOnClickListener {
+                    onClickAdapterListener.onClick(it, credits)
+                }
+            }
+
+        }
+    }
 }

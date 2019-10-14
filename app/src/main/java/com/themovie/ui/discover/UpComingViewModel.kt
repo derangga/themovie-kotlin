@@ -12,14 +12,11 @@ import com.themovie.repos.fromapi.discover.UpcomingDataSource
 import com.themovie.repos.fromapi.discover.UpcomingDataSourceFactory
 import io.reactivex.disposables.CompositeDisposable
 
-class UpComingViewModel: ViewModel() {
+class UpComingViewModel(private val upcomingSourceFactory: UpcomingDataSourceFactory): ViewModel() {
     private val upcomingLiveData: LiveData<PagedList<Movies>>
     private val uiList = MediatorLiveData<PagedList<Movies>>()
-    private val composite: CompositeDisposable = CompositeDisposable()
-    private val upcomingSourceFactory: UpcomingDataSourceFactory
 
     init {
-        upcomingSourceFactory = UpcomingDataSourceFactory(composite)
         val pageConfig = PagedList.Config.Builder()
             .setPageSize(2)
             .setEnablePlaceholders(false)
@@ -52,5 +49,6 @@ class UpComingViewModel: ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        upcomingSourceFactory.getUpcomingDataSource().value?.clearDisposable()
     }
 }

@@ -4,13 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.themovie.model.online.discovertv.Tv
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TvDataSourceFactory(private val composite: CompositeDisposable) : DataSource.Factory<Int, Tv>() {
+@Singleton
+class TvDataSourceFactory
+    @Inject constructor(private val tvDataSource: TvDataSource) : DataSource.Factory<Int, Tv>() {
 
     private val tvSourceLiveData = MutableLiveData<TvDataSource>()
 
     override fun create(): DataSource<Int, Tv> {
-        val tvDataSource = TvDataSource(composite)
         tvSourceLiveData.postValue(tvDataSource)
         return tvDataSource
     }

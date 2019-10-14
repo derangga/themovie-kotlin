@@ -7,6 +7,7 @@ import com.themovie.helper.LoadDataState
 import com.themovie.model.online.discovermv.Movies
 import com.themovie.model.online.discovermv.MoviesResponse
 import com.themovie.restapi.ApiClient
+import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,17 +15,23 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieDataSource(private val composite: CompositeDisposable): PageKeyedDataSource<Int, Movies>() {
+@Singleton
+class MovieDataSource
+    @Inject constructor(private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
+
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
     private var retryCompletable: Completable? = null
+    private var composite = CompositeDisposable()
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
         updateState(LoadDataState.LOADING)
         composite.add(
-            ApiClient.getApiBuilder().getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
+            apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, 1, "2019", "")
                 .subscribe(
                     object: Consumer<MoviesResponse> {
@@ -46,7 +53,7 @@ class MovieDataSource(private val composite: CompositeDisposable): PageKeyedData
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             composite.add(
-                ApiClient.getApiBuilder().getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
+                apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
                     Constant.SORTING, params.key, "2019", "")
                     .subscribe(object: Consumer<MoviesResponse> {
                         override fun accept(t: MoviesResponse?) {
@@ -81,6 +88,10 @@ class MovieDataSource(private val composite: CompositeDisposable): PageKeyedData
                     .subscribe()
             )
         }
+    }
+
+    fun clearDisposable(){
+        composite.clear()
     }
 
     private fun setRetry(action: Action?) {

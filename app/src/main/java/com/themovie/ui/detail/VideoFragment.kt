@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
@@ -18,10 +19,11 @@ import com.themovie.model.online.video.VideoResponse
 import com.themovie.model.online.video.Videos
 import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.VideoAdapter
-import com.themovie.ui.detail.viewmodel.DetailViewModelFactory
 import com.themovie.ui.detail.viewmodel.VideoViewModel
+import com.themovie.ui.detail.viewmodel.VideoViewModelFactory
 import com.themovie.ui.youtube.YoutubeActivity
 import kotlinx.android.synthetic.main.fragment_video.*
+import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,13 +34,14 @@ import kotlinx.android.synthetic.main.fragment_video.*
  */
 class VideoFragment : BaseFragment() {
 
+    @Inject lateinit var viewModelFactory: VideoViewModelFactory
     private lateinit var videoViewModel: VideoViewModel
     private lateinit var videoAdapter: VideoAdapter
     private lateinit var videoFor: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val viewModelFacotry = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
-        videoViewModel = ViewModelProviders.of(this, viewModelFacotry).get(VideoViewModel::class.java)
+        (activity?.application as MyApplication).getAppComponent().inject(this)
+        videoViewModel = ViewModelProviders.of(this, viewModelFactory).get(VideoViewModel::class.java)
         return inflater.inflate(R.layout.fragment_video, container, false)
     }
 
@@ -66,7 +69,7 @@ class VideoFragment : BaseFragment() {
     }
 
     private fun getVideoMovie(){
-        videoViewModel.getVideoMovie().observe(
+        videoViewModel.getVideoMovie(getBundle()!!.getInt("filmId")).observe(
             this, Observer<VideoResponse> {
                 videoAdapter.submitList(it.videos)
             }
@@ -74,7 +77,7 @@ class VideoFragment : BaseFragment() {
     }
 
     private fun getVideoTv(){
-        videoViewModel.getVideoTv().observe(
+        videoViewModel.getVideoTv(getBundle()!!.getInt("filmId")).observe(
             this, Observer<VideoResponse> {
                 videoAdapter.submitList(it.videos)
             }

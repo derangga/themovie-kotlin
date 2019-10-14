@@ -12,15 +12,13 @@ import com.themovie.repos.fromapi.discover.TvDataSource
 import com.themovie.repos.fromapi.discover.TvDataSourceFactory
 import io.reactivex.disposables.CompositeDisposable
 
-class TvViewModel: ViewModel() {
+class TvViewModel(private val tvSourceFactory: TvDataSourceFactory): ViewModel() {
 
     private var tvLiveData: LiveData<PagedList<Tv>>
     private val uiList = MediatorLiveData<PagedList<Tv>>()
-    private val composite: CompositeDisposable = CompositeDisposable()
-    private val tvSourceFactory: TvDataSourceFactory
+
 
     init {
-        tvSourceFactory = TvDataSourceFactory(composite)
         val pageConfig = PagedList.Config.Builder()
             .setPageSize(2)
             .setEnablePlaceholders(false)
@@ -55,6 +53,6 @@ class TvViewModel: ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        composite.dispose()
+        tvSourceFactory.getTvDataSource().value?.clearComposite()
     }
 }

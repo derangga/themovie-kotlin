@@ -41,16 +41,21 @@ class RecommendedTvAdapter : ListAdapter<Tv, RecommendedTvAdapter.ViewHolder>(DI
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val tv = getItem(position)
-        val imgUrl = ApiUrl.IMG_POSTER + tv.posterPath.toString()
-        holder.itemView.recom_title.text = tv.name
-        ImageCache.setImageViewUrl(context, imgUrl, holder.itemView.recom_img)
-        holder.itemView.recom_card.setOnClickListener {
-            onClickAdapterListener.onClick(it, tv)
-        }
+        holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(tv: Tv){
+            itemView.apply {
+                val imgUrl = "${ApiUrl.IMG_POSTER}${tv.posterPath.toString()}"
+                recom_title.text = tv.name
+                ImageCache.setImageViewUrl(context, imgUrl, recom_img)
+                recom_card.setOnClickListener {
+                    onClickAdapterListener.onClick(it, tv)
+                }
+            }
+        }
+    }
     interface OnClickAdapterListener {
         fun onClick(view: View?, tv: Tv)
     }

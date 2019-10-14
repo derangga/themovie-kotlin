@@ -41,17 +41,22 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val video = getItem(position)
-        val urlThumbnail = ApiUrl.THUMBNAIL.replace("key", video.key)
-        ImageCache.setImageViewUrl(context, urlThumbnail, holder.itemView.t_thumbnail)
-        holder.itemView.t_title.text = video.name
-        holder.itemView.t_type.text = video.type
-        holder.itemView.t_layout.setOnClickListener {
-            onClickAdapterListener.onClick(it, video)
-        }
+        holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(video: Videos){
+            itemView.apply {
+                val urlThumbnail = ApiUrl.THUMBNAIL.replace("key", video.key)
+                ImageCache.setImageViewUrl(context, urlThumbnail, t_thumbnail)
+                t_title.text = video.name
+                t_type.text = video.type
+                t_layout.setOnClickListener {
+                    onClickAdapterListener.onClick(it, video)
+                }
+            }
+        }
+    }
 
     interface OnClickAdapterListener {
         fun onClick(view: View?, videos: Videos)

@@ -60,10 +60,8 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
         (application as MyApplication).getAppComponent().inject(this)
-        binding = DataBindingUtil.getBinding<>()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mainViewModel = ViewModelProviders.of(this, mainViewModelFactory).get(MainViewModel::class.java)
         snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
 
@@ -97,15 +95,26 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         discoverTvAdapter = DiscoverTvAdapter()
         discoverMvAdapter = DiscoverMvAdapter()
 
-        main_trend.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        main_upcoming.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        main_disctv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        main_discmv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        main_trend.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = trendingAdapter
+        }
 
-        main_trend.adapter = trendingAdapter
-        main_upcoming.adapter = upcomingAdapter
-        main_disctv.adapter = discoverTvAdapter
-        main_discmv.adapter = discoverMvAdapter
+        main_upcoming.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = upcomingAdapter
+        }
+
+        main_disctv.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = discoverTvAdapter
+        }
+
+
+        main_discmv.apply {
+           layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = discoverMvAdapter
+        }
 
         val pagerSnapHelper = PagerSnapHelper()
         pagerSnapHelper.attachToRecyclerView(main_trend)
@@ -117,10 +126,12 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
         trendingAdapter.setOnClickListener(object: TrendingAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, trending: Trending, imageViewRes: ImageView) {
-                val bundle = Bundle()
-                bundle.putInt("id", trending.tvId)
-                bundle.putString("image", trending.backDropPath)
-                bundle.putString("detail", Constant.TV)
+                val bundle = Bundle().apply {
+                    putInt("id", trending.tvId)
+                    putString("image", trending.backDropPath)
+                    putString("detail", Constant.TV)
+                }
+                snackbar.dismiss()
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
@@ -136,33 +147,36 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
         upcomingAdapter.setOnClickListener(object: UpcomingAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, upcoming: Upcoming, imageViewRes: ImageView) {
-                val bundle = Bundle()
+                val bundle = Bundle().apply {
+                    putInt("id", upcoming.mvId)
+                    putString("image", upcoming.backDropPath)
+                    putString("detail", Constant.MOVIE)
+                }
                 snackbar.dismiss()
-                bundle.putInt("id", upcoming.mvId)
-                bundle.putString("image", upcoming.backDropPath)
-                bundle.putString("detail", Constant.MOVIE)
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
 
         discoverTvAdapter.setOnClickListener(object: DiscoverTvAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, tvLocal: TvLocal, imageViewRes: ImageView) {
-                val bundle = Bundle()
+                val bundle = Bundle().apply {
+                    putInt("id", tvLocal.tvId)
+                    putString("image", tvLocal.backDropPath)
+                    putString("detail", Constant.TV)
+                }
                 snackbar.dismiss()
-                bundle.putInt("id", tvLocal.tvId)
-                bundle.putString("image", tvLocal.backDropPath)
-                bundle.putString("detail", Constant.TV)
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
 
         discoverMvAdapter.setOnClickListener(object: DiscoverMvAdapter.OnClickAdapterListener {
             override fun onClick(view: View?, moviesLocal: MoviesLocal, imageViewRes: ImageView) {
-                val bundle = Bundle()
+                val bundle = Bundle().apply {
+                    putInt("id", moviesLocal.mvId)
+                    putString("image", moviesLocal.backDropPath)
+                    putString("detail", Constant.MOVIE)
+                }
                 snackbar.dismiss()
-                bundle.putInt("id", moviesLocal.mvId)
-                bundle.putString("image", moviesLocal.backDropPath)
-                bundle.putString("detail", Constant.MOVIE)
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })

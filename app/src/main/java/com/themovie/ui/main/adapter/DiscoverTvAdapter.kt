@@ -42,21 +42,26 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val tvLocal = getItem(position)
-        val imgBack = ApiUrl.IMG_BACK + tvLocal.backDropPath
-        val imgPoster = ApiUrl.IMG_POSTER + tvLocal.posterPath
-        ImageCache.setImageViewUrl(context, imgBack, holder.itemView.mdtv_background)
-        ImageCache.setRoundedImageUrl(context, imgPoster, holder.itemView.mdtv_poster)
-        holder.itemView.mdtv_title.text = tvLocal.title
-        holder.itemView.mdtv_rate.text = tvLocal.rating
-
-        holder.itemView.mdtv_card.setOnClickListener { view ->
-            onClickAdapterListener.onClick(view, tvLocal, holder.itemView.mdtv_background)
-        }
+        holder.bindItem(getItem(position))
     }
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bindItem(tvLocal: TvLocal){
+            itemView.apply {
+                val imgBack = "${ApiUrl.IMG_BACK}${tvLocal.backDropPath}"
+                val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
+                ImageCache.setImageViewUrl(context, imgBack, mdtv_background)
+                ImageCache.setRoundedImageUrl(context, imgPoster, mdtv_poster)
+                mdtv_title.text = tvLocal.title
+                mdtv_rate.text = tvLocal.rating
+
+                mdtv_card.setOnClickListener { view ->
+                    onClickAdapterListener.onClick(view, tvLocal, mdtv_background)
+                }
+            }
+        }
+    }
 
     interface OnClickAdapterListener {
         fun onClick(view: View?, tvLocal: TvLocal, imageViewRes: ImageView)

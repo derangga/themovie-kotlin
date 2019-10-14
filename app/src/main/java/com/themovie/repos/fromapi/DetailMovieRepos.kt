@@ -13,13 +13,14 @@ import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class DetailMovieRepos {
+class DetailMovieRepos
+@Inject constructor(private val apiInterface: ApiInterface){
 
     fun getDetailData(token: String, movieId: Int): Observable<FetchDetailMovieData> {
-        val detailMovie = ApiClient.getApiBuilder().getMovieDetail(movieId, token).subscribeOn(Schedulers.io())
-        val castMovie = ApiClient.getApiBuilder().getCredits(movieId, token).subscribeOn(Schedulers.io())
-        val recommended = ApiClient.getApiBuilder().getRecomendedMovies(movieId, token, Constant.LANGUAGE, 1).subscribeOn(Schedulers.io())
-        val reviews = ApiClient.getApiBuilder().getReviews(movieId, token, Constant.LANGUAGE, 1).subscribeOn(Schedulers.io())
+        val detailMovie = apiInterface.getMovieDetail(movieId, token).subscribeOn(Schedulers.io())
+        val castMovie = apiInterface.getCredits(movieId, token).subscribeOn(Schedulers.io())
+        val recommended = apiInterface.getRecomendedMovies(movieId, token, Constant.LANGUAGE, 1).subscribeOn(Schedulers.io())
+        val reviews = apiInterface.getReviews(movieId, token, Constant.LANGUAGE, 1).subscribeOn(Schedulers.io())
 
         val call: Observable<FetchDetailMovieData> = Observable.zip(detailMovie, castMovie, recommended, reviews,
             Function4<DetailMovieResponse, CastResponse, MoviesResponse, ReviewResponse, FetchDetailMovieData>

@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
@@ -28,9 +29,10 @@ import com.themovie.ui.detail.adapter.RecommendedTvAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
 import com.themovie.ui.detail.adapter.SeasonAdapter
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel
-import com.themovie.ui.detail.viewmodel.DetailViewModelFactory
+import com.themovie.ui.detail.viewmodel.DetailTvViewModelFactory
 import com.themovie.ui.person.PersonActivity
 import kotlinx.android.synthetic.main.fragment_detail_tv.*
+import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,6 +44,7 @@ import kotlinx.android.synthetic.main.fragment_detail_tv.*
  */
 class DetailTvFragment : BaseFragment() {
 
+    @Inject lateinit var viewModelFactory: DetailTvViewModelFactory
     private lateinit var detailTvViewModel: DetailTvViewModel
     private lateinit var seasonAdapter: SeasonAdapter
     private lateinit var creditsAdapter: CreditsAdapter
@@ -53,7 +56,7 @@ class DetailTvFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_tv, container, false)
         val view: View = binding.root
-        val viewModelFactory = DetailViewModelFactory(getBundle()!!.getInt("filmId"))
+        (activity?.application as MyApplication).getAppComponent().inject(this)
         detailTvViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailTvViewModel::class.java)
         binding.vm = detailTvViewModel
         binding.lifecycleOwner = this
@@ -86,7 +89,7 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailTvViewModel.getDetailTvRequest().observe(
+        detailTvViewModel.getDetailTvRequest(getBundle()!!.getInt("filmId")).observe(
             this, Observer<FetchDetailTvData> {
                 detailTvViewModel.setDetailTvData(it.detailTvResponse)
                 seasonAdapter.submitList(it.detailTvResponse.seasons)

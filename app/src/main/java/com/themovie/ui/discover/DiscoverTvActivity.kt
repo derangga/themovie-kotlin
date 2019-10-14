@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.helper.Constant
@@ -16,9 +17,11 @@ import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
 import kotlinx.android.synthetic.main.activity_discover.*
 import kotlinx.android.synthetic.main.header_layout.*
+import javax.inject.Inject
 
 class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
+    @Inject lateinit var dcViewModelFactory: DiscoverTvViewModelFactory
     private lateinit var tvAdapter: TvAdapter
     private lateinit var viewModel: TvViewModel
 
@@ -26,7 +29,8 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discover)
 
-        viewModel = ViewModelProviders.of(this).get(TvViewModel::class.java)
+        (application as MyApplication).getAppComponent().inject(this)
+        viewModel = ViewModelProviders.of(this, dcViewModelFactory).get(TvViewModel::class.java)
         onItemHeaderClick()
         setupRecycler()
         dc_swipe.setOnRefreshListener(this)
@@ -54,15 +58,19 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
 
     private fun setupRecycler(){
         tvAdapter = TvAdapter()
-        dc_recycler.layoutManager = LinearLayoutManager(this)
-        dc_recycler.adapter = tvAdapter
+        dc_recycler.apply {
+            layoutManager = LinearLayoutManager(this@DiscoverTvActivity)
+            adapter = tvAdapter
+        }
+
 
         tvAdapter.setOnClickAdapter(object: TvAdapter.OnClickAdapterListener{
             override fun onItemClick(view: View?, tv: Tv, imageViewRes: ImageView) {
-                val bundle= Bundle()
-                bundle.putInt("id", tv.id)
-                bundle.putString("image", tv.backdropPath.toString())
-                bundle.putString("detail", Constant.TV)
+                val bundle = Bundle().apply {
+                    putInt("id", tv.id)
+                    putString("image", tv.backdropPath.toString())
+                    putString("detail", Constant.TV)
+                }
                 changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
             }
         })
