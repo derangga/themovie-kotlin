@@ -18,9 +18,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class UpcomingDataSource
-    @Inject constructor(private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
+    (private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0

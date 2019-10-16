@@ -18,9 +18,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class TvDataSource
-    @Inject constructor(private val apiInterface: ApiInterface) : PageKeyedDataSource<Int, Tv>() {
+    (private val apiInterface: ApiInterface) : PageKeyedDataSource<Int, Tv>() {
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
     private var retryCompletable: Completable? = null

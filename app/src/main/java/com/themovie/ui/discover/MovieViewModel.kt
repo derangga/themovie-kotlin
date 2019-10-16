@@ -44,7 +44,6 @@ class MovieViewModel(private val moviesSourceFactory: MovieDataSourceFactory) : 
     }
 
     fun refresh(){
-        moviesSourceFactory.getMovieDataSource().value?.clearDisposable()
         moviesSourceFactory.getMovieDataSource().value?.invalidate()
     }
 

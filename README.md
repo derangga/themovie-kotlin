@@ -9,6 +9,3 @@ Aplikasi list Movie dengan data source dari Themovie DB
 - Android Architecture Component
 - MVVM Pattern
 - Dagger 2
-
-## Issue
-- 14-10-2019 : function `create()` pada DataSource selalu dijalankan ketika menjalankan function `invalidate()` pada `ViewModel`

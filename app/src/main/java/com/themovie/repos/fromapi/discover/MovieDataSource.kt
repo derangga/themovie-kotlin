@@ -18,10 +18,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class MovieDataSource
-    @Inject constructor(private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
-
+    (private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
@@ -91,6 +89,11 @@ class MovieDataSource
     }
 
     fun clearDisposable(){
+        composite.clear()
+    }
+
+    override fun invalidate() {
+        super.invalidate()
         composite.clear()
     }
 
