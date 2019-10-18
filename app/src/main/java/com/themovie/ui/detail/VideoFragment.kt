@@ -6,18 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
+import com.themovie.databinding.FragmentVideoBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.video.VideoResponse
 import com.themovie.model.online.video.Videos
-import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.adapter.VideoAdapter
 import com.themovie.ui.detail.viewmodel.VideoViewModel
 import com.themovie.ui.detail.viewmodel.VideoViewModelFactory
@@ -38,11 +39,19 @@ class VideoFragment : BaseFragment() {
     private lateinit var videoViewModel: VideoViewModel
     private lateinit var videoAdapter: VideoAdapter
     private lateinit var videoFor: String
+    private lateinit var binding: FragmentVideoBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_video, container, false)
+        val view: View = binding.root
         (activity?.application as MyApplication).getAppComponent().inject(this)
-        videoViewModel = ViewModelProviders.of(this, viewModelFactory).get(VideoViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_video, container, false)
+        videoViewModel = ViewModelProvider(this, viewModelFactory).get(VideoViewModel::class.java)
+        binding.apply {
+            vm = videoViewModel
+            lifecycleOwner = this@VideoFragment
+        }
+
+        return view
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -56,8 +65,11 @@ class VideoFragment : BaseFragment() {
 
     private fun setupRecycler(){
         videoAdapter = VideoAdapter()
-        dt_video.layoutManager = LinearLayoutManager(context)
-        dt_video.adapter = videoAdapter
+        binding.apply {
+            dtVideo.layoutManager = LinearLayoutManager(context)
+            dtVideo.adapter = videoAdapter
+        }
+
 
         videoAdapter.setOnClickAdapter(object: VideoAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, videos: Videos) {
@@ -90,7 +102,7 @@ class VideoFragment : BaseFragment() {
                 if(it == LoadDataState.LOADED) hideLoading()
                 else {
                     showNetworkError()
-                    dt_retry.setOnClickListener {
+                    binding.dtRetry.setOnClickListener {
                         showLoading()
                         if(videoFor.equals(Constant.MOVIE)){
                             getVideoMovie()
@@ -102,18 +114,25 @@ class VideoFragment : BaseFragment() {
     }
 
     private fun showLoading(){
-        shimmer_video.visibility = View.VISIBLE
-        dt_no_internet.visibility = View.GONE
+        binding.apply {
+            shimmerVideo.visibility = View.VISIBLE
+            dtNoInternet.visibility = View.GONE
+        }
     }
 
     private fun hideLoading(){
-        shimmer_video.visibility = View.GONE
-        dt_no_internet.visibility = View.GONE
+        binding.apply {
+            shimmerVideo.visibility = View.GONE
+            dtNoInternet.visibility = View.GONE
+        }
     }
 
     private fun showNetworkError(){
-        shimmer_video.visibility = View.INVISIBLE
-        dt_no_internet.visibility = View.VISIBLE
+        binding.apply {
+            shimmerVideo.visibility = View.INVISIBLE
+            dtNoInternet.visibility = View.VISIBLE
+        }
+
     }
 
 }

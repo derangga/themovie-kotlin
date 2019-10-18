@@ -5,65 +5,44 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.discovermv.Movies
-import com.themovie.model.online.upcoming.UpcomingResponse
-import com.themovie.restapi.ApiClient
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class UpcomingDataSource
-    (private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
+    (private val scope: CoroutineScope,
+     private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
-    private var retryCompletable: Completable? = null
-    private val composite = CompositeDisposable()
+    private var retry: (() -> Any)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
         updateState(LoadDataState.LOADING)
-        composite.add(
-            apiInterface.getUpcomingMovies(ApiUrl.TOKEN, 1, "")
-                .subscribe(
-                    object: Consumer<UpcomingResponse> {
-                        override fun accept(t: UpcomingResponse?) {
-                            updateState(LoadDataState.LOADED)
-                            pageSize = t!!.totalPages
-                            callback.onResult(t.results, null, 2)
-                        }
-                    }, object: Consumer<Throwable> {
-                        override fun accept(t: Throwable?) {
-                            updateState(LoadDataState.ERROR)
-                            setRetry(Action { loadInitial(params, callback) })
-                        }
-                    })
-        )
+        retry = { loadInitial(params, callback) }
+        scope.launch {
+            val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, 1, "")
+            if(upcoming.isSuccessful){
+                updateState(LoadDataState.LOADED)
+                pageSize = upcoming.body()!!.totalPages
+                callback.onResult(upcoming.body()!!.results, null, 2)
+            } else updateState(LoadDataState.ERROR)
+        }
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
-            composite.add(
-                apiInterface.getUpcomingMovies(ApiUrl.TOKEN, params.key, "")
-                    .subscribe(object: Consumer<UpcomingResponse> {
-                        override fun accept(t: UpcomingResponse?) {
-                            updateState(LoadDataState.LOADED)
-                            val key = params.key + 1
-                            callback.onResult(t!!.results, key)
-                        }
-                    }, object: Consumer<Throwable> {
-                        override fun accept(t: Throwable?) {
-                            updateState(LoadDataState.ERROR)
-                            setRetry(Action { loadAfter(params, callback) })
-                        }
-                    })
-            )
+            retry = { loadAfter(params, callback) }
+            scope.launch {
+                val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, params.key, "")
+                if(upcoming.isSuccessful){
+                    updateState(LoadDataState.LOADED)
+                    val key = params.key + 1
+                    callback.onResult(upcoming.body()!!.results, key)
+                } else updateState(LoadDataState.ERROR)
+            }
         }
     }
 
@@ -76,22 +55,8 @@ class UpcomingDataSource
     }
 
     fun retry(){
-        if(retryCompletable != null){
-            composite.add(
-                retryCompletable!!.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
-            )
-        }
-    }
-
-    fun clearDisposable(){
-        composite.clear()
-    }
-
-    private fun setRetry(action: Action?) {
-        retryCompletable = if(action == null){
-            null
-        } else Completable.fromAction(action)
+        val reCall = retry
+        retry = null
+        reCall?.invoke()
     }
 }

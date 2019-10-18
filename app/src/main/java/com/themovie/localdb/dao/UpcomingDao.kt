@@ -13,8 +13,8 @@ interface UpcomingDao {
     fun getAllUpcomingMv(): LiveData<List<Upcoming>>
 
     @Insert
-    fun insertUpcoming(upcoming: Upcoming)
+    suspend fun insertUpcoming(upcoming: Upcoming)
 
     @Update
-    fun updateUpcoming(upcoming: Upcoming)
+    suspend fun updateUpcoming(upcoming: Upcoming)
 }

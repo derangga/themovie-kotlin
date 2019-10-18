@@ -13,8 +13,8 @@ interface MoviesDao {
     fun getAllDiscoverMovies(): LiveData<List<MoviesLocal>>
 
     @Insert
-    fun insertDiscoverMovies(movies: MoviesLocal)
+    suspend fun insertDiscoverMovies(movies: MoviesLocal)
 
     @Update
-    fun updateDiscoverMovies(movies: MoviesLocal)
+    suspend fun updateDiscoverMovies(movies: MoviesLocal)
 }

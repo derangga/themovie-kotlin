@@ -13,8 +13,8 @@ interface TrendingDao {
     fun getAllTrendingTv(): LiveData<List<Trending>>
 
     @Insert
-    fun insertTrending(trending: Trending)
+    suspend fun insertTrending(trending: Trending)
 
     @Update
-    fun updateTrendingData(trending: Trending)
+    suspend fun updateTrendingData(trending: Trending)
 }

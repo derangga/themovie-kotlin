@@ -13,8 +13,8 @@ interface TvDao {
     fun getAllDiscoverTv(): LiveData<List<TvLocal>>
 
     @Insert
-    fun insertDiscoverTv(tv: TvLocal)
+    suspend fun insertDiscoverTv(tv: TvLocal)
 
     @Update
-    fun updateDiscoverTv(tv: TvLocal)
+    suspend fun updateDiscoverTv(tv: TvLocal)
 }

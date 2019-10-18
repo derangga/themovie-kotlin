@@ -3,7 +3,6 @@ package com.themovie.repos.local
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.TvDao
 import com.themovie.model.local.TvLocal
-import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class DiscoverTvLocalRepos
@@ -11,16 +10,12 @@ class DiscoverTvLocalRepos
 
     private var discoverTvList: LiveData<List<TvLocal>> = tvDao.getAllDiscoverTv()
 
-    fun insert(tv: TvLocal){
-        doAsync {
-            tvDao.insertDiscoverTv(tv)
-        }
+    suspend fun insert(tv: TvLocal){
+        tvDao.insertDiscoverTv(tv)
     }
 
-    fun update(tv: TvLocal){
-        doAsync {
-            tvDao.updateDiscoverTv(tv)
-        }
+    suspend fun update(tv: TvLocal){
+        tvDao.updateDiscoverTv(tv)
     }
 
     fun getDiscoverTvList(): LiveData<List<TvLocal>>{

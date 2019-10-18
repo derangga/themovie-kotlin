@@ -1,20 +1,16 @@
 package com.themovie.ui.detail.viewmodel
 
-import android.util.Log
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import com.themovie.helper.DateConverter
-import com.themovie.helper.ImageCache
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.DetailMovieResponse
 import com.themovie.model.online.detail.Genre
 import com.themovie.repos.fromapi.DetailMovieRepos
 import com.themovie.restapi.ApiUrl
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewModel() {
 
@@ -34,24 +30,18 @@ class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewMo
     private var imageUrl: MutableLiveData<String> = MediatorLiveData()
 
     fun getDetailMovieRequest(filmId: Int): MutableLiveData<FetchDetailMovieData> {
-        composite.add(
-            detailMovieRepos.getDetailData(ApiUrl.TOKEN, filmId).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<FetchDetailMovieData>(){
-                    override fun onComplete() {
+        viewModelScope.launch {
+            try {
+                val response = detailMovieRepos.getDetailData(ApiUrl.TOKEN, filmId)
+                if(response != null){
+                    detailLiveMovieData.value = response
+                    loadDataStatus.value = LoadDataState.LOADED
+                } else loadDataStatus.value = LoadDataState.ERROR
 
-                    }
-
-                    override fun onNext(t: FetchDetailMovieData) {
-                        detailLiveMovieData.value = t
-                        loadDataStatus.value = LoadDataState.LOADED
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.e("tag", e.message.toString())
-                        loadDataStatus.value = LoadDataState.ERROR
-                    }
-                })
-        )
+            } catch (e: Exception){
+                loadDataStatus.value = LoadDataState.ERROR
+            }
+        }
         return detailLiveMovieData
     }
 

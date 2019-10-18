@@ -1,9 +1,11 @@
 package com.themovie.ui.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.themovie.helper.DateConverter
 import com.themovie.helper.LoadDataState
 import com.themovie.model.local.MoviesLocal
@@ -18,9 +20,11 @@ import com.themovie.repos.local.DiscoverMvLocalRepos
 import com.themovie.repos.local.DiscoverTvLocalRepos
 import com.themovie.repos.local.TrendingLocalRepos
 import com.themovie.repos.local.UpcomingLocalRepos
+import com.themovie.restapi.ApiUrl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.launch
 
 class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalRepos: TrendingLocalRepos,
                     private val upcomingLocalRepos: UpcomingLocalRepos, private val discoverTvLocalRepos: DiscoverTvLocalRepos,
@@ -30,24 +34,19 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
     private val onlineLiveDataFetch: MutableLiveData<FetchMainData> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
-    fun getDataRequest(token: String): MutableLiveData<FetchMainData>{
-        composite.add(
-            mainRepos.getDataMovie(token).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<FetchMainData>(){
-                    override fun onComplete() {
-
-                    }
-
-                    override fun onNext(t: FetchMainData) {
-                        onlineLiveDataFetch.value = t
-                        loadDataStatus.value = LoadDataState.LOADED
-                    }
-
-                    override fun onError(e: Throwable) {
-                        loadDataStatus.value = LoadDataState.ERROR
-                    }
-                })
-        )
+    fun getDataRequest(): MutableLiveData<FetchMainData>{
+        viewModelScope.launch {
+            try {
+                val response = mainRepos.getDataMovie(ApiUrl.TOKEN)
+                if(response != null){
+                    Log.e("Success", "")
+                    onlineLiveDataFetch.value = response
+                } else loadDataStatus.value = LoadDataState.ERROR
+            } catch (e: Exception){
+                Log.e("Fail", "")
+                loadDataStatus.value = LoadDataState.ERROR
+            }
+        }
         return onlineLiveDataFetch
     }
 
@@ -58,7 +57,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 title = trendingList[i].name,
                 backDropPath = trendingList[i].backdropPath.toString()
             )
-            trendingLocalRepos.insert(trending)
+            viewModelScope.launch {
+                trendingLocalRepos.insert(trending)
+            }
         }
     }
 
@@ -71,7 +72,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 posterPath = upcomingList[i].posterPath.toString(),
                 backDropPath = upcomingList[i].backdropPath.toString()
             )
-            upcomingLocalRepos.insert(upcoming)
+            viewModelScope.launch {
+                upcomingLocalRepos.insert(upcoming)
+            }
         }
     }
 
@@ -84,7 +87,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 posterPath = tvList[i].posterPath.toString(),
                 backDropPath = tvList[i].backdropPath.toString()
             )
-            discoverTvLocalRepos.insert(tv)
+            viewModelScope.launch {
+                discoverTvLocalRepos.insert(tv)
+            }
         }
     }
 
@@ -98,7 +103,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                posterPath = movieList[i].posterPath.toString(),
                backDropPath = movieList[i].backdropPath.toString()
            )
-           discoverMvLocalRepos.insert(movies)
+            viewModelScope.launch {
+                discoverMvLocalRepos.insert(movies)
+            }
         }
     }
 
@@ -109,7 +116,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 title = trendingList[i].name,
                 backDropPath = trendingList[i].backdropPath.toString()
             )
-            trendingLocalRepos.update(trending)
+            viewModelScope.launch {
+                trendingLocalRepos.update(trending)
+            }
         }
     }
 
@@ -122,7 +131,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 posterPath = upcomingList[i].posterPath.toString(),
                 backDropPath = upcomingList[i].backdropPath.toString()
             )
-            upcomingLocalRepos.update(upcoming)
+            viewModelScope.launch {
+                upcomingLocalRepos.update(upcoming)
+            }
         }
     }
 
@@ -135,7 +146,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 posterPath = tvList[i].posterPath.toString(),
                 backDropPath = tvList[i].backdropPath.toString()
             )
-            discoverTvLocalRepos.update(tv)
+            viewModelScope.launch {
+                discoverTvLocalRepos.update(tv)
+            }
         }
     }
 
@@ -149,7 +162,9 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 posterPath = movieList[i].posterPath.toString(),
                 backDropPath = movieList[i].backdropPath.toString()
             )
-            discoverMvLocalRepos.update(movies)
+            viewModelScope.launch {
+                discoverMvLocalRepos.update(movies)
+            }
         }
     }
 

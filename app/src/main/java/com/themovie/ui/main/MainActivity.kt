@@ -1,14 +1,12 @@
 package com.themovie.ui.main
 
-import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,7 +14,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseActivity
-import com.themovie.base.di.AppComponent
 import com.themovie.databinding.ActivityMainBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
@@ -62,7 +59,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         super.onCreate(savedInstanceState)
         (application as MyApplication).getAppComponent().inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mainViewModel = ViewModelProviders.of(this, mainViewModelFactory).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
         snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
 
         upcomingListSetup()
@@ -238,7 +235,7 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchData(){
-        mainViewModel.getDataRequest(ApiUrl.TOKEN).observe(this,
+        mainViewModel.getDataRequest().observe(this,
             Observer<FetchMainData> { t ->
                 if(isTrendingEmpty)
                     mainViewModel.insertLocalTrending(t?.trending!!.results)
@@ -246,19 +243,19 @@ class MainActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
                     mainViewModel.updateLocalTrending(t?.trending!!.results)
 
                 if(isUpcomingEmpty)
-                    mainViewModel.insertLocalUpcoming(t.upcomingResponse.results)
+                    mainViewModel.insertLocalUpcoming(t.upcomingResponse!!.results)
                 else
-                    mainViewModel.updateLocalUpComing(t.upcomingResponse.results)
+                    mainViewModel.updateLocalUpComing(t.upcomingResponse!!.results)
 
                 if(isDiscoverTvEmpty)
-                    mainViewModel.insertLocalTv(t.tvResponse.results)
+                    mainViewModel.insertLocalTv(t.tvResponse!!.results)
                 else
-                    mainViewModel.updateLocalTv(t.tvResponse.results)
+                    mainViewModel.updateLocalTv(t.tvResponse!!.results)
 
                 if(isDiscoverMvEmpty)
-                    mainViewModel.insertLocalMovies(t.moviesResponse.movies)
+                    mainViewModel.insertLocalMovies(t.moviesResponse!!.movies)
                 else
-                    mainViewModel.updateLocalMovies(t.moviesResponse.movies)
+                    mainViewModel.updateLocalMovies(t.moviesResponse!!.movies)
 
                 hideLoading()
             })

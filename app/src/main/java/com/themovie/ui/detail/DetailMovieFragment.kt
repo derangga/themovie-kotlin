@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 
@@ -55,9 +55,12 @@ class DetailMovieFragment : BaseFragment() {
 
         //val viewModelFactory = DetailViewModelFactory()
         (activity?.application as MyApplication).getAppComponent().inject(this)
-        detailMvViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailMvViewModel::class.java)
-        binding.vm = detailMvViewModel
-        binding.lifecycleOwner = this
+        detailMvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMvViewModel::class.java)
+        binding.apply {
+            vm = detailMvViewModel
+            lifecycleOwner = this@DetailMovieFragment
+        }
+
         return view
     }
 
@@ -71,16 +74,16 @@ class DetailMovieFragment : BaseFragment() {
     private fun getAllDetailData(){
         detailMvViewModel.getDetailMovieRequest(getBundle()!!.getInt("filmId")).observe (
             this, Observer<FetchDetailMovieData>{
-                detailMvViewModel.setDetailMovieData(it.detailMovieResponse)
-                creditsAdapter.submitList(it.castResponse.credits)
-                recommendedAdapter.submitList(it.moviesResponse.movies)
-                reviewsAdapter.submitList(it.reviewResponse.reviewList)
+                detailMvViewModel.setDetailMovieData(it.detailMovieResponse!!)
+                creditsAdapter.submitList(it.castResponse?.credits)
+                recommendedAdapter.submitList(it.moviesResponse?.movies)
+                reviewsAdapter.submitList(it.reviewResponse?.reviewList)
 
-                if(it.moviesResponse.movies.isEmpty()) dt_recom_empty.visibility = View.VISIBLE
-                else dt_recom_empty.visibility = View.GONE
+                if(it.moviesResponse?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
+                else binding.dtRecomEmpty.visibility = View.GONE
 
-                if(it.reviewResponse.reviewList.isEmpty()) dt_review_empty.visibility = View.VISIBLE
-                else dt_review_empty.visibility = View.GONE
+                if(it.reviewResponse?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
+                else binding.dtReviewEmpty.visibility = View.GONE
             }
         )
     }
@@ -91,7 +94,7 @@ class DetailMovieFragment : BaseFragment() {
                 hideLoading()
             } else{
                 showErrorConnection()
-                dt_retry.setOnClickListener {
+                binding.dtRetry.setOnClickListener {
                     showLoading()
                     getAllDetailData()
                 }
@@ -104,13 +107,17 @@ class DetailMovieFragment : BaseFragment() {
         recommendedAdapter = RecommendedAdapter()
         reviewsAdapter = ReviewsAdapter()
 
-        binding.dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.apply {
+            dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.dtCastList.adapter = creditsAdapter
-        binding.dtRecomList.adapter = recommendedAdapter
-        binding.dtReviewList.adapter = reviewsAdapter
+            dtCastList.adapter = creditsAdapter
+            dtRecomList.adapter = recommendedAdapter
+            dtReviewList.adapter = reviewsAdapter
+        }
+
+
     }
 
     private fun adapterOnClick(){
@@ -124,10 +131,12 @@ class DetailMovieFragment : BaseFragment() {
 
         recommendedAdapter.setOnClickListener(object: RecommendedAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, movies: Movies) {
-                val bundle = Bundle()
-                bundle.putInt("id", movies.id)
-                bundle.putString("image", movies.backdropPath.toString())
-                bundle.putString("detail", Constant.MOVIE)
+                val bundle = Bundle().apply {
+                    putInt("id", movies.id)
+                    putString("image", movies.backdropPath.toString())
+                    putString("detail", Constant.MOVIE)
+                }
+
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
@@ -142,20 +151,29 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun showLoading(){
-        binding.dtShimmer.visibility = View.VISIBLE
-        binding.dtLayout.visibility = View.GONE
-        binding.dtNoInternet.visibility = View.GONE
+        binding.apply {
+            dtShimmer.visibility = View.VISIBLE
+            dtLayout.visibility = View.GONE
+            dtNoInternet.visibility = View.GONE
+        }
+
     }
 
     private fun hideLoading(){
-        binding.dtShimmer.visibility = View.GONE
-        binding.dtLayout.visibility = View.VISIBLE
-        binding.dtNoInternet.visibility = View.GONE
+        binding.apply {
+            dtShimmer.visibility = View.GONE
+            dtLayout.visibility = View.VISIBLE
+            dtNoInternet.visibility = View.GONE
+        }
+
     }
 
     private fun showErrorConnection(){
-        binding.dtShimmer.visibility = View.INVISIBLE
-        binding.dtLayout.visibility = View.GONE
-        binding.dtNoInternet.visibility = View.VISIBLE
+        binding.apply {
+            dtShimmer.visibility = View.INVISIBLE
+            dtLayout.visibility = View.GONE
+            dtNoInternet.visibility = View.VISIBLE
+        }
+
     }
 }

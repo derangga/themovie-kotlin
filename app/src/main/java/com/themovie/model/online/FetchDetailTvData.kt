@@ -6,8 +6,8 @@ import com.themovie.model.online.detail.ReviewResponse
 import com.themovie.model.online.discovertv.TvResponse
 
 data class FetchDetailTvData(
-    val detailTvResponse: DetailTvResponse,
-    val castResponse: CastResponse,
-    val tvResponse: TvResponse,
-    val reviews: ReviewResponse
+    val detailTvResponse: DetailTvResponse?,
+    val castResponse: CastResponse?,
+    val tvResponse: TvResponse?,
+    val reviews: ReviewResponse?
 )

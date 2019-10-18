@@ -1,20 +1,17 @@
 package com.themovie.ui.detail.viewmodel
 
 import android.util.Log
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import com.themovie.helper.DateConverter
-import com.themovie.helper.ImageCache
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.DetailTvResponse
 import com.themovie.model.online.detail.Genre
 import com.themovie.repos.fromapi.DetailTvRepos
 import com.themovie.restapi.ApiUrl
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() {
 
@@ -36,24 +33,18 @@ class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() 
     private val imageUrl: MutableLiveData<String> = MediatorLiveData()
 
     fun getDetailTvRequest(filmId: Int): MutableLiveData<FetchDetailTvData> {
-        composite.add(
-            detailTvRepos.getDetailData(ApiUrl.TOKEN, filmId).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<FetchDetailTvData>(){
-                    override fun onComplete() {
+        viewModelScope.launch {
+            try {
+                val response = detailTvRepos.getDetailData(ApiUrl.TOKEN, filmId)
+                if(response != null){
+                    detailTvLiveData.value = response
+                    loadDataStatus.value = LoadDataState.LOADED
+                } else loadDataStatus.value = LoadDataState.ERROR
 
-                    }
-
-                    override fun onNext(t: FetchDetailTvData) {
-                        detailTvLiveData.value = t
-                        loadDataStatus.value = LoadDataState.LOADED
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.e("tag", e.message.toString())
-                        loadDataStatus.value = LoadDataState.ERROR
-                    }
-                })
-        )
+            }catch (e: Exception){
+                loadDataStatus.value = LoadDataState.ERROR
+            }
+        }
         return detailTvLiveData
     }
 

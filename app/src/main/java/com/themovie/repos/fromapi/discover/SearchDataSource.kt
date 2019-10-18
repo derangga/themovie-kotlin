@@ -23,44 +23,44 @@ class SearchDataSource(private val composite: CompositeDisposable, private val m
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
         updateState(LoadDataState.LOADING)
-        composite.add(
-            ApiClient.getApiBuilder().getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, movieName, 1)
-                .subscribe(
-                    object: Consumer<MoviesResponse> {
-                    override fun accept(t: MoviesResponse?) {
-                        updateState(LoadDataState.LOADED)
-                        pageSize = t!!.totalPages
-                        callback.onResult(t.movies, null, 2)
-                    }
-                }, object: Consumer<Throwable>{
-                    override fun accept(t: Throwable?) {
-                        updateState(LoadDataState.ERROR)
-                        setRetry(Action { loadInitial(params, callback) })
-                    }
-                })
-        )
+//        composite.add(
+//            ApiClient.getApiBuilder().getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, movieName, 1)
+//                .subscribe(
+//                    object: Consumer<MoviesResponse> {
+//                    override fun accept(t: MoviesResponse?) {
+//                        updateState(LoadDataState.LOADED)
+//                        pageSize = t!!.totalPages
+//                        callback.onResult(t.movies, null, 2)
+//                    }
+//                }, object: Consumer<Throwable>{
+//                    override fun accept(t: Throwable?) {
+//                        updateState(LoadDataState.ERROR)
+//                        setRetry(Action { loadInitial(params, callback) })
+//                    }
+//                })
+//        )
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
         updateState(LoadDataState.LOADING)
-        composite.add(
-            ApiClient.getApiBuilder().getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, movieName, params.key)
-                .subscribe(
-                    object: Consumer<MoviesResponse>{
-                    override fun accept(t: MoviesResponse?) {
-                        updateState(LoadDataState.LOADED)
-                        val key = params.key + 1
-                        if(key < pageSize){
-                            callback.onResult(t!!.movies, key)
-                        }
-                    }
-                }, object: Consumer<Throwable>{
-                    override fun accept(t: Throwable?) {
-                        updateState(LoadDataState.ERROR)
-                        setRetry(Action { loadAfter(params, callback) })
-                    }
-                })
-        )
+//        composite.add(
+//            ApiClient.getApiBuilder().getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, movieName, params.key)
+//                .subscribe(
+//                    object: Consumer<MoviesResponse>{
+//                    override fun accept(t: MoviesResponse?) {
+//                        updateState(LoadDataState.LOADED)
+//                        val key = params.key + 1
+//                        if(key < pageSize){
+//                            callback.onResult(t!!.movies, key)
+//                        }
+//                    }
+//                }, object: Consumer<Throwable>{
+//                    override fun accept(t: Throwable?) {
+//                        updateState(LoadDataState.ERROR)
+//                        setRetry(Action { loadAfter(params, callback) })
+//                    }
+//                })
+//        )
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {

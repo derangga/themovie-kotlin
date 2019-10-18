@@ -5,68 +5,49 @@ import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.discovertv.Tv
-import com.themovie.model.online.discovertv.TvResponse
-import com.themovie.restapi.ApiClient
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class TvDataSource
-    (private val apiInterface: ApiInterface) : PageKeyedDataSource<Int, Tv>() {
+    (private val scope: CoroutineScope,
+     private val apiInterface: ApiInterface) : PageKeyedDataSource<Int, Tv>() {
+
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
-    private var retryCompletable: Completable? = null
-    private val composite = CompositeDisposable()
+    private var retry: (() -> Any)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(LoadDataState.LOADING)
-        composite.add(
-            apiInterface.getDiscoverTvs(
+        retry = { loadInitial(params, callback) }
+        scope.launch {
+            val discover = apiInterface.getDiscoverTvs(
                 ApiUrl.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, 1, "")
-                .subscribe(
-                    object: Consumer<TvResponse> {
-                        override fun accept(t: TvResponse?) {
-                            updateState(LoadDataState.LOADED)
-                            pageSize = t!!.totalPages
-                            callback.onResult(t.results, null, 2)
-                        }
-                    }, object: Consumer<Throwable> {
-                        override fun accept(t: Throwable?) {
-                            updateState(LoadDataState.ERROR)
-                            setRetry(Action { loadInitial(params, callback) })
-                        }
-                    })
-        )
+            if(discover.isSuccessful){
+                updateState(LoadDataState.LOADED)
+                pageSize = discover.body()!!.totalPages
+                callback.onResult(discover.body()!!.results, null, 2)
+            } else updateState(LoadDataState.ERROR)
+        }
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Tv>) {
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
-            composite.add(
-                apiInterface.getDiscoverTvs(
+            retry = { loadAfter(params, callback) }
+            scope.launch {
+                val discover = apiInterface.getDiscoverTvs(
                     ApiUrl.TOKEN, Constant.LANGUAGE,
                     Constant.SORTING, params.key, "")
-                    .subscribe(object: Consumer<TvResponse> {
-                        override fun accept(t: TvResponse?) {
-                            updateState(LoadDataState.LOADED)
-                            val key = params.key + 1
-                            callback.onResult(t!!.results, key)
-                        }
-                    }, object: Consumer<Throwable> {
-                        override fun accept(t: Throwable?) {
-                            updateState(LoadDataState.ERROR)
-                            setRetry(Action { loadAfter(params, callback) })
-                        }
-                    })
-            )
+                if(discover.isSuccessful){
+                    updateState(LoadDataState.LOADED)
+                    val key = params.key + 1
+                    callback.onResult(discover.body()!!.results, key)
+                } else updateState(LoadDataState.ERROR)
+            }
         }
     }
 
@@ -79,22 +60,12 @@ class TvDataSource
     }
 
     fun retry(){
-        if(retryCompletable != null){
-            composite.add(
-                retryCompletable!!.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
-            )
-        }
+        val reCall = retry
+        retry = null
+        reCall?.invoke()
     }
 
-    fun clearComposite(){
-        composite.clear()
-    }
-
-    private fun setRetry(action: Action?) {
-        retryCompletable = if(action == null){
-            null
-        } else Completable.fromAction(action)
+    private fun getJobErrorHandler() = CoroutineExceptionHandler { _, _ ->
+        updateState(LoadDataState.ERROR)
     }
 }

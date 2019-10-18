@@ -2,10 +2,9 @@ package com.themovie.ui.person
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 import com.themovie.R
@@ -15,7 +14,6 @@ import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.Filmography
-import com.themovie.restapi.ApiUrl
 import com.themovie.ui.detail.DetailActivity
 import kotlinx.android.synthetic.main.activity_person.*
 import javax.inject.Inject
@@ -25,14 +23,15 @@ class PersonActivity : BaseActivity() {
     @Inject lateinit var viewmodelFactory: PersonViewModelFactory
     private lateinit var personFilmAdapter: PersonFilmAdapter
     private lateinit var personViewModel: PersonViewModel
+    private lateinit var binding: ActivityPersonBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title = "Biography"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (application as MyApplication).getAppComponent().inject(this)
-        personViewModel = ViewModelProviders.of(this, viewmodelFactory).get(PersonViewModel::class.java)
-        val binding: ActivityPersonBinding = DataBindingUtil.setContentView(this, R.layout.activity_person)
+        personViewModel = ViewModelProvider(this, viewmodelFactory).get(PersonViewModel::class.java)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_person)
 
         binding.let {
             it.vm = personViewModel
@@ -71,10 +70,10 @@ class PersonActivity : BaseActivity() {
     }
 
     private fun getPersonData(){
-        personViewModel.getPersonData(ApiUrl.TOKEN, getBundle()!!.getInt("person")).observe(
+        personViewModel.getPersonData(getBundle()!!.getInt("person")).observe(
             this, Observer<FetchPersonData> {
-                personViewModel.setPersonData(it.personResponse)
-                personFilmAdapter.submitList(it.personFilmResponse.filmographies)
+                personViewModel.setPersonData(it.personResponse!!)
+                personFilmAdapter.submitList(it.personFilmResponse?.filmographies)
             }
         )
     }
@@ -85,7 +84,7 @@ class PersonActivity : BaseActivity() {
                 if(it == LoadDataState.LOADED) hideLoading()
                 else {
                     showNetworkError()
-                    pr_retry.setOnClickListener {
+                    binding.prRetry.setOnClickListener {
                         showLoading()
                         getPersonData()
                     }
@@ -95,21 +94,29 @@ class PersonActivity : BaseActivity() {
     }
 
     private fun showLoading(){
-        shimmer_person.visibility = View.VISIBLE
-        person_layout.visibility = View.INVISIBLE
-        pr_no_internet.visibility = View.GONE
+        binding.apply {
+            shimmerPerson.visibility = View.VISIBLE
+            personLayout.visibility = View.INVISIBLE
+            prNoInternet.visibility = View.GONE
+        }
     }
 
     private fun hideLoading(){
-        shimmer_person.visibility = View.GONE
-        person_layout.visibility = View.VISIBLE
-        pr_no_internet.visibility = View.GONE
+        binding.apply {
+            shimmerPerson.visibility = View.GONE
+            personLayout.visibility = View.VISIBLE
+            prNoInternet.visibility = View.GONE
+        }
+
     }
 
     private fun showNetworkError(){
-        shimmer_person.visibility = View.GONE
-        person_layout.visibility = View.INVISIBLE
-        pr_no_internet.visibility = View.VISIBLE
+        binding.apply {
+            shimmerPerson.visibility = View.GONE
+            personLayout.visibility = View.INVISIBLE
+            prNoInternet.visibility = View.VISIBLE
+        }
+
     }
 
 }

@@ -11,8 +11,6 @@ import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : BaseActivity() {
 
-    private val tag: String = DetailActivity::class.java.simpleName
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)

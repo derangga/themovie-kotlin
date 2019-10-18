@@ -3,7 +3,6 @@ package com.themovie.repos.local
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.TrendingDao
 import com.themovie.model.local.Trending
-import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class TrendingLocalRepos
@@ -11,16 +10,12 @@ class TrendingLocalRepos
 
     private var trendingListTv: LiveData<List<Trending>> = trendingDao.getAllTrendingTv()
 
-    fun insert(trending: Trending){
-        doAsync {
-            trendingDao.insertTrending(trending)
-        }
+    suspend fun insert(trending: Trending){
+        trendingDao.insertTrending(trending)
     }
 
-    fun update(trending: Trending){
-        doAsync {
-            trendingDao.updateTrendingData(trending)
-        }
+    suspend fun update(trending: Trending){
+        trendingDao.updateTrendingData(trending)
     }
 
     fun getTrendingList(): LiveData<List<Trending>>{

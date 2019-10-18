@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 
@@ -57,9 +57,12 @@ class DetailTvFragment : BaseFragment() {
             R.layout.fragment_detail_tv, container, false)
         val view: View = binding.root
         (activity?.application as MyApplication).getAppComponent().inject(this)
-        detailTvViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailTvViewModel::class.java)
-        binding.vm = detailTvViewModel
-        binding.lifecycleOwner = this
+        detailTvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailTvViewModel::class.java)
+        binding.apply {
+            vm = detailTvViewModel
+            lifecycleOwner = this@DetailTvFragment
+        }
+
 
         return view
     }
@@ -77,34 +80,37 @@ class DetailTvFragment : BaseFragment() {
         recommendedTvAdapter = RecommendedTvAdapter()
         reviewsAdapter = ReviewsAdapter()
 
-        binding.dtSeasonList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.apply {
+            dtSeasonList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.dtSeasonList.adapter = seasonAdapter
-        binding.dtCastList.adapter = creditsAdapter
-        binding.dtRecomList.adapter = recommendedTvAdapter
-        binding.dtReviewList.adapter = reviewsAdapter
+            dtSeasonList.adapter = seasonAdapter
+            dtCastList.adapter = creditsAdapter
+            dtRecomList.adapter = recommendedTvAdapter
+            dtReviewList.adapter = reviewsAdapter
+        }
+
     }
 
     private fun getAllDetailData(){
         detailTvViewModel.getDetailTvRequest(getBundle()!!.getInt("filmId")).observe(
             this, Observer<FetchDetailTvData> {
-                detailTvViewModel.setDetailTvData(it.detailTvResponse)
+                detailTvViewModel.setDetailTvData(it.detailTvResponse!!)
                 seasonAdapter.submitList(it.detailTvResponse.seasons)
-                creditsAdapter.submitList(it.castResponse.credits)
-                recommendedTvAdapter.submitList(it.tvResponse.results)
-                reviewsAdapter.submitList(it.reviews.reviewList)
+                creditsAdapter.submitList(it.castResponse?.credits)
+                recommendedTvAdapter.submitList(it.tvResponse?.results)
+                reviewsAdapter.submitList(it.reviews?.reviewList)
 
-                if(it.tvResponse.results.isEmpty()) dt_recom_empty.visibility = View.VISIBLE
-                else dt_recom_empty.visibility = View.GONE
+                if(it.tvResponse?.results.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
+                else binding.dtRecomEmpty.visibility = View.GONE
 
-                if(it.castResponse.credits.isEmpty()) dt_cast_empty.visibility = View.VISIBLE
-                else dt_cast_empty.visibility = View.GONE
+                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visibility = View.VISIBLE
+                else binding.dtCastEmpty.visibility = View.GONE
 
-                if(it.reviews.reviewList.isEmpty()) dt_review_empty.visibility = View.VISIBLE
-                else dt_review_empty.visibility = View.GONE
+                if(it.reviews?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
+                else binding.dtReviewEmpty.visibility = View.GONE
             }
         )
     }
@@ -115,7 +121,7 @@ class DetailTvFragment : BaseFragment() {
                 if(it == LoadDataState.LOADED) hideLoading()
                 else {
                     showErrorConnection()
-                    dt_retry.setOnClickListener {
+                    binding.dtRetry.setOnClickListener {
                         showLoading()
                         getAllDetailData()
                     }
@@ -136,10 +142,12 @@ class DetailTvFragment : BaseFragment() {
 
         recommendedTvAdapter.setOnClickListener(object: RecommendedTvAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, tv: Tv) {
-                val bundle = Bundle()
-                bundle.putInt("id", tv.id)
-                bundle.putString("image", tv.backdropPath.toString())
-                bundle.putString("detail", Constant.TV)
+                val bundle = Bundle().apply {
+                    putInt("id", tv.id)
+                    putString("image", tv.backdropPath.toString())
+                    putString("detail", Constant.TV)
+                }
+
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
@@ -154,21 +162,27 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun showLoading(){
-        binding.dtShimmer.visibility = View.VISIBLE
-        binding.dtLayout.visibility = View.GONE
-        binding.dtNoInternet.visibility = View.GONE
+        binding.apply {
+            dtShimmer.visibility = View.VISIBLE
+            dtLayout.visibility = View.GONE
+            dtNoInternet.visibility = View.GONE
+        }
     }
 
     private fun hideLoading(){
-        binding.dtShimmer.visibility = View.GONE
-        binding.dtLayout.visibility = View.VISIBLE
-        binding.dtNoInternet.visibility = View.GONE
+        binding.apply {
+            dtShimmer.visibility = View.GONE
+            dtLayout.visibility = View.VISIBLE
+            dtNoInternet.visibility = View.GONE
+        }
     }
 
     private fun showErrorConnection(){
-        binding.dtShimmer.visibility = View.INVISIBLE
-        binding.dtLayout.visibility = View.GONE
-        binding.dtNoInternet.visibility = View.VISIBLE
+        binding.apply {
+            dtShimmer.visibility = View.INVISIBLE
+            dtLayout.visibility = View.GONE
+            dtNoInternet.visibility = View.VISIBLE
+        }
     }
 
 }
