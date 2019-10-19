@@ -122,7 +122,7 @@ class DetailMovieFragment : BaseFragment() {
 
     private fun adapterOnClick(){
         creditsAdapter.setOnClickListener(object: CreditsAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, credits: Credits) {
+            override fun onClick(credits: Credits) {
                 val bundle = Bundle()
                 bundle.putInt("person", credits.id)
                 changeActivity(bundle, PersonActivity::class.java)
@@ -130,7 +130,7 @@ class DetailMovieFragment : BaseFragment() {
         })
 
         recommendedAdapter.setOnClickListener(object: RecommendedAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, movies: Movies) {
+            override fun onClick(movies: Movies) {
                 val bundle = Bundle().apply {
                     putInt("id", movies.id)
                     putString("image", movies.backdropPath.toString())

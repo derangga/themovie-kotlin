@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -37,11 +37,11 @@ class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         if(fetch == Constant.UPCOMING){
             h_title.visibility = View.VISIBLE
             h_title_layout.visibility = View.GONE
-            upViewModel = ViewModelProviders.of(this, upcoModelFactory).get(UpComingViewModel::class.java)
+            upViewModel = ViewModelProvider(this, upcoModelFactory).get(UpComingViewModel::class.java)
         } else {
             h_title.visibility = View.GONE
             h_title_layout.visibility = View.VISIBLE
-            dcViewModel = ViewModelProviders.of(this, movieModelFactory).get(MovieViewModel::class.java)
+            dcViewModel = ViewModelProvider(this, movieModelFactory).get(MovieViewModel::class.java)
         }
 
         onItemHeaderClick()

@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
 import com.themovie.model.online.detail.SeasonTv
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_recomended.view.*
@@ -43,8 +42,9 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
         fun bindItem(season: SeasonTv){
             itemView.apply {
                 val imgUrl = "${ApiUrl.IMG_POSTER}${season.posterPath.toString()}"
-                ImageCache.setImageViewUrl(context, imgUrl, recom_img)
-                recom_title.text = season.name
+                rec_item.apply {
+                    setImage(imgUrl)
+                }
             }
         }
     }

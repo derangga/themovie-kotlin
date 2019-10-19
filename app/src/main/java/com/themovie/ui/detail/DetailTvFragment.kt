@@ -133,7 +133,7 @@ class DetailTvFragment : BaseFragment() {
     private fun adapterOnCLick(){
 
         creditsAdapter.setOnClickListener(object: CreditsAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, credits: Credits) {
+            override fun onClick(credits: Credits) {
                 val bundle = Bundle()
                 bundle.putInt("person", credits.id)
                 changeActivity(bundle, PersonActivity::class.java)

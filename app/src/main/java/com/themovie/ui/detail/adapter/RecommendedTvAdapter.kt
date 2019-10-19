@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.online.discovertv.Tv
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_recomended.view.*
@@ -48,15 +49,19 @@ class RecommendedTvAdapter : ListAdapter<Tv, RecommendedTvAdapter.ViewHolder>(DI
         fun bindItem(tv: Tv){
             itemView.apply {
                 val imgUrl = "${ApiUrl.IMG_POSTER}${tv.posterPath.toString()}"
-                recom_title.text = tv.name
-                ImageCache.setImageViewUrl(context, imgUrl, recom_img)
-                recom_card.setOnClickListener {
-                    onClickAdapterListener.onClick(it, tv)
+                rec_item.apply {
+                    setImage(imgUrl)
+                    setTitle(tv.name)
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            onClickAdapterListener.onClick(tv)
+                        }
+                    })
                 }
             }
         }
     }
     interface OnClickAdapterListener {
-        fun onClick(view: View?, tv: Tv)
+        fun onClick(tv: Tv)
     }
 }

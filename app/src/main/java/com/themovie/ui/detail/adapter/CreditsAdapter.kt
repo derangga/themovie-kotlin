@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.online.detail.Credits
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_credits.view.*
@@ -45,19 +45,24 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, credits: Credits)
+        fun onClick(credits: Credits)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(credits: Credits){
             itemView.apply {
                 val imgUrl = "${ApiUrl.IMG_POSTER}${credits.profilePath.toString()}"
-                ImageCache.setImageViewUrl(context, imgUrl, crew_img)
-                crew_name.text = credits.name
-                crew_char.text = credits.character
-                crew_card.setOnClickListener {
-                    onClickAdapterListener.onClick(it, credits)
+                cast_portrait.apply {
+                    setTitle(credits.name)
+                    setSubtitle(credits.character)
+                    setImage(imgUrl)
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            onClickAdapterListener.onClick(credits)
+                        }
+                    })
                 }
+
             }
 
         }

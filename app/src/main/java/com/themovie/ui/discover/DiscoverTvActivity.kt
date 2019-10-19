@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -30,7 +30,7 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
         setContentView(R.layout.activity_discover)
 
         (application as MyApplication).getAppComponent().inject(this)
-        viewModel = ViewModelProviders.of(this, dcViewModelFactory).get(TvViewModel::class.java)
+        viewModel = ViewModelProvider(this, dcViewModelFactory).get(TvViewModel::class.java)
         onItemHeaderClick()
         setupRecycler()
         dc_swipe.setOnRefreshListener(this)

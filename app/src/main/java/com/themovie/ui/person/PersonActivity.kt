@@ -57,7 +57,7 @@ class PersonActivity : BaseActivity() {
         }
 
         personFilmAdapter.setOnItemCLickListener(object: PersonFilmAdapter.OnClickItemListener{
-            override fun onClick(view: View?, personFilm: Filmography) {
+            override fun onClick(personFilm: Filmography) {
                 val bundle = Bundle().apply {
                     putInt("id", personFilm.id)
                     putString("image", personFilm.backdrop_path.toString())
