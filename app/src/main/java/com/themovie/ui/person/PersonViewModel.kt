@@ -30,7 +30,14 @@ class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
     private val biography: MutableLiveData<String> = MediatorLiveData()
     private val photoUrl: MutableLiveData<String> = MediatorLiveData()
 
-    fun getPersonData(personId: Int): MutableLiveData<FetchPersonData> {
+    companion object{
+        private var personId = 0
+        fun setPersonId(personId: Int){
+            this.personId = personId
+        }
+    }
+
+    init {
         viewModelScope.launch {
             try {
                 val response = personRepos.getPersonData(ApiUrl.TOKEN, personId)
@@ -43,6 +50,9 @@ class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
                 loadDataState.value = LoadDataState.ERROR
             }
         }
+    }
+
+    fun getPersonData(): MutableLiveData<FetchPersonData> {
         return  personLiveData
     }
 

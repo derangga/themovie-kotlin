@@ -32,7 +32,14 @@ class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() 
     private val totalSeason: MutableLiveData<String> = MediatorLiveData()
     private val imageUrl: MutableLiveData<String> = MediatorLiveData()
 
-    fun getDetailTvRequest(filmId: Int): MutableLiveData<FetchDetailTvData> {
+    companion object {
+        private var filmId = 0
+        fun setFilmId(filmId: Int){
+            this.filmId = filmId
+        }
+    }
+
+    init {
         viewModelScope.launch {
             try {
                 val response = detailTvRepos.getDetailData(ApiUrl.TOKEN, filmId)
@@ -45,6 +52,9 @@ class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() 
                 loadDataStatus.value = LoadDataState.ERROR
             }
         }
+    }
+
+    fun getDetailTvRequest(): MutableLiveData<FetchDetailTvData> {
         return detailTvLiveData
     }
 

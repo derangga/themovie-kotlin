@@ -18,19 +18,13 @@ class TvDataSource
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
     private var retry: (() -> Any)? = null
+    private var key = 0
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(LoadDataState.LOADING)
         retry = { loadInitial(params, callback) }
-        scope.launch {
-            val discover = apiInterface.getDiscoverTvs(
-                ApiUrl.TOKEN, Constant.LANGUAGE,
-                Constant.SORTING, 1, "")
-            if(discover.isSuccessful){
-                updateState(LoadDataState.LOADED)
-                pageSize = discover.body()!!.totalPages
-                callback.onResult(discover.body()!!.results, null, 2)
-            } else updateState(LoadDataState.ERROR)
+        fetchData(1){
+            callback.onResult(it!!.toMutableList(), null, 2)
         }
     }
 
@@ -38,15 +32,9 @@ class TvDataSource
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             retry = { loadAfter(params, callback) }
-            scope.launch {
-                val discover = apiInterface.getDiscoverTvs(
-                    ApiUrl.TOKEN, Constant.LANGUAGE,
-                    Constant.SORTING, params.key, "")
-                if(discover.isSuccessful){
-                    updateState(LoadDataState.LOADED)
-                    val key = params.key + 1
-                    callback.onResult(discover.body()!!.results, key)
-                } else updateState(LoadDataState.ERROR)
+            fetchData(params.key){
+                key = params.key + 1
+                callback.onResult(it!!.toMutableList(), key)
             }
         }
     }
@@ -63,6 +51,19 @@ class TvDataSource
         val reCall = retry
         retry = null
         reCall?.invoke()
+    }
+
+    private fun fetchData(page: Int, callback: (List<Tv>?) -> Unit){
+        scope.launch(getJobErrorHandler()) {
+            val discover = apiInterface.getDiscoverTvs(
+                ApiUrl.TOKEN, Constant.LANGUAGE,
+                Constant.SORTING, page, "")
+            if(discover.isSuccessful){
+                updateState(LoadDataState.LOADED)
+                pageSize = discover.body()!!.totalPages
+                callback(discover.body()?.results)
+            } else updateState(LoadDataState.ERROR)
+        }
     }
 
     private fun getJobErrorHandler() = CoroutineExceptionHandler { _, _ ->

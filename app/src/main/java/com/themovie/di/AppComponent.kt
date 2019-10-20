@@ -1,4 +1,4 @@
-package com.themovie.base.di
+package com.themovie.di
 
 import com.themovie.ui.detail.DetailMovieFragment
 import com.themovie.ui.detail.DetailTvFragment

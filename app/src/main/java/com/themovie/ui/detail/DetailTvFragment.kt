@@ -56,13 +56,13 @@ class DetailTvFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_tv, container, false)
         val view: View = binding.root
+        DetailTvViewModel.setFilmId(getBundle()!!.getInt("filmId"))
         (activity?.application as MyApplication).getAppComponent().inject(this)
         detailTvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailTvViewModel::class.java)
         binding.apply {
             vm = detailTvViewModel
             lifecycleOwner = this@DetailTvFragment
         }
-
 
         return view
     }
@@ -95,7 +95,7 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailTvViewModel.getDetailTvRequest(getBundle()!!.getInt("filmId")).observe(
+        detailTvViewModel.getDetailTvRequest().observe(
             this, Observer<FetchDetailTvData> {
                 detailTvViewModel.setDetailTvData(it.detailTvResponse!!)
                 seasonAdapter.submitList(it.detailTvResponse.seasons)
@@ -141,7 +141,7 @@ class DetailTvFragment : BaseFragment() {
         })
 
         recommendedTvAdapter.setOnClickListener(object: RecommendedTvAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, tv: Tv) {
+            override fun onClick(tv: Tv) {
                 val bundle = Bundle().apply {
                     putInt("id", tv.id)
                     putString("image", tv.backdropPath.toString())

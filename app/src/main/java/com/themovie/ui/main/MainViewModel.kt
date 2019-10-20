@@ -21,9 +21,7 @@ import com.themovie.repos.local.DiscoverTvLocalRepos
 import com.themovie.repos.local.TrendingLocalRepos
 import com.themovie.repos.local.UpcomingLocalRepos
 import com.themovie.restapi.ApiUrl
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalRepos: TrendingLocalRepos,
@@ -34,7 +32,7 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
     private val onlineLiveDataFetch: MutableLiveData<FetchMainData> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
-    fun getDataRequest(): MutableLiveData<FetchMainData>{
+    init {
         viewModelScope.launch {
             try {
                 val response = mainRepos.getDataMovie(ApiUrl.TOKEN)
@@ -47,6 +45,10 @@ class MainViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                 loadDataStatus.value = LoadDataState.ERROR
             }
         }
+    }
+
+    fun getDataRequest(): MutableLiveData<FetchMainData>{
+
         return onlineLiveDataFetch
     }
 

@@ -1,4 +1,4 @@
-package com.themovie.base.di
+package com.themovie.di
 
 import android.app.Application
 import androidx.room.Room
@@ -12,7 +12,8 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RoomModule(val application: Application) {
+class RoomModule
+    (val application: Application) {
 
     private val theMovieDatabase: TheMovieDatabase = Room.databaseBuilder(
         application, TheMovieDatabase::class.java, "TheMovieDatabase"

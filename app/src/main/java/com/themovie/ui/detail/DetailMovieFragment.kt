@@ -55,6 +55,7 @@ class DetailMovieFragment : BaseFragment() {
 
         //val viewModelFactory = DetailViewModelFactory()
         (activity?.application as MyApplication).getAppComponent().inject(this)
+        DetailMvViewModel.setFilmId(getBundle()!!.getInt("filmId"))
         detailMvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.apply {
             vm = detailMvViewModel
@@ -72,7 +73,7 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailMvViewModel.getDetailMovieRequest(getBundle()!!.getInt("filmId")).observe (
+        detailMvViewModel.getDetailMovieRequest().observe (
             this, Observer<FetchDetailMovieData>{
                 detailMvViewModel.setDetailMovieData(it.detailMovieResponse!!)
                 creditsAdapter.submitList(it.castResponse?.credits)

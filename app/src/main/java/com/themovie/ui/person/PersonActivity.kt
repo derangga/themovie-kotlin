@@ -29,6 +29,7 @@ class PersonActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.title = "Biography"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        PersonViewModel.setPersonId(getBundle()!!.getInt("person"))
         (application as MyApplication).getAppComponent().inject(this)
         personViewModel = ViewModelProvider(this, viewmodelFactory).get(PersonViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_person)
@@ -70,7 +71,7 @@ class PersonActivity : BaseActivity() {
     }
 
     private fun getPersonData(){
-        personViewModel.getPersonData(getBundle()!!.getInt("person")).observe(
+        personViewModel.getPersonData().observe(
             this, Observer<FetchPersonData> {
                 personViewModel.setPersonData(it.personResponse!!)
                 personFilmAdapter.submitList(it.personFilmResponse?.filmographies)

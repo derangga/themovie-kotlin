@@ -1,5 +1,6 @@
 package com.themovie.repos.fromapi.discover
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.Constant
@@ -17,19 +18,14 @@ class MovieDataSource
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
+    private var key = 0
     private var retry: (() -> Any)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
         updateState(LoadDataState.LOADING)
         retry = {loadInitial(params, callback)}
-        scope.launch(getJobErrorHandler()) {
-            val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
-                Constant.SORTING, 1, "2019", "")
-            if(discover.isSuccessful){
-                updateState(LoadDataState.LOADED)
-                pageSize = discover.body()!!.totalPages
-                callback.onResult(discover.body()!!.movies, null, 2)
-            } else updateState(LoadDataState.ERROR)
+        fetchData(1){
+            callback.onResult(it!!.toMutableList(), null, 2)
         }
     }
 
@@ -37,20 +33,27 @@ class MovieDataSource
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             retry = {loadAfter(params, callback)}
-            scope.launch(getJobErrorHandler()) {
-                val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
-                    Constant.SORTING, params.key, "2019", "")
-                if(discover.isSuccessful){
-                    updateState(LoadDataState.LOADED)
-                    val key = params.key + 1
-                    if(key <= pageSize) callback.onResult(discover.body()!!.movies, key)
-                } else updateState(LoadDataState.ERROR)
+            fetchData(params.key){
+                key = params.key + 1
+                callback.onResult(it!!.toMutableList(), key)
             }
         }
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
 
+    }
+
+    private fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
+        scope.launch(getJobErrorHandler()) {
+            val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
+                Constant.SORTING, page, "2019", "")
+            if(discover.isSuccessful){
+                updateState(LoadDataState.LOADED)
+                pageSize = discover.body()?.totalPages ?: 0
+                callback(discover.body()?.movies)
+            } else updateState(LoadDataState.ERROR)
+        }
     }
 
     private fun updateState(state: LoadDataState) {

@@ -29,7 +29,14 @@ class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewMo
     private val genre: MutableLiveData<String> = MediatorLiveData()
     private var imageUrl: MutableLiveData<String> = MediatorLiveData()
 
-    fun getDetailMovieRequest(filmId: Int): MutableLiveData<FetchDetailMovieData> {
+    companion object{
+        private var filmId = 0
+        fun setFilmId(filmId: Int){
+            this.filmId = filmId
+        }
+    }
+
+    init {
         viewModelScope.launch {
             try {
                 val response = detailMovieRepos.getDetailData(ApiUrl.TOKEN, filmId)
@@ -42,6 +49,10 @@ class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewMo
                 loadDataStatus.value = LoadDataState.ERROR
             }
         }
+    }
+
+    fun getDetailMovieRequest(): MutableLiveData<FetchDetailMovieData> {
+
         return detailLiveMovieData
     }
 

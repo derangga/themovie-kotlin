@@ -44,6 +44,7 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
                 val imgUrl = "${ApiUrl.IMG_POSTER}${season.posterPath.toString()}"
                 rec_item.apply {
                     setImage(imgUrl)
+                    setTitle(season.name)
                 }
             }
         }

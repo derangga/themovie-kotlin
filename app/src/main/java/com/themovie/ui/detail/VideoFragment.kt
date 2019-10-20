@@ -44,6 +44,8 @@ class VideoFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_video, container, false)
         val view: View = binding.root
+        videoFor = getBundle()?.getString("video").toString()
+        VideoViewModel.setFilmIdAndType(getBundle()!!.getInt("filmId"), videoFor)
         (activity?.application as MyApplication).getAppComponent().inject(this)
         videoViewModel = ViewModelProvider(this, viewModelFactory).get(VideoViewModel::class.java)
         binding.apply {
@@ -55,7 +57,7 @@ class VideoFragment : BaseFragment() {
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        videoFor = getBundle()?.getString("video").toString()
+
         setupRecycler()
         if(videoFor.equals(Constant.MOVIE)){
             getVideoMovie()
@@ -81,7 +83,7 @@ class VideoFragment : BaseFragment() {
     }
 
     private fun getVideoMovie(){
-        videoViewModel.getVideoMovie(getBundle()!!.getInt("filmId")).observe(
+        videoViewModel.getVideoMovie().observe(
             this, Observer<VideoResponse> {
                 videoAdapter.submitList(it.videos)
             }
@@ -124,6 +126,7 @@ class VideoFragment : BaseFragment() {
         binding.apply {
             shimmerVideo.visibility = View.GONE
             dtNoInternet.visibility = View.GONE
+            dtVideo.visibility = View.VISIBLE
         }
     }
 
@@ -131,6 +134,7 @@ class VideoFragment : BaseFragment() {
         binding.apply {
             shimmerVideo.visibility = View.INVISIBLE
             dtNoInternet.visibility = View.VISIBLE
+            dtVideo.visibility = View.GONE
         }
 
     }
