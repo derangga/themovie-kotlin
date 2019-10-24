@@ -6,7 +6,7 @@ import com.themovie.repos.fromapi.discover.TvDataSourceFactory
 import com.themovie.restapi.ApiInterface
 import javax.inject.Inject
 
-class DiscoverTvViewModelFactory
+class TvViewModelFactory
 @Inject constructor(private val apiInterface: ApiInterface)
     :ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

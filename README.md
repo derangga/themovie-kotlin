@@ -9,3 +9,4 @@ Aplikasi list Movie dengan data source dari Themovie DB
 - Android Architecture Component
 - MVVM Pattern
 - Dagger 2
+- Navigation

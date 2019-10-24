@@ -16,12 +16,11 @@ import com.themovie.model.online.discovertv.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
 import kotlinx.android.synthetic.main.activity_discover.*
-import kotlinx.android.synthetic.main.header_layout.*
 import javax.inject.Inject
 
 class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var dcViewModelFactory: DiscoverTvViewModelFactory
+    @Inject lateinit var dcViewModelFactory: TvViewModelFactory
     private lateinit var tvAdapter: TvAdapter
     private lateinit var viewModel: TvViewModel
 
@@ -48,12 +47,12 @@ class DiscoverTvActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener 
     }
 
     private fun onItemHeaderClick(){
-        h_back.setOnClickListener{
-            super.onBackPressed()
-        }
-        h_search.setOnClickListener {
-
-        }
+//        h_back.setOnClickListener{
+//            super.onBackPressed()
+//        }
+//        h_search.setOnClickListener {
+//
+//        }
     }
 
     private fun setupRecycler(){

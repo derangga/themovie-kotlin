@@ -8,8 +8,6 @@ import javax.inject.Inject
 class TrendingLocalRepos
     @Inject constructor(private val trendingDao: TrendingDao) {
 
-    private var trendingListTv: LiveData<List<Trending>> = trendingDao.getAllTrendingTv()
-
     suspend fun insert(trending: Trending){
         trendingDao.insertTrending(trending)
     }
@@ -19,7 +17,7 @@ class TrendingLocalRepos
     }
 
     fun getTrendingList(): LiveData<List<Trending>>{
-        return trendingListTv
+        return trendingDao.getAllTrendingTv()
     }
 
 }

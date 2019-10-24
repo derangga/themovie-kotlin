@@ -5,6 +5,8 @@ class ApiUrl {
         const val BASE_URL = "https://api.themoviedb.org/3/"
         const val UPCOMING = "movie/upcoming"
         const val TRENDING = "trending/tv/day"
+        const val POPULAR_MOVIE = "movie/popular"
+        const val GENRES = "genre/movie/list"
         const val DISCOVER_MOVIES = "discover/movie"
         const val DISCOVER_TV = "discover/tv"
         const val DETAIL_MOVIE = "movie/{movie_id}"

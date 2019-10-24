@@ -31,17 +31,16 @@ class PortraitView(context: Context,
     }
 
     override fun initAttr(attrs: TypedArray?) {
-        val params = poster_item.layoutParams
+        //val params = poster_item.layoutParams
         when(attrs?.getInt(R.styleable.PortraitView_type, 0)){
             0 -> {
-                poster_subtitle.visibility = View.GONE
-                params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 232.toFloat(), resources.displayMetrics).toInt() // convert dip to pixel
+               poster_subtitle.visibility = View.GONE
             }
             1 -> {
-                params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
+                poster_rate_l.visibility = View.GONE
             }
             else -> {
-
+                poster_subtitle.visibility = View.GONE
             }
         }
 
@@ -60,6 +59,10 @@ class PortraitView(context: Context,
 
     fun setSubtitle(subtitle: String){
         poster_subtitle.text= subtitle
+    }
+
+    fun setRating(rating: String){
+        poster_rate.text = rating
     }
 
     fun setOnClickListener(onClickListener: OnClickListener){

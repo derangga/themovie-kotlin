@@ -1,5 +1,6 @@
 package com.themovie.ui.discover
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList

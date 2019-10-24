@@ -9,7 +9,7 @@ import javax.inject.Inject
 class DiscoverMvLocalRepos
     @Inject constructor(private val moviesDao: MoviesDao) {
 
-    private var discoverMovieList: LiveData<List<MoviesLocal>> = moviesDao.getAllDiscoverMovies()
+
 
     suspend fun insert(movies: MoviesLocal){
         moviesDao.insertDiscoverMovies(movies)
@@ -20,6 +20,6 @@ class DiscoverMvLocalRepos
     }
 
     fun getDiscoverMovieLis(): LiveData<List<MoviesLocal>>{
-        return discoverMovieList
+        return moviesDao.getAllDiscoverMovies()
     }
 }

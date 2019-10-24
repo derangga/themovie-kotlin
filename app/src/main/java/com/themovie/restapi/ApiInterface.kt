@@ -7,6 +7,7 @@ import com.themovie.model.online.detail.DetailTvResponse
 import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.model.online.upcoming.UpcomingResponse
 import com.themovie.model.online.discovermv.MoviesResponse
+import com.themovie.model.online.genre.GenreResponse
 import com.themovie.model.online.person.PersonFilmResponse
 import com.themovie.model.online.person.PersonResponse
 import com.themovie.model.online.video.VideoResponse
@@ -28,6 +29,16 @@ interface ApiInterface {
 
     @GET(ApiUrl.TRENDING)
     suspend fun getTrendingTv(@Query("api_key") api_key: String): Response<TvResponse>
+
+    @GET(ApiUrl.POPULAR_MOVIE)
+    suspend fun getPopularMovie(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
+    ): Response<MoviesResponse>
+
+    @GET(ApiUrl.GENRES)
+    suspend fun getGenres(@Query("api_key") api_key: String): Response<GenreResponse>
 
     @GET(ApiUrl.DISCOVER_MOVIES)
     suspend fun getDiscoverMovies (

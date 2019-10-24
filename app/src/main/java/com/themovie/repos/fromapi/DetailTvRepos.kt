@@ -2,15 +2,7 @@ package com.themovie.repos.fromapi
 
 import com.themovie.helper.Constant
 import com.themovie.model.online.FetchDetailTvData
-import com.themovie.model.online.detail.CastResponse
-import com.themovie.model.online.detail.DetailTvResponse
-import com.themovie.model.online.detail.ReviewResponse
-import com.themovie.model.online.discovertv.TvResponse
-import com.themovie.restapi.ApiClient
 import com.themovie.restapi.ApiInterface
-import io.reactivex.Observable
-import io.reactivex.functions.Function4
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

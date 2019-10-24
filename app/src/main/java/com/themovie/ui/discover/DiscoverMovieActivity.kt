@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,12 +15,11 @@ import com.themovie.model.online.discovermv.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.activity_discover.*
-import kotlinx.android.synthetic.main.header_layout.*
 import javax.inject.Inject
 
 class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var movieModelFactory: DiscoverMovieViewModelFactory
+    @Inject lateinit var movieModelFactory: MovieViewModelFactory
     @Inject lateinit var upcoModelFactory: UpcomingViewModelFactory
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var dcViewModel: MovieViewModel
@@ -34,15 +32,15 @@ class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         (application as MyApplication).getAppComponent().inject(this)
         fetch = getBundle()?.getString("fetch").toString()
 
-        if(fetch == Constant.UPCOMING){
-            h_title.visibility = View.VISIBLE
-            h_title_layout.visibility = View.GONE
-            upViewModel = ViewModelProvider(this, upcoModelFactory).get(UpComingViewModel::class.java)
-        } else {
-            h_title.visibility = View.GONE
-            h_title_layout.visibility = View.VISIBLE
-            dcViewModel = ViewModelProvider(this, movieModelFactory).get(MovieViewModel::class.java)
-        }
+//        if(fetch == Constant.UPCOMING){
+//            h_title.visibility = View.VISIBLE
+//            h_title_layout.visibility = View.GONE
+//            upViewModel = ViewModelProvider(this, upcoModelFactory).get(UpComingViewModel::class.java)
+//        } else {
+//            h_title.visibility = View.GONE
+//            h_title_layout.visibility = View.VISIBLE
+//            dcViewModel = ViewModelProvider(this, movieModelFactory).get(MovieViewModel::class.java)
+//        }
 
         onItemHeaderClick()
         setupRecycler()
@@ -74,13 +72,13 @@ class DiscoverMovieActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
     }
 
     private fun onItemHeaderClick(){
-        h_back.setOnClickListener{
-            super.onBackPressed()
-        }
-        
-        h_title_layout.setOnClickListener {
-
-        }
+//        h_back.setOnClickListener{
+//            super.onBackPressed()
+//        }
+//
+//        h_title_layout.setOnClickListener {
+//
+//        }
     }
 
     private fun setupRecycler(){

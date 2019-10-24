@@ -6,7 +6,7 @@ import com.themovie.repos.fromapi.discover.MovieDataSourceFactory
 import com.themovie.restapi.ApiInterface
 import javax.inject.Inject
 
-class DiscoverMovieViewModelFactory
+class MovieViewModelFactory
 @Inject constructor(private val apiInterface: ApiInterface)
     : ViewModelProvider.Factory {
 

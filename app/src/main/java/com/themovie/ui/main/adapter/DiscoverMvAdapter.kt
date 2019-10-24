@@ -49,13 +49,12 @@ class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(movies: MoviesLocal){
             itemView.apply {
-                val imgBack = "${ApiUrl.IMG_BACK}${movies.backDropPath}"
                 val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
-                ImageCache.setImageViewUrl(context, imgBack, mdmv_background)
-                ImageCache.setRoundedImageUrl(context, imgPoster, mdmv_poster)
-                mdmv_title.text = movies.title
-                mdmv_date.text = movies.dateRelease
-                mdmv_card.setOnClickListener { view -> onClickAdapterListener.onClick(view, movies, mdmv_background) }
+                movie_item.apply {
+                    setImage(imgPoster)
+                    setTitle(movies.title)
+                    setRating(movies.rating)
+                }
             }
         }
     }

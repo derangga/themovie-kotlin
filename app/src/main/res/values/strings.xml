@@ -6,6 +6,13 @@
     <string name="transition_poster">selectedPoster</string>
     <string name="transition_cast">selectCrew</string>
 
+    <!-- Home Fragment -->
+    <string name="home_title_1">Popular Movies</string>
+    <string name="home_title_2">Upcoming Movies</string>
+    <string name="home_title_3">Genres</string>
+    <string name="home_title_4">Discover Tv Shows</string>
+    <string name="home_title_5">Discover Movies</string>
+
     <!-- Main Activity -->
     <string name="title_main_1">Now Trending on TV</string>
     <string name="title_main_2">Upcoming Movies</string>

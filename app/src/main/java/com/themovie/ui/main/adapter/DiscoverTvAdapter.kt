@@ -49,15 +49,11 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(tvLocal: TvLocal){
             itemView.apply {
-                val imgBack = "${ApiUrl.IMG_BACK}${tvLocal.backDropPath}"
                 val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
-                ImageCache.setImageViewUrl(context, imgBack, mdtv_background)
-                ImageCache.setRoundedImageUrl(context, imgPoster, mdtv_poster)
-                mdtv_title.text = tvLocal.title
-                mdtv_rate.text = tvLocal.rating
-
-                mdtv_card.setOnClickListener { view ->
-                    onClickAdapterListener.onClick(view, tvLocal, mdtv_background)
+                tv_item.apply {
+                    setTitle(tvLocal.title)
+                    setImage(imgPoster)
+                    setRating(tvLocal.rating.orEmpty())
                 }
             }
         }

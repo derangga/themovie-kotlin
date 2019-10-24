@@ -49,15 +49,11 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(upcoming: Upcoming){
             itemView.apply {
-                val backImg = "${ApiUrl.IMG_BACK}${upcoming.backDropPath}"
                 val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
-
-                ImageCache.setRoundedImageUrl(context, posterImg, mupco_poster)
-                ImageCache.setImageViewUrl(context, backImg, mupco_background)
-                mupco_title.text = upcoming.title
-                mupco_date.text = upcoming.dateRelease
-                mupco_card.setOnClickListener {
-                    onClickAdapterListener.onClick(it, upcoming, mupco_background)
+                upcoming_item.apply {
+                    setImage(posterImg)
+                    setTitle(upcoming.title)
+                    setRating(upcoming.rating ?: "0")
                 }
             }
         }

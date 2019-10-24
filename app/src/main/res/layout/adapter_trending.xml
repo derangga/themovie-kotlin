@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
             android:id="@+id/mupco_card"
-            android:layout_width="320dp"
+            android:layout_width="300dp"
             android:layout_height="180dp"
             android:elevation="6dp"
             app:cardCornerRadius="5dp"
