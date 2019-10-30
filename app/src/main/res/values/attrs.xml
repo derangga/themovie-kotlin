@@ -5,6 +5,8 @@
         <attr name="type" format="flags">
             <flag name="movie" value="0"/>
             <flag name="cast" value="1"/>
+            <flag name="season" value="2"/>
+            <flag name="upcoming" value="3"/>
         </attr>
         <attr name="poster_title"/>
         <attr name="poster_subtitle"/>

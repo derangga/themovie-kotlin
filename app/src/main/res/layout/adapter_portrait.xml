@@ -34,6 +34,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/extra_small_space"
                     android:paddingEnd="@dimen/extra_small_space"
+                    android:maxLines="2"
                     android:textColor="@color/colorWhite"
                     android:layout_marginBottom="4dp"/>
 
@@ -44,8 +45,19 @@
                     android:paddingStart="@dimen/extra_small_space"
                     android:paddingEnd="@dimen/extra_small_space"
                     android:maxLines="2"
+                    android:textStyle="italic"
                     android:textColor="@color/colorWhite"
                     android:ellipsize="end"/>
+
+            <TextView
+                    android:id="@+id/poster_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:visibility="gone"
+                    android:paddingStart="@dimen/extra_small_space"
+                    android:paddingEnd="@dimen/extra_small_space"
+                    android:textColor="@color/colorWhite"/>
 
             <LinearLayout
                     android:id="@+id/poster_rate_l"

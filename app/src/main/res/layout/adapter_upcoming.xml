@@ -8,6 +8,6 @@
             android:id="@+id/upcoming_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:type="movie"/>
+            app:type="upcoming"/>
 
 </LinearLayout>

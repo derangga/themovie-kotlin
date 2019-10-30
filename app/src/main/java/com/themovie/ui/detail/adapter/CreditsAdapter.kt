@@ -45,7 +45,7 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
     }
 
     interface OnClickAdapterListener {
-        fun onClick(credits: Credits)
+        fun onClick(view: View, credits: Credits)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -58,7 +58,7 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
                     setImage(imgUrl)
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {
-                            onClickAdapterListener.onClick(credits)
+                            onClickAdapterListener.onClick(itemView, credits)
                         }
                     })
                 }

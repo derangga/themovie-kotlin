@@ -29,6 +29,7 @@ import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.local.*
 import com.themovie.model.online.FetchMainData
+import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.genres.GenresFragmentDirections
 import com.themovie.ui.main.adapter.*
 import java.util.*
@@ -67,7 +68,6 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        val view = binding.root
         (activity?.application as MyApplication).getAppComponent().inject(this)
 
         homeViewModel = ViewModelProvider(this, homeViewFactory).get(HomeViewModel::class.java)
@@ -75,7 +75,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             vm = homeViewModel
             lifecycleOwner = this@HomeFragment
         }
-        return view
+        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -146,21 +146,18 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         }
 
-
-
     }
 
     private fun onClick(){
 
         trendingAdapter.setOnClickListener(object: TrendingAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, trending: Trending, imageViewRes: ImageView) {
-                val bundle = Bundle().apply {
-                    putInt("id", trending.mvId)
-                    putString("image", trending.backDropPath)
-                    putString("detail", Constant.TV)
-                }
                 snackbar.dismiss()
-                //changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
+                val bundle = Bundle().apply {
+                    putInt("filmId", trending.mvId)
+                    putString("type", Constant.MOVIE)
+                }
+                changeActivity(bundle, DetailActivity::class.java)
             }
         })
 
@@ -174,38 +171,38 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         })
 
         upcomingAdapter.setOnClickListener(object: UpcomingAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, upcoming: Upcoming, imageViewRes: ImageView) {
-                val bundle = Bundle().apply {
-                    putInt("id", upcoming.mvId)
-                    putString("image", upcoming.backDropPath)
-                    putString("detail", Constant.MOVIE)
-                }
+            override fun onClick(view: View?, upcoming: Upcoming) {
                 snackbar.dismiss()
-                //changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
+                stopSliding()
+                val bundle = Bundle().apply {
+                    putInt("filmId", upcoming.mvId)
+                    putString("type", Constant.MOVIE)
+                }
+                changeActivity(bundle, DetailActivity::class.java)
             }
         })
 
         discoverTvAdapter.setOnClickListener(object: DiscoverTvAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, tvLocal: TvLocal, imageViewRes: ImageView) {
-                val bundle = Bundle().apply {
-                    putInt("id", tvLocal.tvId)
-                    putString("image", tvLocal.backDropPath)
-                    putString("detail", Constant.TV)
-                }
+            override fun onClick(view: View?, tvLocal: TvLocal) {
                 snackbar.dismiss()
-                //changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
+                stopSliding()
+                val bundle = Bundle().apply {
+                    putInt("filmId", tvLocal.tvId)
+                    putString("type", Constant.TV)
+                }
+                changeActivity(bundle, DetailActivity::class.java)
             }
         })
 
         discoverMvAdapter.setOnClickListener(object: DiscoverMvAdapter.OnClickAdapterListener {
-            override fun onClick(view: View?, moviesLocal: MoviesLocal, imageViewRes: ImageView) {
-                val bundle = Bundle().apply {
-                    putInt("id", moviesLocal.mvId)
-                    putString("image", moviesLocal.backDropPath)
-                    putString("detail", Constant.MOVIE)
-                }
+            override fun onClick(view: View?, moviesLocal: MoviesLocal) {
                 snackbar.dismiss()
-                //changeActivityTransitionBundle(DetailActivity::class.java, bundle, imageViewRes)
+                stopSliding()
+                val bundle = Bundle().apply {
+                    putInt("filmId", moviesLocal.mvId)
+                    putString("type", Constant.MOVIE)
+                }
+                changeActivity(bundle, DetailActivity::class.java)
             }
         })
 

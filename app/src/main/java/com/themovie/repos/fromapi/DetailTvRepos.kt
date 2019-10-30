@@ -20,11 +20,16 @@ class DetailTvRepos
                 val cast = async(IO) { return@async apiInterface.getCreditsTv(tvId, token) }
                 val recommendation = async(IO) { return@async apiInterface.getRecomendedTv(tvId, token, Constant.LANGUAGE, 1) }
                 val reviews = async(IO) { return@async apiInterface.getReviewsTV(tvId, token, Constant.LANGUAGE, 1) }
+                val videos = async(IO) { return@async apiInterface.getVideosTv(tvId, token, Constant.LANGUAGE) }
 
-                if(detail.await().isSuccessful && cast.await().isSuccessful && recommendation.await().isSuccessful && reviews.await().isSuccessful){
+                if(detail.await().isSuccessful && cast.await().isSuccessful &&
+                    videos.await().isSuccessful && recommendation.await().isSuccessful &&
+                    reviews.await().isSuccessful){
+
                     data = FetchDetailTvData(
                         detail.await().body(),
                         cast.await().body(),
+                        videos.await().body(),
                         recommendation.await().body(),
                         reviews.await().body()
                     )

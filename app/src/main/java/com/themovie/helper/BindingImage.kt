@@ -15,4 +15,10 @@ object BindingImage {
     fun loadProfilePicture(view: ImageView, photoUrl: String?){
         ImageCache.setImageViewUrl(view.context, photoUrl.toString(), view)
     }
+
+    @BindingAdapter("backdropImage")
+    @JvmStatic
+    fun loadMovieBackDrop(view: ImageView, imageUrl: String?){
+        ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)
+    }
 }

@@ -17,7 +17,7 @@ class MainRepos
             coroutineScope {
                 val popular = async(IO) { return@async apiInterface.getPopularMovie(token, Constant.LANGUAGE, 1) }
                 val genre = async(IO) { return@async apiInterface.getGenres(token) }
-                val upcoming = async(IO) { return@async apiInterface.getUpcomingMovies(token, 1, "") }
+                val upcoming = async(IO) { return@async apiInterface.getUpcomingMovies(token, 1) }
                 val discoverTv = async(IO) {
                     return@async apiInterface.getDiscoverTvs(token, Constant.LANGUAGE, Constant.SORTING, 1, "US")
                 }

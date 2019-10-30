@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 
@@ -23,13 +24,14 @@ import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.online.video.Videos
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
+import com.themovie.ui.detail.adapter.VideoAdapter
 import com.themovie.ui.detail.viewmodel.DetailMovieViewModelFactory
 import com.themovie.ui.detail.viewmodel.DetailMvViewModel
-import com.themovie.ui.person.PersonActivity
-import kotlinx.android.synthetic.main.fragment_detail_movie.*
+import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,6 +46,7 @@ class DetailMovieFragment : BaseFragment() {
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
+    private lateinit var videoAdapter: VideoAdapter
     private lateinit var binding: FragmentDetailMovieBinding
 
     @Inject lateinit var viewModelFactory: DetailMovieViewModelFactory
@@ -51,18 +54,20 @@ class DetailMovieFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_movie, container, false)
-        val view: View = binding.root
 
-        //val viewModelFactory = DetailViewModelFactory()
         (activity?.application as MyApplication).getAppComponent().inject(this)
-        DetailMvViewModel.setFilmId(getBundle()!!.getInt("filmId"))
+        arguments?.let {
+            val filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
+            DetailMvViewModel.setFilmId(filmId)
+        }
+
         detailMvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.apply {
             vm = detailMvViewModel
             lifecycleOwner = this@DetailMovieFragment
         }
 
-        return view
+        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -79,6 +84,7 @@ class DetailMovieFragment : BaseFragment() {
                 creditsAdapter.submitList(it.castResponse?.credits)
                 recommendedAdapter.submitList(it.moviesResponse?.movies)
                 reviewsAdapter.submitList(it.reviewResponse?.reviewList)
+                videoAdapter.submitList(it.videoResponse?.videos)
 
                 if(it.moviesResponse?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
                 else binding.dtRecomEmpty.visibility = View.GONE
@@ -107,15 +113,18 @@ class DetailMovieFragment : BaseFragment() {
         creditsAdapter = CreditsAdapter()
         recommendedAdapter = RecommendedAdapter()
         reviewsAdapter = ReviewsAdapter()
+        videoAdapter = VideoAdapter()
 
         binding.apply {
             dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtVideoList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
             dtCastList.adapter = creditsAdapter
             dtRecomList.adapter = recommendedAdapter
             dtReviewList.adapter = reviewsAdapter
+            dtVideoList.adapter = videoAdapter
         }
 
 
@@ -123,21 +132,18 @@ class DetailMovieFragment : BaseFragment() {
 
     private fun adapterOnClick(){
         creditsAdapter.setOnClickListener(object: CreditsAdapter.OnClickAdapterListener{
-            override fun onClick(credits: Credits) {
-                val bundle = Bundle()
-                bundle.putInt("person", credits.id)
-                changeActivity(bundle, PersonActivity::class.java)
+            override fun onClick(view: View, credits: Credits) {
+                val action = DetailMovieFragmentDirections.actionDetailMovieFragmentToPersonFragment(credits.id)
+                Navigation.findNavController(view).navigate(action)
             }
         })
 
         recommendedAdapter.setOnClickListener(object: RecommendedAdapter.OnClickAdapterListener{
             override fun onClick(movies: Movies) {
                 val bundle = Bundle().apply {
-                    putInt("id", movies.id)
-                    putString("image", movies.backdropPath.toString())
-                    putString("detail", Constant.MOVIE)
+                    putInt("filmId", movies.id)
+                    putString("type", Constant.MOVIE)
                 }
-
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
@@ -147,6 +153,14 @@ class DetailMovieFragment : BaseFragment() {
                 val uri: Uri = Uri.parse(reviews.url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context?.startActivity(intent)
+            }
+        })
+
+        videoAdapter.setOnClickAdapter(object: VideoAdapter.OnClickAdapterListener{
+            override fun onClick(videos: Videos) {
+                val bundle = Bundle()
+                bundle.putString("key", videos.key)
+                changeActivity(bundle, YoutubeActivity::class.java)
             }
         })
     }

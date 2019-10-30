@@ -19,15 +19,16 @@ class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewMo
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
     // Data Movie
-    private val title: MutableLiveData<String> = MediatorLiveData()
-    private val rating: MutableLiveData<String> = MediatorLiveData()
-    private val totalVote: MutableLiveData<String> = MediatorLiveData()
-    private val popularity: MutableLiveData<String> = MediatorLiveData()
-    private val releaseDate: MutableLiveData<String> = MediatorLiveData()
-    private val description: MutableLiveData<String> = MediatorLiveData()
-    private val status: MutableLiveData<String> = MediatorLiveData()
-    private val genre: MutableLiveData<String> = MediatorLiveData()
-    private var imageUrl: MutableLiveData<String> = MediatorLiveData()
+    private val title: MutableLiveData<String> = MutableLiveData()
+    private val rating: MutableLiveData<String> = MutableLiveData()
+    private val totalVote: MutableLiveData<String> = MutableLiveData()
+    private val popularity: MutableLiveData<String> = MutableLiveData()
+    private val releaseDate: MutableLiveData<String> = MutableLiveData()
+    private val description: MutableLiveData<String> = MutableLiveData()
+    private val status: MutableLiveData<String> = MutableLiveData()
+    private val genre: MutableLiveData<String> = MutableLiveData()
+    private var imageUrl: MutableLiveData<String> = MutableLiveData()
+    private var backdropImage: MutableLiveData<String> = MutableLiveData()
 
     companion object{
         private var filmId = 0
@@ -63,50 +64,27 @@ class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewMo
     fun setDetailMovieData(detailMovie: DetailMovieResponse){
         title.value = detailMovie.title
         rating.value = detailMovie.rate
-        totalVote.value = detailMovie.voteCount
+        totalVote.value = "(${detailMovie.voteCount} Reviews)"
         popularity.value = detailMovie.popularity
-        releaseDate.value = DateConverter.convert(detailMovie.releaseDate)
+        releaseDate.value = "Date Release : ${DateConverter.convert(detailMovie.releaseDate)}"
         description.value = detailMovie.overview
         status.value = detailMovie.status
-        genre.value = concateGenres(detailMovie.genreList)
+        genre.value = "Genre : ${concateGenres(detailMovie.genreList)}"
         imageUrl.value = ApiUrl.IMG_POSTER + detailMovie.posterPath.toString()
+        backdropImage.value = ApiUrl.IMG_BACK + detailMovie.backdropPath.toString()
     }
 
-    fun getTitle(): LiveData<String> {
-        return title
-    }
+    fun getTitle(): LiveData<String> = title
+    fun getRating(): LiveData<String> = rating
+    fun getTotalVote(): LiveData<String> = totalVote
+    fun getPopularity(): LiveData<String> = popularity
+    fun getDescription(): LiveData<String> = description
+    fun getReleaseDate(): LiveData<String> = releaseDate
+    fun getStatus(): LiveData<String> = status
+    fun getBackdropImage(): LiveData<String> = backdropImage
+    fun getGenre(): LiveData<String> = genre
+    fun getImageUrl(): LiveData<String> = imageUrl
 
-    fun getRating(): LiveData<String> {
-        return rating
-    }
-
-    fun getTotalVote(): LiveData<String> {
-        return totalVote
-    }
-
-    fun getPopularity(): LiveData<String> {
-        return popularity
-    }
-
-    fun getDescription(): LiveData<String> {
-        return description
-    }
-
-    fun getReleaseDate(): LiveData<String> {
-        return releaseDate
-    }
-
-    fun getStatus(): LiveData<String> {
-        return status
-    }
-
-    fun getGenre(): LiveData<String> {
-        return genre
-    }
-
-    fun getImageUrl(): LiveData<String> {
-        return imageUrl
-    }
 
     private fun concateGenres(genreList: List<Genre>): String {
         val genre = StringBuilder()

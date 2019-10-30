@@ -45,7 +45,7 @@ class UpcomingDataSource
 
     private fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
         scope.launch(getJobErrorHandler()) {
-            val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, page, "")
+            val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, page)
             if(upcoming.isSuccessful){
                 updateState(LoadDataState.LOADED)
                 pageSize = upcoming.body()?.totalPages ?: 0

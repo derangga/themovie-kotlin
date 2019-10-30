@@ -51,6 +51,7 @@ class RecommendedAdapter : ListAdapter<Movies, RecommendedAdapter.ViewHolder>(DI
                 rec_item.apply {
                     setImage(imgUrl)
                     setTitle(movies.title)
+                    setRating(movies.voteAverage)
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {
                             onClickAdapterListener.onClick(movies)

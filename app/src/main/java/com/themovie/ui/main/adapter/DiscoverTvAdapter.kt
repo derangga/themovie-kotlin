@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.local.TvLocal
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_maindtv.view.*
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.adapter_maindtv.view.*
 class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var listener: OnClickAdapterListener
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<TvLocal> = object: DiffUtil.ItemCallback<TvLocal>(){
             override fun areItemsTheSame(oldItem: TvLocal, newItem: TvLocal): Boolean {
@@ -31,7 +32,7 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
     }
 
     fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
-        this.onClickAdapterListener = onClickAdapterListener
+        this.listener = onClickAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -54,12 +55,17 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
                     setTitle(tvLocal.title)
                     setImage(imgPoster)
                     setRating(tvLocal.rating.orEmpty())
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            listener.onClick(itemView, tvLocal)
+                        }
+                    })
                 }
             }
         }
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, tvLocal: TvLocal, imageViewRes: ImageView)
+        fun onClick(view: View?, tvLocal: TvLocal)
     }
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 
@@ -23,15 +24,11 @@ import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.online.discovertv.Tv
-import com.themovie.restapi.ApiUrl
-import com.themovie.ui.detail.adapter.CreditsAdapter
-import com.themovie.ui.detail.adapter.RecommendedTvAdapter
-import com.themovie.ui.detail.adapter.ReviewsAdapter
-import com.themovie.ui.detail.adapter.SeasonAdapter
+import com.themovie.model.online.video.Videos
+import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel
 import com.themovie.ui.detail.viewmodel.DetailTvViewModelFactory
-import com.themovie.ui.person.PersonActivity
-import kotlinx.android.synthetic.main.fragment_detail_tv.*
+import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,21 +47,26 @@ class DetailTvFragment : BaseFragment() {
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedTvAdapter: RecommendedTvAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
+    private lateinit var videoAdapter: VideoAdapter
     private lateinit var binding: FragmentDetailTvBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_detail_tv, container, false)
-        val view: View = binding.root
-        DetailTvViewModel.setFilmId(getBundle()!!.getInt("filmId"))
+
         (activity?.application as MyApplication).getAppComponent().inject(this)
+        arguments?.let {
+            val filmId = DetailTvFragmentArgs.fromBundle(it).filmId
+            DetailTvViewModel.setFilmId(filmId)
+        }
+
         detailTvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailTvViewModel::class.java)
         binding.apply {
             vm = detailTvViewModel
             lifecycleOwner = this@DetailTvFragment
         }
 
-        return view
+        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -79,17 +81,20 @@ class DetailTvFragment : BaseFragment() {
         creditsAdapter = CreditsAdapter()
         recommendedTvAdapter = RecommendedTvAdapter()
         reviewsAdapter = ReviewsAdapter()
+        videoAdapter = VideoAdapter()
 
         binding.apply {
             dtSeasonList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtVideoList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
             dtSeasonList.adapter = seasonAdapter
             dtCastList.adapter = creditsAdapter
             dtRecomList.adapter = recommendedTvAdapter
             dtReviewList.adapter = reviewsAdapter
+            dtVideoList.adapter = videoAdapter
         }
 
     }
@@ -102,6 +107,7 @@ class DetailTvFragment : BaseFragment() {
                 creditsAdapter.submitList(it.castResponse?.credits)
                 recommendedTvAdapter.submitList(it.tvResponse?.results)
                 reviewsAdapter.submitList(it.reviews?.reviewList)
+                videoAdapter.submitList(it.videoResponse?.videos)
 
                 if(it.tvResponse?.results.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
                 else binding.dtRecomEmpty.visibility = View.GONE
@@ -133,21 +139,18 @@ class DetailTvFragment : BaseFragment() {
     private fun adapterOnCLick(){
 
         creditsAdapter.setOnClickListener(object: CreditsAdapter.OnClickAdapterListener{
-            override fun onClick(credits: Credits) {
-                val bundle = Bundle()
-                bundle.putInt("person", credits.id)
-                changeActivity(bundle, PersonActivity::class.java)
+            override fun onClick(view: View, credits: Credits) {
+                val action = DetailTvFragmentDirections.actionDetailTvFragmentToPersonFragment2(credits.id)
+                Navigation.findNavController(view).navigate(action)
             }
         })
 
         recommendedTvAdapter.setOnClickListener(object: RecommendedTvAdapter.OnClickAdapterListener{
             override fun onClick(tv: Tv) {
                 val bundle = Bundle().apply {
-                    putInt("id", tv.id)
-                    putString("image", tv.backdropPath.toString())
-                    putString("detail", Constant.TV)
+                    putInt("filmId", tv.id)
+                    putString("type", Constant.TV)
                 }
-
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
@@ -157,6 +160,14 @@ class DetailTvFragment : BaseFragment() {
                 val uri: Uri = Uri.parse(reviews.url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context?.startActivity(intent)
+            }
+        })
+
+        videoAdapter.setOnClickAdapter(object: VideoAdapter.OnClickAdapterListener{
+            override fun onClick(videos: Videos) {
+                val bundle = Bundle()
+                bundle.putString("key", videos.key)
+                changeActivity(bundle, YoutubeActivity::class.java)
             }
         })
     }

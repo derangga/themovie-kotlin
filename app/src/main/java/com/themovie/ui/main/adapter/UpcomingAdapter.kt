@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.helper.DateConverter
 import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.local.Upcoming
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_upcoming.view.*
@@ -53,13 +55,18 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
                 upcoming_item.apply {
                     setImage(posterImg)
                     setTitle(upcoming.title)
-                    setRating(upcoming.rating ?: "0")
+                    setDateRelease(upcoming.dateRelease)
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            onClickAdapterListener.onClick(itemView, upcoming)
+                        }
+                    })
                 }
             }
         }
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, upcoming: Upcoming, imageViewRes: ImageView)
+        fun onClick(view: View?, upcoming: Upcoming)
     }
 }

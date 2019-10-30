@@ -24,7 +24,7 @@ interface ApiInterface {
     suspend fun getUpcomingMovies (
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
-        @Query("region") region: String
+        @Query("region") region: String = "US"
     ) : Response<UpcomingResponse>
 
     @GET(ApiUrl.TRENDING)

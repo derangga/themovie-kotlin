@@ -52,6 +52,7 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
                 rec_item.apply {
                     setImage(imgUrl)
                     setTitle(item.title)
+                    setRating(item.rating.orEmpty())
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {
                             onClickItemListener.onClick(item)

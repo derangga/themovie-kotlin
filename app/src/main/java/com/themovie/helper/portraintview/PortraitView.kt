@@ -34,12 +34,31 @@ class PortraitView(context: Context,
         //val params = poster_item.layoutParams
         when(attrs?.getInt(R.styleable.PortraitView_type, 0)){
             0 -> {
-               poster_subtitle.visibility = View.GONE
+                val params = poster_item.layoutParams
+                params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
+                poster_subtitle.visibility = View.GONE
             }
             1 -> {
+                val params = poster_item.layoutParams
+                params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
                 poster_rate_l.visibility = View.GONE
             }
+            2 -> {
+                val params = poster_item.layoutParams
+                params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240.toFloat(), resources.displayMetrics).toInt()
+                poster_rate_l.visibility = View.GONE
+                poster_subtitle.visibility = View.GONE
+            }
+            3 -> {
+                val params = poster_item.layoutParams
+                params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
+                poster_subtitle.visibility = View.GONE
+                poster_rate_l.visibility = View.GONE
+                poster_date.visibility = View.VISIBLE
+            }
             else -> {
+                val params = poster_item.layoutParams
+                params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
                 poster_subtitle.visibility = View.GONE
             }
         }
@@ -63,6 +82,10 @@ class PortraitView(context: Context,
 
     fun setRating(rating: String){
         poster_rate.text = rating
+    }
+
+    fun setDateRelease(date: String){
+        poster_date.text = date
     }
 
     fun setOnClickListener(onClickListener: OnClickListener){
