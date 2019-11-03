@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -32,6 +33,7 @@ import com.themovie.model.online.FetchMainData
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.genres.GenresFragmentDirections
 import com.themovie.ui.main.adapter.*
+import kotlinx.android.synthetic.main.header.*
 import java.util.*
 import javax.inject.Inject
 
@@ -80,12 +82,20 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onMain(savedInstanceState: Bundle?) {
         binding.homeSwipe.setOnRefreshListener(this)
-        snackbar = Snackbar.make(activity!!.findViewById(android.R.id.content), getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
+        snackbar = Snackbar.make(activity!!.findViewById(android.R.id.content),
+            getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
+        h_search.visibility = View.GONE
         recyclerViewSetup()
         onClick()
         fetchData()
         showData()
         observeNetworkLoad()
+
+        val callback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                activity?.finishAffinity()
+            }}
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onRefresh() {

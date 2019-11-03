@@ -27,8 +27,8 @@
         <action
                 android:id="@+id/action_detailMovieFragment_to_personFragment"
                 app:destination="@id/personFragment"
-                app:enterAnim="@anim/fragment_close_enter"
-                app:exitAnim="@anim/fragment_close_exit" />
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
         <argument
                 android:name="filmId"
                 app:argType="integer"

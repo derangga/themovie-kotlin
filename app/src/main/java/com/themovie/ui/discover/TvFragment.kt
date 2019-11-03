@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +20,9 @@ import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentTvBinding
+import com.themovie.helper.Constant
 import com.themovie.model.online.discovertv.Tv
+import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
 import kotlinx.android.synthetic.main.fragment_tv.*
 import kotlinx.android.synthetic.main.header.*
@@ -41,7 +44,6 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tv, container, false)
-        val view = binding.root
         (activity?.application as MyApplication).getAppComponent().inject(this)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(TvViewModel::class.java)
@@ -49,7 +51,7 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             vm = viewModel
             lifecycleOwner = this@TvFragment
         }
-        return view
+        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -62,6 +64,14 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 Navigation.findNavController(it).navigate(action)
             }
         }
+
+        val callback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
+                Navigation.findNavController(view!!).navigate(action)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         recyclerViewSetup()
     }
 
@@ -88,7 +98,11 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
         tvAdapter.setOnClickAdapter(object: TvAdapter.OnClickAdapterListener{
             override fun onItemClick(view: View?, tv: Tv, imageViewRes: ImageView) {
-
+                val bundle = Bundle().apply {
+                    putInt("filmId", tv.id)
+                    putString("type", Constant.TV)
+                }
+                changeActivity(bundle, DetailActivity::class.java)
             }
         })
 

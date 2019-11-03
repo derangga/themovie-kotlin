@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         tools:context=".ui.genres.GenresFragment">
 
+    <data>
+        <variable
+                name="vm"
+                type="com.themovie.ui.genres.GenreViewModel" />
+        <import type="android.view.View"/>
+    </data>
+
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:background="@color/colorPrimaryDark">
 
-</FrameLayout>
+        <include
+            layout="@layout/header"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/genre_list"
+                android:layout_marginTop="@dimen/extra_small_space"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/header"
+                android:layout_marginStart="@dimen/extra_small_space"
+                android:layout_marginEnd="@dimen/extra_small_space"/>
+
+    </RelativeLayout>
+
+</layout>

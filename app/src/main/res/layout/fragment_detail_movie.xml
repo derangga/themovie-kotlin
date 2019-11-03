@@ -37,7 +37,7 @@
                         android:tint="#11000000"
                         android:background="@color/colorWhite"
                         android:scaleType="centerCrop"
-                        app:backdropImage="@{vm.backdropImage}"
+                        app:loadImage="@{vm.backdropImage}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -76,11 +76,12 @@
                                 android:layout_width="108dp"
                                 android:layout_height="match_parent"
                                 android:fitsSystemWindows="true"
-                                app:posterImage="@{vm.imageUrl}"
+                                app:loadImage="@{vm.imageUrl}"
                                 android:scaleType="centerCrop"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="ContentDescription" />
 
                         <TextView
                                 android:id="@+id/title"
@@ -158,7 +159,8 @@
                                 android:textSize="11sp"
                                 android:text="@{vm.totalVote}"
                                 app:layout_constraintTop_toBottomOf="@id/rate_layout"
-                                app:layout_constraintStart_toEndOf="@id/poster_img"/>
+                                app:layout_constraintStart_toEndOf="@id/poster_img"
+                                tools:ignore="SmallSp" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -169,7 +171,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/medium_space"
-                        android:text="Synopsis"
+                        android:text="@string/detail_title_4"
                         android:textColor="@color/colorAccent"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -250,7 +252,7 @@
                         <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Videos"
+                                android:text="@string/detail_title_18"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_margin="@dimen/small_space"
@@ -292,7 +294,7 @@
                         <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Recommendation Movies"
+                                android:text="@string/detail_title_8"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_margin="@dimen/small_space"

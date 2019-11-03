@@ -15,7 +15,6 @@ import com.themovie.model.online.genre.Genre
 import com.themovie.repos.fromapi.MainRepos
 import com.themovie.repos.local.*
 import com.themovie.restapi.ApiUrl
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalRepos: TrendingLocalRepos,
@@ -24,7 +23,6 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                     private val discoverMvLocalRepos: DiscoverMvLocalRepos
 ) : ViewModel() {
 
-    private val composite: CompositeDisposable = CompositeDisposable()
     private val onlineLiveDataFetch: MutableLiveData<FetchMainData> = MutableLiveData()
     private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
 
@@ -217,9 +215,5 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
 
     fun getGenreLocalData(): LiveData<List<GenreLocal>>{
         return genreRepos.getPartOfGenre()
-    }
-
-    override fun onCleared() {
-        composite.clear()
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +20,9 @@ import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentUpcomingBinding
+import com.themovie.helper.Constant
 import com.themovie.model.online.discovermv.Movies
+import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_upcoming.*
 import kotlinx.android.synthetic.main.header.*
@@ -41,7 +44,6 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_upcoming, container, false)
-        val view = binding.root
         (activity?.application as MyApplication).getAppComponent().inject(this)
 
         viewModel = ViewModelProvider(this, upcomingViewFactory).get(UpComingViewModel::class.java)
@@ -49,7 +51,7 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             vm = viewModel
             lifecycleOwner = this@UpcomingFragment
         }
-        return view
+        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -60,6 +62,14 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
             Navigation.findNavController(it).navigate(action)
         }
+
+        val callback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
+                Navigation.findNavController(view!!).navigate(action)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         recyclerViewSetup()
     }
 
@@ -86,7 +96,11 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
         mAdapter.setOnClickAdapter(object: MovieAdapter.OnClickAdapterListener{
             override fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView) {
-
+                val bundle = Bundle().apply {
+                    putInt("filmId", movies.id)
+                    putString("type", Constant.MOVIE)
+                }
+                changeActivity(bundle, DetailActivity::class.java)
             }
         })
 

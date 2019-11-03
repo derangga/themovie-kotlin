@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +20,9 @@ import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentMoviesBinding
+import com.themovie.helper.Constant
 import com.themovie.model.online.discovermv.Movies
+import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.header.*
@@ -62,6 +65,14 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 Navigation.findNavController(it).navigate(action)
             }
         }
+
+        val callback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
+                Navigation.findNavController(view!!).navigate(action)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         recyclerViewSetup()
     }
 
@@ -88,7 +99,11 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
         mAdapter.setOnClickAdapter(object: MovieAdapter.OnClickAdapterListener{
             override fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView) {
-
+                val bundle = Bundle().apply {
+                    putInt("filmId", movies.id)
+                    putString("type", Constant.MOVIE)
+                }
+                changeActivity(bundle, DetailActivity::class.java)
             }
         })
 

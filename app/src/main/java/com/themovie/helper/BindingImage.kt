@@ -4,21 +4,9 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 
 object BindingImage {
-    @BindingAdapter("posterImage")
+    @BindingAdapter("loadImage")
     @JvmStatic
-    fun loadMovieImage(view: ImageView, imageUrl: String?){
-        ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)
-    }
-
-    @BindingAdapter("profilePict")
-    @JvmStatic
-    fun loadProfilePicture(view: ImageView, photoUrl: String?){
-        ImageCache.setImageViewUrl(view.context, photoUrl.toString(), view)
-    }
-
-    @BindingAdapter("backdropImage")
-    @JvmStatic
-    fun loadMovieBackDrop(view: ImageView, imageUrl: String?){
+    fun loadImage(view: ImageView, imageUrl: String?){
         ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)
     }
 }

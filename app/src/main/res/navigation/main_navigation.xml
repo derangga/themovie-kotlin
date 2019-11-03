@@ -12,7 +12,9 @@
             tools:layout="@layout/fragment_upcoming" >
         <action
                 android:id="@+id/action_upcomingFragment_to_homeFragment"
-                app:destination="@id/homeFragment" />
+                app:destination="@id/homeFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
             android:id="@+id/homeFragment"
@@ -20,16 +22,24 @@
             android:label="HomeFragment" >
         <action
                 android:id="@+id/action_homeFragment_to_upcomingFragment"
-                app:destination="@id/upcomingFragment" />
+                app:destination="@id/upcomingFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
         <action
                 android:id="@+id/action_homeFragment_to_genresFragment"
-                app:destination="@id/genresFragment" />
+                app:destination="@id/genresFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
         <action
                 android:id="@+id/action_homeFragment_to_tvFragment"
-                app:destination="@id/tvFragment" />
+                app:destination="@id/tvFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
         <action
                 android:id="@+id/action_homeFragment_to_moviesFragment"
-                app:destination="@id/moviesFragment" />
+                app:destination="@id/moviesFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
             android:id="@+id/genresFragment"
@@ -38,7 +48,9 @@
             tools:layout="@layout/fragment_genres" >
         <action
                 android:id="@+id/action_genresFragment_to_homeFragment"
-                app:destination="@id/homeFragment" />
+                app:destination="@id/homeFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
             android:id="@+id/tvFragment"
@@ -47,7 +59,9 @@
             tools:layout="@layout/fragment_tv" >
         <action
                 android:id="@+id/action_tvFragment_to_homeFragment"
-                app:destination="@id/homeFragment" />
+                app:destination="@id/homeFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
             android:id="@+id/moviesFragment"
@@ -56,6 +70,8 @@
             tools:layout="@layout/fragment_movies" >
         <action
                 android:id="@+id/action_moviesFragment_to_homeFragment"
-                app:destination="@id/homeFragment" />
+                app:destination="@id/homeFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
 </navigation>
