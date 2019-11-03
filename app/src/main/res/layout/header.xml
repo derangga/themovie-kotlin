@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/Toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:contentInsetStart="@dimen/medium_space"
+            app:contentInsetEnd="@dimen/medium_space">
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true">
+
+            <ImageButton
+                    android:id="@+id/h_back"
+                    android:layout_width="40dp"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:layout_gravity="start"
+                    android:src="@drawable/ic_arrow"
+                    android:visibility="gone"
+                    style="@style/Widget.AppCompat.ActionButton"/>
+
+            <ImageView
+                    android:id="@+id/h_logo"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/tmdb"/>
+
+
+            <ImageButton
+                    android:id="@+id/h_search"
+                    android:layout_width="40dp"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_search"
+                    style="@style/Widget.AppCompat.ActionButton" />
+
+        </FrameLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+</com.google.android.material.appbar.AppBarLayout>

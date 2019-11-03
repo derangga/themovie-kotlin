@@ -16,18 +16,6 @@
         <activity android:name=".ui.search.SearchActivity">
         </activity>
         <activity
-                android:name=".ui.discover.DiscoverTvActivity"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-                android:name=".ui.discover.DiscoverMovieActivity"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".ui.youtube.YoutubeActivity">
-        </activity>
-        <activity android:name=".ui.person.PersonActivity">
-        </activity>
-        <activity
                 android:name=".ui.detail.DetailActivity"
                 android:label="@string/title_activity_detail_movie"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -42,6 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.youtube.YoutubeActivity"
+                android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

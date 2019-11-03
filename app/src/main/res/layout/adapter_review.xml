@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/rev_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="3dp">
+        android:layout_margin="4dp"
+            app:cardBackgroundColor="@color/colorPrimaryDark">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+                android:padding="@dimen/extra_small_space">
 
             <ImageView
                 android:layout_width="52dp"
@@ -31,7 +34,7 @@
                     android:id="@+id/rev_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/colorWhite"
                     android:textStyle="bold"/>
 
                 <View
@@ -39,13 +42,13 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
-                    android:background="@color/colorPrimary"/>
+                    android:background="@color/colorBlue"/>
 
                 <TextView
                     android:id="@+id/rev_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/colorWhite"
                     android:maxLines="4"/>
 
             </LinearLayout>

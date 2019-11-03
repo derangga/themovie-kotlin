@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.helper.DateConverter
 import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.local.Upcoming
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_upcoming.view.*
@@ -49,21 +51,22 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(upcoming: Upcoming){
             itemView.apply {
-                val backImg = "${ApiUrl.IMG_BACK}${upcoming.backDropPath}"
                 val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
-
-                ImageCache.setRoundedImageUrl(context, posterImg, mupco_poster)
-                ImageCache.setImageViewUrl(context, backImg, mupco_background)
-                mupco_title.text = upcoming.title
-                mupco_date.text = upcoming.dateRelease
-                mupco_card.setOnClickListener {
-                    onClickAdapterListener.onClick(it, upcoming, mupco_background)
+                upcoming_item.apply {
+                    setImage(posterImg)
+                    setTitle(upcoming.title)
+                    setDateRelease(upcoming.dateRelease)
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            onClickAdapterListener.onClick(itemView, upcoming)
+                        }
+                    })
                 }
             }
         }
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, upcoming: Upcoming, imageViewRes: ImageView)
+        fun onClick(view: View?, upcoming: Upcoming)
     }
 }

@@ -6,6 +6,13 @@
     <string name="transition_poster">selectedPoster</string>
     <string name="transition_cast">selectCrew</string>
 
+    <!-- Home Fragment -->
+    <string name="home_title_1">Popular Movies</string>
+    <string name="home_title_2">Upcoming Movies</string>
+    <string name="home_title_3">Genres</string>
+    <string name="home_title_4">Discover Tv Shows</string>
+    <string name="home_title_5">Discover Movies</string>
+
     <!-- Main Activity -->
     <string name="title_main_1">Now Trending on TV</string>
     <string name="title_main_2">Upcoming Movies</string>
@@ -24,7 +31,7 @@
 
     <!-- Detail Activity -->
     <string name="fragment_title_1">Detail</string>
-    <string name="fragment_title_2">Video</string>
+
     <string name="detail_title_1">Movie Detail</string>
     <string name="detail_title_2">Popularity</string>
     <string name="detail_title_3">Date Release</string>
@@ -32,7 +39,7 @@
     <string name="detail_title_5">Status</string>
     <string name="detail_title_6">Genre</string>
     <string name="detail_title_7">Cast and Crew</string>
-    <string name="detail_title_8">Recommended for you</string>
+    <string name="detail_title_8">Recommendation Movies</string>
     <string name="detail_title_9">No Recommended Movie</string>
     <string name="detail_title_10">Movie Reviews</string>
     <string name="detail_title_11">No internet connection found.\nCheck your internet connection or try again.</string>
@@ -42,6 +49,7 @@
     <string name="detail_title_15">Total Seasons</string>
     <string name="detail_title_16">Seasons</string>
     <string name="detail_title_17">No Cast Available</string>
+    <string name="detail_title_18">Videos</string>
 
     <!-- Person Activity -->
     <string name="person_title_1">Born :</string>

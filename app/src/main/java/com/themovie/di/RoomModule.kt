@@ -1,18 +1,16 @@
-package com.themovie.base.di
+package com.themovie.di
 
 import android.app.Application
 import androidx.room.Room
 import com.themovie.localdb.TheMovieDatabase
-import com.themovie.localdb.dao.MoviesDao
-import com.themovie.localdb.dao.TrendingDao
-import com.themovie.localdb.dao.TvDao
-import com.themovie.localdb.dao.UpcomingDao
+import com.themovie.localdb.dao.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RoomModule(val application: Application) {
+class RoomModule
+    (val application: Application) {
 
     private val theMovieDatabase: TheMovieDatabase = Room.databaseBuilder(
         application, TheMovieDatabase::class.java, "TheMovieDatabase"
@@ -46,5 +44,11 @@ class RoomModule(val application: Application) {
     @Singleton
     fun provideMoviesDao(): MoviesDao {
         return theMovieDatabase.discoverMovies()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGenreDao(): GenresDao {
+        return theMovieDatabase.genreDao()
     }
 }

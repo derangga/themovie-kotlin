@@ -7,11 +7,13 @@ import com.themovie.model.online.detail.DetailTvResponse
 import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.model.online.upcoming.UpcomingResponse
 import com.themovie.model.online.discovermv.MoviesResponse
+import com.themovie.model.online.genre.GenreResponse
 import com.themovie.model.online.person.PersonFilmResponse
 import com.themovie.model.online.person.PersonResponse
 import com.themovie.model.online.video.VideoResponse
 import io.reactivex.Observable
 import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -19,115 +21,125 @@ import retrofit2.http.Query
 interface ApiInterface {
 
     @GET(ApiUrl.UPCOMING)
-    fun getUpcomingMovies (
+    suspend fun getUpcomingMovies (
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
-        @Query("region") region: String
-    ) : Observable<UpcomingResponse>
+        @Query("region") region: String = "US"
+    ) : Response<UpcomingResponse>
 
     @GET(ApiUrl.TRENDING)
-    fun getTrendingTv(@Query("api_key") api_key: String): Observable<TvResponse>
+    suspend fun getTrendingTv(@Query("api_key") api_key: String): Response<TvResponse>
+
+    @GET(ApiUrl.POPULAR_MOVIE)
+    suspend fun getPopularMovie(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int
+    ): Response<MoviesResponse>
+
+    @GET(ApiUrl.GENRES)
+    suspend fun getGenres(@Query("api_key") api_key: String): Response<GenreResponse>
 
     @GET(ApiUrl.DISCOVER_MOVIES)
-    fun getDiscoverMovies (
+    suspend fun getDiscoverMovies (
         @Query("api_key") api_key: String ,
         @Query("language") language: String ,
         @Query("sort_by") sort_by: String ,
         @Query("page") page: Int ,
         @Query("primary_release_year") primary_release_year: String ,
         @Query("with_genres") with_genres: String
-    ) : Observable<MoviesResponse>
+    ) : Response<MoviesResponse>
 
     @GET(ApiUrl.DISCOVER_TV)
-    fun getDiscoverTvs(
+    suspend fun getDiscoverTvs(
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("sort_by") sort_by: String,
         @Query("page") page: Int,
         @Query("timezone") timezone: String
-    ) : Observable<TvResponse>
+    ) : Response<TvResponse>
 
     @GET(ApiUrl.DETAIL_MOVIE)
-    fun getMovieDetail(
+    suspend fun getMovieDetail(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String
-    ) : Observable<DetailMovieResponse>
+    ) : Response<DetailMovieResponse>
 
     @GET(ApiUrl.DETAIL_TV)
-    fun getTvDetail(
+    suspend fun getTvDetail(
         @Path("tv_id") movie_id: Int,
         @Query("api_key") api_key: String
-    ) : Observable<DetailTvResponse>
+    ) : Response<DetailTvResponse>
 
     @GET(ApiUrl.RECOMMENDATION)
-    fun getRecomendedMovies(
+    suspend fun getRecomendedMovies(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ) : Observable<MoviesResponse>
+    ) : Response<MoviesResponse>
 
     @GET(ApiUrl.RECOMMENDATION_TV)
-    fun getRecomendedTv(
+    suspend fun getRecomendedTv(
         @Path("tv_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ) : Observable<TvResponse>
+    ) : Response<TvResponse>
 
     @GET(ApiUrl.REVIEWS)
-    fun getReviews(
+    suspend fun getReviews(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ) : Observable<ReviewResponse>
+    ) : Response<ReviewResponse>
 
     @GET(ApiUrl.REVIEWS_TV)
-    fun getReviewsTV(
+    suspend fun getReviewsTV(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ) : Observable<ReviewResponse>
+    ) : Response<ReviewResponse>
 
     @GET(ApiUrl.CREDITS)
-    fun getCredits(
+    suspend fun getCredits(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String
-    ) : Observable<CastResponse>
+    ) : Response<CastResponse>
 
     @GET(ApiUrl.CREDITS_TV)
-    fun getCreditsTv(
+    suspend fun getCreditsTv(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") api_key: String
-    ) : Observable<CastResponse>
+    ) : Response<CastResponse>
 
     @GET(ApiUrl.VIDEO_MOVIE)
-    fun getVideosMovie(
+    suspend fun getVideosMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String
-    ) : Single<VideoResponse>
+    ) : Response<VideoResponse>
 
     @GET(ApiUrl.VIDEO_TV)
-    fun getVideosTv(
+    suspend fun getVideosTv(
     @Path("tv_id") tv_id: Int,
     @Query("api_key") api_key: String ,
     @Query("language") language: String
-    ) : Single<VideoResponse>
+    ) : Response<VideoResponse>
 
     @GET(ApiUrl.PERSON_FILM)
-    fun getFilmography(
+    suspend fun getFilmography(
         @Path("person_id") person_id: Int,
         @Query("api_key") api_key: String
-    ) : Observable<PersonFilmResponse>
+    ) : Response<PersonFilmResponse>
 
     @GET(ApiUrl.BIOGRAPHY)
-    fun getPerson(
+    suspend fun getPerson(
         @Path("person_id") person_id: Int,
         @Query("api_key") api_key: String
-    ) : Observable<PersonResponse>
+    ) : Response<PersonResponse>
 
     @GET("search/movie")
     fun getSearchMovie (

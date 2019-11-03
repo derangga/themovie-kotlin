@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.online.person.Filmography
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_recomended.view.*
@@ -48,16 +49,22 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
         fun bindItem(item: Filmography){
             itemView.apply {
                 val imgUrl = "${ApiUrl.IMG_POSTER}${item.posterPath.toString()}"
-                recom_title.text = item.title
-                ImageCache.setImageViewUrl(context, imgUrl, recom_img)
-            }
-            itemView.setOnClickListener {
-                onClickItemListener.onClick(it, item)
+                rec_item.apply {
+                    setImage(imgUrl)
+                    setTitle(item.title)
+                    setRating(item.rating.orEmpty())
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            onClickItemListener.onClick(item)
+                        }
+                    })
+                }
+
             }
         }
     }
 
     interface OnClickItemListener {
-        fun onClick(view: View?, personFilm: Filmography)
+        fun onClick(personFilm: Filmography)
     }
 }

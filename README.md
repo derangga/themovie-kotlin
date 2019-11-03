@@ -3,9 +3,10 @@ Aplikasi list Movie dengan data source dari Themovie DB
 
 ## Aplikasi ini dibuat dengan menggunakan
 - Retrofit2
-- RxKotlin2 dan RxAndroid
-- Room (for local database)
-- Kotlin Anko
+- Kotlin Coroutines
+- Room
+- Paging
 - Android Architecture Component
 - MVVM Pattern
 - Dagger 2
+- Navigation

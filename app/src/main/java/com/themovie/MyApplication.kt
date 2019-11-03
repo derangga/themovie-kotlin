@@ -1,7 +1,11 @@
 package com.themovie
 
 import android.app.Application
-import com.themovie.base.di.*
+import com.themovie.di.*
+import com.themovie.di.AppComponent
+import com.themovie.di.AppModule
+import com.themovie.di.NetworkModule
+import com.themovie.di.RoomModule
 
 class MyApplication : Application() {
 

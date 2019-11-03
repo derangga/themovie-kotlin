@@ -1,25 +1,28 @@
 package com.themovie.repos.fromapi
 
 import com.themovie.model.online.FetchPersonData
-import com.themovie.model.online.person.PersonFilmResponse
-import com.themovie.model.online.person.PersonResponse
 import com.themovie.restapi.ApiInterface
-import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class PersonRepos
 @Inject constructor(private val apiInterface: ApiInterface){
 
-    fun getPersonData(token: String, personId: Int): Observable<FetchPersonData> {
-        val personDetail = apiInterface.getPerson(personId, token).subscribeOn(Schedulers.io())
-        val personFilm = apiInterface.getFilmography(personId, token).subscribeOn(Schedulers.io())
-        return Observable.zip(personDetail, personFilm,
-            object: BiFunction<PersonResponse, PersonFilmResponse, FetchPersonData>{
-                override fun apply(t1: PersonResponse, t2: PersonFilmResponse): FetchPersonData {
-                    return FetchPersonData(t1, t2)
+    suspend fun getPersonData(token: String, personId: Int): FetchPersonData? {
+        var data: FetchPersonData? = null
+        try {
+            coroutineScope {
+                val detail = async(IO) { return@async apiInterface.getPerson(personId, token) }
+                val person = async(IO) { return@async apiInterface.getFilmography(personId, token) }
+                if(detail.await().isSuccessful && person.await().isSuccessful){
+                    data = FetchPersonData(detail.await().body(), person.await().body())
                 }
-            })
+            }
+        } catch (e: Exception){
+            throw e
+        }
+        return data
     }
 }

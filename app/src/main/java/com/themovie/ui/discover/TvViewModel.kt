@@ -1,22 +1,19 @@
 package com.themovie.ui.discover
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
 import com.themovie.model.online.discovertv.Tv
 import com.themovie.repos.fromapi.discover.TvDataSource
 import com.themovie.repos.fromapi.discover.TvDataSourceFactory
-import io.reactivex.disposables.CompositeDisposable
+import com.themovie.restapi.ApiInterface
 
-class TvViewModel(private val tvSourceFactory: TvDataSourceFactory): ViewModel() {
+class TvViewModel(apiInterface: ApiInterface): ViewModel() {
 
     private var tvLiveData: LiveData<PagedList<Tv>>
     private val uiList = MediatorLiveData<PagedList<Tv>>()
-
+    private val tvSourceFactory = TvDataSourceFactory(viewModelScope, apiInterface)
 
     init {
         val pageConfig = PagedList.Config.Builder()
@@ -49,10 +46,5 @@ class TvViewModel(private val tvSourceFactory: TvDataSourceFactory): ViewModel()
 
     fun refresh(){
         tvSourceFactory.getTvDataSource().value?.invalidate()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        tvSourceFactory.getTvDataSource().value?.clearComposite()
     }
 }

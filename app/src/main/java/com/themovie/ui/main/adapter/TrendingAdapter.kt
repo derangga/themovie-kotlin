@@ -2,6 +2,7 @@ package com.themovie.ui.main.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -25,7 +26,7 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Trending> = object: DiffUtil.ItemCallback<Trending>(){
             override fun areItemsTheSame(oldItem: Trending, newItem: Trending): Boolean {
-                return oldItem.tvId == newItem.tvId
+                return oldItem.mvId == newItem.mvId
             }
 
             override fun areContentsTheSame(oldItem: Trending, newItem: Trending): Boolean {

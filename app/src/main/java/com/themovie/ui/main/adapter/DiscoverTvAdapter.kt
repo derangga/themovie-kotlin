@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.local.TvLocal
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_maindtv.view.*
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.adapter_maindtv.view.*
 class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var listener: OnClickAdapterListener
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<TvLocal> = object: DiffUtil.ItemCallback<TvLocal>(){
             override fun areItemsTheSame(oldItem: TvLocal, newItem: TvLocal): Boolean {
@@ -31,7 +32,7 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
     }
 
     fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
-        this.onClickAdapterListener = onClickAdapterListener
+        this.listener = onClickAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,21 +50,22 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(tvLocal: TvLocal){
             itemView.apply {
-                val imgBack = "${ApiUrl.IMG_BACK}${tvLocal.backDropPath}"
                 val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
-                ImageCache.setImageViewUrl(context, imgBack, mdtv_background)
-                ImageCache.setRoundedImageUrl(context, imgPoster, mdtv_poster)
-                mdtv_title.text = tvLocal.title
-                mdtv_rate.text = tvLocal.rating
-
-                mdtv_card.setOnClickListener { view ->
-                    onClickAdapterListener.onClick(view, tvLocal, mdtv_background)
+                tv_item.apply {
+                    setTitle(tvLocal.title)
+                    setImage(imgPoster)
+                    setRating(tvLocal.rating.orEmpty())
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            listener.onClick(itemView, tvLocal)
+                        }
+                    })
                 }
             }
         }
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, tvLocal: TvLocal, imageViewRes: ImageView)
+        fun onClick(view: View?, tvLocal: TvLocal)
     }
 }

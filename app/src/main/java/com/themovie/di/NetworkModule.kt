@@ -1,9 +1,11 @@
-package com.themovie.base.di
+package com.themovie.di
 
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -45,4 +47,7 @@ class NetworkModule {
     fun provideApiInterface(retrofit: Retrofit): ApiInterface {
         return retrofit.create(ApiInterface::class.java)
     }
+
+    @Provides
+    fun provideCoroutineScope() = CoroutineScope(Dispatchers.Main)
 }

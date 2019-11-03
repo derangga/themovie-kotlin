@@ -4,103 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/mdtv_card"
-        android:layout_width="280dp"
-        android:layout_height="180dp"
-        android:elevation="6dp"
-        app:cardCornerRadius="5dp"
-        android:layout_margin="4dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/mdtv_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/no_image"
-                android:scaleType="centerCrop"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:transitionName="@string/transition_name"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorBlack"
-                android:alpha=".4"
-                android:id="@+id/vw_blacklayer" />
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/mdtv_poster"
-                android:layout_width="72dp"
-                android:layout_height="100dp"
-                android:src="@drawable/no_image"
-                android:scaleType="centerCrop"
-                app:riv_border_width="1dip"
-                app:riv_border_color="@color/coloorGrayYoung"
-                android:layout_marginBottom="12dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="12dp" />
-
-            <TextView
-                android:id="@+id/mdtv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_marginTop="6dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:layout_marginBottom="4dp"
-                android:layout_alignTop="@+id/mdtv_poster"
-                android:layout_toEndOf="@id/mdtv_poster"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@+id/mdtv_title"
-                android:layout_toEndOf="@+id/mdtv_poster"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Rating :  "
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="4dp"/>
-
-                <TextView
-                    android:id="@+id/mdtv_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"
-                    android:textAlignment="textEnd"
-                    android:gravity="end" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_rate"/>
-
-            </LinearLayout>
-
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
+    <com.themovie.helper.portraintview.PortraitView
+            android:id="@+id/tv_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:type="movie"/>
 
 </LinearLayout>

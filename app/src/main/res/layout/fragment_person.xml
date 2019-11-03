@@ -1,34 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".ui.person.PersonFragment">
 
     <data>
-        <variable name="vm" type="com.themovie.ui.person.PersonViewModel"/>
+        <variable
+                name="vm"
+                type="com.themovie.ui.person.PersonViewModel" />
         <import type="android.view.View"/>
     </data>
 
+    <!-- TODO: Update blank fragment layout -->
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.person.PersonActivity">
+            android:background="@color/colorPrimaryDark">
 
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+            <include
+                    android:id="@+id/header"
+                    layout="@layout/header"
+                    android:layout_alignParentTop="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" />
+
             <LinearLayout
                     android:id="@+id/person_layout"
-                    android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:visibility="invisible"
+                    android:orientation="vertical"
+                    android:layout_below="@id/header">
 
                 <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/small_space">
+                        android:layout_marginTop="@dimen/small_space"
+                        android:layout_marginBottom="@dimen/small_space"
+                        app:cardBackgroundColor="@color/colorPrimary">
 
                     <LinearLayout
                             android:id="@+id/per_layout"
@@ -44,14 +57,14 @@
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
                                 android:textSize="20sp"
-                                android:textColor="@color/colorPrimary"/>
+                                android:textColor="@color/colorAccent"/>
 
                         <View
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
                                 android:layout_marginTop="@dimen/small_space"
                                 android:layout_marginBottom="@dimen/small_space"
-                                android:background="@color/colorPrimary"/>
+                                android:background="@color/colorBlue"/>
 
                         <LinearLayout
                                 android:layout_width="match_parent"
@@ -63,7 +76,7 @@
                                     android:layout_height="180dp"
                                     android:layout_marginEnd="@dimen/small_space"
                                     android:transitionName="@string/transition_cast"
-                                    app:profilePict="@{vm.photoUrl}"/>
+                                    app:loadImage="@{vm.photoUrl}"/>
 
                             <LinearLayout
                                     android:layout_width="match_parent"
@@ -75,20 +88,20 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:maxLines="6"
-                                        android:textColor="@color/colorBlack"
+                                        android:textColor="@color/colorWhite"
                                         android:layout_marginBottom="20dp"/>
 
                                 <TextView
                                         android:text="@{vm.birthday}"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/colorBlack"/>
+                                        android:textColor="@color/colorWhite"/>
 
                                 <TextView
                                         android:text="@{vm.place}"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/colorBlack"/>
+                                        android:textColor="@color/colorWhite"/>
 
                             </LinearLayout>
 
@@ -100,7 +113,8 @@
 
                 <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/colorPrimary">
 
                     <RelativeLayout
                             android:layout_width="match_parent"
@@ -129,14 +143,14 @@
                                             android:layout_height="wrap_content"
                                             android:textStyle="bold"
                                             android:textSize="16sp"
-                                            android:textColor="@color/colorPrimary"/>
+                                            android:textColor="@color/colorAccent"/>
 
                                     <View
                                             android:layout_width="match_parent"
                                             android:layout_height="1dp"
                                             android:layout_marginTop="@dimen/small_space"
-                                            android:layout_marginBottom="@dimen/small_space"
-                                            android:background="@color/colorPrimary"/>
+                                            android:layout_marginBottom="@dimen/extra_small_space"
+                                            android:background="@color/colorBlue"/>
 
                                 </LinearLayout>
 
@@ -150,12 +164,14 @@
                                     android:textSize="20sp"
                                     android:textAlignment="center"
                                     android:visibility="gone"
-                                    android:layout_marginBottom="20dp"/>
+                                    android:layout_marginBottom="20dp"
+                                    android:textColor="@color/colorWhite"/>
 
                             <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/cast_recycler"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/extra_small_space">
 
                             </androidx.recyclerview.widget.RecyclerView>
 
@@ -169,7 +185,10 @@
 
             <include
                     android:id="@+id/shimmer_person"
-                    layout="@layout/shimmer_person"/>
+                    layout="@layout/shimmer_person"
+                    android:layout_below="@id/header"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" />
 
             <LinearLayout
                     android:id="@+id/pr_no_internet"
@@ -177,6 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:layout_below="@id/header"
                     android:layout_centerInParent="true">
 
                 <ImageView
@@ -206,4 +226,5 @@
         </RelativeLayout>
 
     </ScrollView>
+
 </layout>

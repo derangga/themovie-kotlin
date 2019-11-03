@@ -15,6 +15,7 @@ import com.themovie.restapi.ApiUrl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.launch
 
 class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
 
@@ -29,24 +30,29 @@ class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
     private val biography: MutableLiveData<String> = MediatorLiveData()
     private val photoUrl: MutableLiveData<String> = MediatorLiveData()
 
-    fun getPersonData(token: String, personId: Int): MutableLiveData<FetchPersonData> {
-        composite.add(
-            personRepos.getPersonData(token, personId).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<FetchPersonData>(){
-                    override fun onComplete() {
+    companion object{
+        private var personId = 0
+        fun setPersonId(personId: Int){
+            this.personId = personId
+        }
+    }
 
-                    }
+    init {
+        viewModelScope.launch {
+            try {
+                val response = personRepos.getPersonData(ApiUrl.TOKEN, personId)
+                if(response != null){
+                    personLiveData.value = response
+                    loadDataState.value = LoadDataState.LOADED
+                } else loadDataState.value = LoadDataState.ERROR
 
-                    override fun onNext(t: FetchPersonData) {
-                        personLiveData.value = t
-                        loadDataState.value = LoadDataState.LOADED
-                    }
+            } catch (e: Exception){
+                loadDataState.value = LoadDataState.ERROR
+            }
+        }
+    }
 
-                    override fun onError(e: Throwable) {
-                        loadDataState.value = LoadDataState.ERROR
-                    }
-                })
-        )
+    fun getPersonData(): MutableLiveData<FetchPersonData> {
         return  personLiveData
     }
 

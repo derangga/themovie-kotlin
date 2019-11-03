@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.local.MoviesLocal
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_maindmv.view.*
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.adapter_maindmv.view.*
 class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var listener: OnClickAdapterListener
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<MoviesLocal> = object: DiffUtil.ItemCallback<MoviesLocal>(){
@@ -39,7 +40,7 @@ class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>
     }
 
     fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
-        this.onClickAdapterListener = onClickAdapterListener
+        this.listener = onClickAdapterListener
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -49,18 +50,22 @@ class DiscoverMvAdapter : ListAdapter<MoviesLocal, DiscoverMvAdapter.ViewHolder>
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(movies: MoviesLocal){
             itemView.apply {
-                val imgBack = "${ApiUrl.IMG_BACK}${movies.backDropPath}"
                 val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
-                ImageCache.setImageViewUrl(context, imgBack, mdmv_background)
-                ImageCache.setRoundedImageUrl(context, imgPoster, mdmv_poster)
-                mdmv_title.text = movies.title
-                mdmv_date.text = movies.dateRelease
-                mdmv_card.setOnClickListener { view -> onClickAdapterListener.onClick(view, movies, mdmv_background) }
+                movie_item.apply {
+                    setImage(imgPoster)
+                    setTitle(movies.title)
+                    setRating(movies.rating)
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+                            listener.onClick(itemView, movies)
+                        }
+                    })
+                }
             }
         }
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, moviesLocal: MoviesLocal, imageViewRes: ImageView)
+        fun onClick(view: View?, moviesLocal: MoviesLocal)
     }
 }

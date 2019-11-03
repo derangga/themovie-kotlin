@@ -3,7 +3,6 @@ package com.themovie.repos.local
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.UpcomingDao
 import com.themovie.model.local.Upcoming
-import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class UpcomingLocalRepos
@@ -11,16 +10,12 @@ class UpcomingLocalRepos
 
     private var allUpcomingMovie: LiveData<List<Upcoming>> = upcomingDao.getAllUpcomingMv()
 
-    fun insert(upcoming: Upcoming){
-        doAsync {
-            upcomingDao.insertUpcoming(upcoming)
-        }
+    suspend fun insert(upcoming: Upcoming){
+        upcomingDao.insertUpcoming(upcoming)
     }
 
-    fun update(upcoming: Upcoming){
-        doAsync {
-            upcomingDao.updateUpcoming(upcoming)
-        }
+    suspend fun update(upcoming: Upcoming){
+        upcomingDao.updateUpcoming(upcoming)
     }
 
     fun getAllUpcoming(): LiveData<List<Upcoming>>{

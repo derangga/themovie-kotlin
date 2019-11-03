@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.adapter_video.view.*
 class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var listener: OnClickAdapterListener
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Videos> = object: DiffUtil.ItemCallback<Videos>(){
@@ -31,7 +31,7 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
     }
 
     fun setOnClickAdapter(onClickAdapterListener: OnClickAdapterListener){
-        this.onClickAdapterListener = onClickAdapterListener
+        this.listener = onClickAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -50,15 +50,14 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
                 val urlThumbnail = ApiUrl.THUMBNAIL.replace("key", video.key)
                 ImageCache.setImageViewUrl(context, urlThumbnail, t_thumbnail)
                 t_title.text = video.name
-                t_type.text = video.type
                 t_layout.setOnClickListener {
-                    onClickAdapterListener.onClick(it, video)
+                    listener.onClick(video)
                 }
             }
         }
     }
 
     interface OnClickAdapterListener {
-        fun onClick(view: View?, videos: Videos)
+        fun onClick(videos: Videos)
     }
 }

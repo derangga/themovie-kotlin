@@ -1,4 +1,4 @@
-package com.themovie.base.di
+package com.themovie.di
 
 import android.app.Application
 import android.content.Context
@@ -17,7 +17,8 @@ class AppModule(val context: Context, val application: Application) {
 
     @Provides
     @Singleton
-    fun provideApplication(): Application{
+    fun provideApplication(): Application {
         return application
     }
+
 }

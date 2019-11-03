@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
+import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.online.detail.SeasonTv
 import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_recomended.view.*
+import kotlinx.android.synthetic.main.adapter_season.view.*
 
 class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -30,7 +30,7 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_recomended, parent, false)
+        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_season, parent, false)
         context = parent.context
         return ViewHolder(view)
     }
@@ -43,8 +43,15 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
         fun bindItem(season: SeasonTv){
             itemView.apply {
                 val imgUrl = "${ApiUrl.IMG_POSTER}${season.posterPath.toString()}"
-                ImageCache.setImageViewUrl(context, imgUrl, recom_img)
-                recom_title.text = season.name
+                season_item.apply {
+                    setImage(imgUrl)
+                    setTitle(season.name)
+                    setOnClickListener(object: PortraitView.OnClickListener{
+                        override fun onClick() {
+
+                        }
+                    })
+                }
             }
         }
     }
