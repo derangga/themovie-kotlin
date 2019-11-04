@@ -14,8 +14,16 @@ class UpcomingLocalRepos
         upcomingDao.insertUpcoming(upcoming)
     }
 
+    suspend fun insert(upcoing: List<Upcoming>){
+        upcomingDao.insertUpcoming(*upcoing.toTypedArray())
+    }
+
     suspend fun update(upcoming: Upcoming){
         upcomingDao.updateUpcoming(upcoming)
+    }
+
+    suspend fun update(upcoming: List<Upcoming>){
+        upcomingDao.updateUpcoming(*upcoming.toTypedArray())
     }
 
     fun getAllUpcoming(): LiveData<List<Upcoming>>{

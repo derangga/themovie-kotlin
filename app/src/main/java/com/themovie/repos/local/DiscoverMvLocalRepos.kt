@@ -9,14 +9,20 @@ import javax.inject.Inject
 class DiscoverMvLocalRepos
     @Inject constructor(private val moviesDao: MoviesDao) {
 
-
-
     suspend fun insert(movies: MoviesLocal){
         moviesDao.insertDiscoverMovies(movies)
     }
 
+    suspend fun insert(movies: List<MoviesLocal>){
+        moviesDao.insertDiscoverMovies(*movies.toTypedArray())
+    }
+
     suspend fun update(movies: MoviesLocal){
         moviesDao.updateDiscoverMovies(movies)
+    }
+
+    suspend fun update(movies: List<MoviesLocal>){
+        moviesDao.updateDiscoverMovies(*movies.toTypedArray())
     }
 
     fun getDiscoverMovieLis(): LiveData<List<MoviesLocal>>{

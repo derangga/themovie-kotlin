@@ -192,6 +192,13 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
+        genreAdapter.setGenreClickListener(object: GenreAdapter.OnClickAdapterListener{
+            override fun itemGenreClick(view: View, genreLocal: GenreLocal) {
+                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(genreLocal.genreId)
+                Navigation.findNavController(view).navigate(action)
+            }
+        })
+
         discoverTvAdapter.setOnClickListener(object: DiscoverTvAdapter.OnClickAdapterListener{
             override fun onClick(view: View?, tvLocal: TvLocal) {
                 snackbar.dismiss()

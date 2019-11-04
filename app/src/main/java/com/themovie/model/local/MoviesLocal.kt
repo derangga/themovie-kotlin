@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tbl_movies")
-class MoviesLocal(@PrimaryKey @ColumnInfo(name = "id") val id: Int?,
+class MoviesLocal(@PrimaryKey
                   @ColumnInfo(name = "movieId") val mvId: Int,
                   @ColumnInfo(name = "title") val title: String,
                   @ColumnInfo(name = "date_release") val dateRelease: String,

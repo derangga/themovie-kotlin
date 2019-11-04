@@ -96,7 +96,7 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
     }
 
     interface OnClickAdapterListener {
-        fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView)
+        fun onItemClick(view: View?, movies: Movies)
     }
 
 }

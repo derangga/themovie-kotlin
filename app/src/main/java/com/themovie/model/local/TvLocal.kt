@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "tbl_tv")
 class TvLocal(
-    @PrimaryKey @ColumnInfo(name = "id") val id: Int?,
+    @PrimaryKey
     @ColumnInfo(name = "tvId") val tvId: Int,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "rating") val rating: String?,

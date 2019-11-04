@@ -11,9 +11,10 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class TvDataSource
-    (private val scope: CoroutineScope,
-     private val apiInterface: ApiInterface) : PageKeyedDataSource<Int, Tv>() {
+class TvDataSource(
+    private val scope: CoroutineScope,
+    private val apiInterface: ApiInterface
+) : PageKeyedDataSource<Int, Tv>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0

@@ -1,4 +1,4 @@
-package com.themovie.ui.discover
+package com.themovie.ui.genres
 
 
 import android.os.Bundle
@@ -6,76 +6,83 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.BaseAdapter
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.themovie.MyApplication
-
 import com.themovie.R
 import com.themovie.base.BaseFragment
-import com.themovie.databinding.FragmentUpcomingBinding
+import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.helper.Constant
 import com.themovie.model.online.discovermv.Movies
 import com.themovie.ui.detail.DetailActivity
+import com.themovie.ui.discover.MovieViewModel
+import com.themovie.ui.discover.MovieViewModelFactory
 import com.themovie.ui.discover.adapter.MovieAdapter
-import kotlinx.android.synthetic.main.fragment_upcoming.*
 import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
-class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
+class MovieWithGenreFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var upcomingViewFactory: UpcomingViewModelFactory
-    private lateinit var viewModel: UpComingViewModel
+    @Inject lateinit var movieFactory: MovieViewModelFactory
+    private lateinit var viewModel: MovieViewModel
     private lateinit var mAdapter: MovieAdapter
-    private lateinit var binding: FragmentUpcomingBinding
+    private lateinit var binding: FragmentMoviesBinding
+    private var destinationBackPress = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_upcoming, container, false)
-        (activity?.application as MyApplication).getAppComponent().inject(this)
 
-        viewModel = ViewModelProvider(this, upcomingViewFactory).get(UpComingViewModel::class.java)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies, container, false)
+        (activity?.application as MyApplication).getAppComponent().inject(this)
+        arguments?.let {
+            MovieViewModel.genre = MovieWithGenreFragmentArgs.fromBundle(it).genreId.toString()
+            destinationBackPress = MovieWithGenreFragmentArgs.fromBundle(it).from
+        }
+        viewModel = ViewModelProvider(this, movieFactory).get(MovieViewModel::class.java)
         binding.apply {
             vm = viewModel
-            lifecycleOwner = this@UpcomingFragment
+            lifecycleOwner = this@MovieWithGenreFragment
         }
+
         return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        swipe.setOnRefreshListener(this)
+        binding.swipe.setOnRefreshListener(this)
         h_logo.visibility = View.GONE
-        h_back.visibility = View.VISIBLE
-        h_back.setOnClickListener {
-            val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
-            Navigation.findNavController(it).navigate(action)
+        val action = if(destinationBackPress == "home"){
+            MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToHomeFragment()
+        } else MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToGenresFragment()
+
+        h_back.apply {
+            visibility = View.VISIBLE
+            setOnClickListener { Navigation.findNavController(it).navigate(action) }
+        }
+        val callback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() { Navigation.findNavController(view!!).navigate(action) }
         }
 
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-        }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         recyclerViewSetup()
     }
 
     override fun onStart() {
         super.onStart()
-        getUpcomingMovie()
+        getDiscoverMovies()
     }
 
     override fun onStop() {
@@ -89,7 +96,7 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun recyclerViewSetup(){
         mAdapter = MovieAdapter()
-        upcoming_rec.apply {
+        binding.movieRec.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdapter
         }
@@ -111,15 +118,15 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         })
     }
 
-    private fun getUpcomingMovie(){
+    private fun getDiscoverMovies(){
         viewModel.apply {
-            getUpcomingData().observe(this@UpcomingFragment,
-                Observer<PagedList<Movies>> {
+            getMovieLiveData().observe(this@MovieWithGenreFragment,
+                Observer<PagedList<Movies>>{
                     mAdapter.submitList(it)
-                    swipe.isRefreshing = false
+                    binding.swipe.isRefreshing = false
                 })
 
-            getLoadState().observe(this@UpcomingFragment,
+            getLoadState().observe(this@MovieWithGenreFragment,
                 Observer{
                     mAdapter.setLoadState(it)
                 })

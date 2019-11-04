@@ -12,8 +12,16 @@ class TrendingLocalRepos
         trendingDao.insertTrending(trending)
     }
 
+    suspend fun insert(trending: List<Trending>){
+        trendingDao.insertTrending(*trending.toTypedArray())
+    }
+
     suspend fun update(trending: Trending){
         trendingDao.updateTrendingData(trending)
+    }
+
+    suspend fun update(trending: List<Trending>){
+        trendingDao.updateTrendingData(*trending.toTypedArray())
     }
 
     fun getTrendingList(): LiveData<List<Trending>>{

@@ -20,6 +20,8 @@ import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentGenresBinding
 import com.themovie.model.local.GenreLocal
 import com.themovie.ui.main.adapter.GenreAdapter
+import com.themovie.ui.main.adapter.GenreAdapter.OnClickAdapterListener
+import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -57,6 +59,13 @@ class GenresFragment : BaseFragment() {
                 Navigation.findNavController(view!!).navigate(action)
             }}
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+        h_logo.visibility = View.GONE
+        h_back.apply {
+            visibility = View.VISIBLE
+            setOnClickListener {
+                val action = GenresFragmentDirections.actionGenresFragmentToHomeFragment()
+                Navigation.findNavController(it).navigate(action)
+            }}
     }
 
     private fun setupRecycler(){
@@ -65,6 +74,13 @@ class GenresFragment : BaseFragment() {
             layoutManager = GridLayoutManager(context, 2)
             adapter = genreAdapter
         }
+
+        genreAdapter.setGenreClickListener(object: OnClickAdapterListener{
+            override fun itemGenreClick(view: View, genreLocal: GenreLocal) {
+                val action = GenresFragmentDirections.actionGenresFragmentToMovieWithGenreFragment(genreLocal.genreId, "genreList")
+                Navigation.findNavController(view).navigate(action)
+            }
+        })
     }
 
     private fun getGenreList(){

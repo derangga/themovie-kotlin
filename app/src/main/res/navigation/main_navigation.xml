@@ -40,6 +40,11 @@
                 app:destination="@id/moviesFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
                 app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+                android:id="@+id/action_homeFragment_to_movieWithGenreFragment"
+                app:destination="@id/movieWithGenreFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
             android:id="@+id/genresFragment"
@@ -49,6 +54,11 @@
         <action
                 android:id="@+id/action_genresFragment_to_homeFragment"
                 app:destination="@id/homeFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+                android:id="@+id/action_genresFragment_to_movieWithGenreFragment"
+                app:destination="@id/movieWithGenreFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
                 app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
@@ -73,5 +83,28 @@
                 app:destination="@id/homeFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
                 app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+            android:id="@+id/movieWithGenreFragment"
+            android:name="com.themovie.ui.genres.MovieWithGenreFragment"
+            android:label="MovieWithGenreFragment" >
+        <action
+                android:id="@+id/action_movieWithGenreFragment_to_genresFragment"
+                app:destination="@id/genresFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
+        <argument
+                android:name="genreId"
+                app:argType="integer"
+                android:defaultValue="0" />
+        <action
+                android:id="@+id/action_movieWithGenreFragment_to_homeFragment"
+                app:destination="@id/homeFragment"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit" />
+        <argument
+                android:name="from"
+                app:argType="string"
+                android:defaultValue="home" />
     </fragment>
 </navigation>

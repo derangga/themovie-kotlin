@@ -14,7 +14,11 @@ import io.reactivex.disposables.CompositeDisposable
 class MovieViewModel(apiInterface: ApiInterface) : ViewModel() {
     private var movieLiveData: LiveData<PagedList<Movies>>
     private val uiList = MediatorLiveData<PagedList<Movies>>()
-    private val moviesSourceFactory = MovieDataSourceFactory(viewModelScope, apiInterface)
+    private val moviesSourceFactory = MovieDataSourceFactory(viewModelScope, apiInterface, genre)
+
+    companion object {
+        var genre: String = ""
+    }
 
     init {
         val pageConfig = PagedList.Config.Builder()

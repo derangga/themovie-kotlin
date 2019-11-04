@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.adapter_genre.view.*
 
 class GenreAdapter : ListAdapter<GenreLocal, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
 
+    private lateinit var listener: OnClickAdapterListener
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<GenreLocal> = object: DiffUtil.ItemCallback<GenreLocal>(){
@@ -34,11 +35,20 @@ class GenreAdapter : ListAdapter<GenreLocal, GenreAdapter.ViewHolder>(DIFF_CALLB
         holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItem(item: GenreLocal){
             itemView.apply {
                 genre_name.text = item.name
             }
+            itemView.setOnClickListener { listener.itemGenreClick(itemView, item) }
         }
+    }
+
+    fun setGenreClickListener(listener: OnClickAdapterListener){
+        this.listener = listener
+    }
+
+    interface OnClickAdapterListener {
+        fun itemGenreClick(view: View, genreLocal: GenreLocal)
     }
 }

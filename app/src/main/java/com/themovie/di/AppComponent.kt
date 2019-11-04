@@ -4,6 +4,7 @@ import com.themovie.ui.detail.DetailMovieFragment
 import com.themovie.ui.detail.DetailTvFragment
 import com.themovie.ui.discover.*
 import com.themovie.ui.genres.GenresFragment
+import com.themovie.ui.genres.MovieWithGenreFragment
 import com.themovie.ui.main.HomeFragment
 import com.themovie.ui.main.MainActivity
 import com.themovie.ui.person.PersonFragment
@@ -22,4 +23,5 @@ interface AppComponent {
     fun inject(tvFragment: TvFragment)
     fun inject(personFragment: PersonFragment)
     fun inject(genresFragment: GenresFragment)
+    fun inject(movieWithGenreFragment: MovieWithGenreFragment)
 }

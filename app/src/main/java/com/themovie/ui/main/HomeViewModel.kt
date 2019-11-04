@@ -1,6 +1,7 @@
 package com.themovie.ui.main
 
 import android.util.Log
+import androidx.core.util.rangeTo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import com.themovie.model.online.genre.Genre
 import com.themovie.repos.fromapi.MainRepos
 import com.themovie.repos.local.*
 import com.themovie.restapi.ApiUrl
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalRepos: TrendingLocalRepos,
@@ -42,154 +44,146 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
     }
 
     fun insertLocalTrending(trendingList: List<Movies>){
-        trendingList.forEachIndexed { i, movies ->
-            val trending = Trending( i,
-                mvId = movies.id,
-                title = movies.title,
-                dateRelease = movies.releaseDate,
-                rating = movies.voteAverage,
-                posterPath = movies.posterPath,
-                backDropPath = movies.backdropPath
+        val trendingLocal = trendingList.map { trending ->
+            Trending(
+                mvId = trending.id,
+                title = trending.title,
+                dateRelease = trending.releaseDate,
+                rating = trending.voteAverage,
+                posterPath = trending.posterPath,
+                backDropPath = trending.backdropPath
             )
-            viewModelScope.launch {
-                trendingLocalRepos.insert(trending)
-            }
+        }
+        viewModelScope.launch(IO) {
+            trendingLocalRepos.insert(trendingLocal)
         }
     }
 
     fun insertLocalUpcoming(upcomingList: List<Movies>){
-        upcomingList.forEachIndexed { i, movies ->
-            val upcoming = Upcoming(i,
-                mvId = movies.id,
-                title = movies.title,
-                dateRelease = DateConverter.convert(movies.releaseDate),
-                posterPath = movies.posterPath.toString(),
-                backDropPath = movies.backdropPath.toString(),
-                rating = movies.voteAverage
+        val upcomingLocal = upcomingList.map { upcoming->
+            Upcoming(
+                mvId = upcoming.id,
+                title = upcoming.title,
+                dateRelease = upcoming.releaseDate,
+                posterPath = upcoming.posterPath,
+                backDropPath = upcoming.backdropPath,
+                rating = upcoming.voteAverage
             )
-            viewModelScope.launch {
-                upcomingLocalRepos.insert(upcoming)
-            }
+        }
+        viewModelScope.launch(IO) {
+            upcomingLocalRepos.insert(upcomingLocal)
         }
     }
 
     fun insertLocalGenre(genreList: List<Genre>){
-        genreList.forEachIndexed { index, genre ->
-            val genreData = GenreLocal(
-                index,
-                genreId = genre.id,
-                name = genre.name
-            )
-            viewModelScope.launch {
-                genreRepos.insert(genreData)
-            }
+        val genreLocal = genreList.map { genre ->
+            GenreLocal(genreId = genre.id, name = genre.name)
+        }
+        viewModelScope.launch(IO) {
+            genreRepos.insert(genreLocal)
         }
     }
 
     fun insertLocalTv(tvList: List<Tv>){
-        tvList.forEachIndexed { i, tv ->
-            val tvData = TvLocal( i,
+        val tvLocal = tvList.map { tv ->
+            TvLocal(
                 tvId = tv.id,
                 title = tv.name,
                 rating = tv.voteAverage,
-                posterPath = tv.posterPath.toString(),
-                backDropPath = tv.backdropPath.toString()
+                posterPath = tv.posterPath,
+                backDropPath = tv.backdropPath
             )
-            viewModelScope.launch {
-                discoverTvLocalRepos.insert(tvData)
-            }
+        }
+        viewModelScope.launch(IO) {
+            discoverTvLocalRepos.insert(tvLocal)
         }
     }
 
     fun insertLocalMovies(movieList: List<Movies>){
-        movieList.forEachIndexed { i, movies ->
-            val movieData = MoviesLocal( i,
-                mvId = movies.id,
-                title = movies.title,
-                dateRelease = DateConverter.convert(movies.releaseDate),
-                rating = movies.voteAverage,
-                posterPath = movies.posterPath.toString(),
-                backDropPath = movies.backdropPath.toString()
-            )
-            viewModelScope.launch {
-                discoverMvLocalRepos.insert(movieData)
-            }
-        }
-    }
-
-    fun updateLocalTrending(trendingList: List<Movies>){
-        trendingList.forEachIndexed { i, movies ->
-            val trending = Trending( i,
+        val moviesLocal = movieList.map { movies ->
+            MoviesLocal(
                 mvId = movies.id,
                 title = movies.title,
                 dateRelease = movies.releaseDate,
                 rating = movies.voteAverage,
-                posterPath = movies.posterPath,
-                backDropPath = movies.backdropPath
+                posterPath = movies.posterPath.orEmpty(),
+                backDropPath = movies.posterPath.orEmpty()
             )
-            viewModelScope.launch {
-                trendingLocalRepos.update(trending)
-            }
+        }
+        viewModelScope.launch {
+            discoverMvLocalRepos.insert(moviesLocal)
+        }
+    }
+
+    fun updateLocalTrending(trendingList: List<Movies>){
+        val trendingLocal = trendingList.map { trending ->
+            Trending(
+                mvId = trending.id,
+                title = trending.title,
+                dateRelease = trending.releaseDate,
+                rating = trending.voteAverage,
+                posterPath = trending.posterPath,
+                backDropPath = trending.backdropPath
+            )
+        }
+        viewModelScope.launch(IO) {
+            trendingLocalRepos.update(trendingLocal)
         }
     }
 
     fun updateLocalUpComing(upcomingList: List<Movies>){
-        upcomingList.forEachIndexed { i, movies ->
-            val upcoming = Upcoming(i,
-                mvId = movies.id,
-                title = movies.title,
-                dateRelease = DateConverter.convert(movies.releaseDate),
-                posterPath = movies.posterPath.toString(),
-                backDropPath = movies.backdropPath.toString(),
-                rating = movies.voteAverage
+        val upcomingLocal = upcomingList.map { upcoming->
+            Upcoming(
+                mvId = upcoming.id,
+                title = upcoming.title,
+                dateRelease = upcoming.releaseDate,
+                posterPath = upcoming.posterPath,
+                backDropPath = upcoming.backdropPath,
+                rating = upcoming.voteAverage
             )
-            viewModelScope.launch {
-                upcomingLocalRepos.update(upcoming)
-            }
+        }
+        viewModelScope.launch(IO) {
+            upcomingLocalRepos.update(upcomingLocal)
         }
     }
 
     fun updateLocalGenre(genreList: List<Genre>){
-        genreList.forEachIndexed { index, genre ->
-            val genreData = GenreLocal(
-                index,
-                genreId = genre.id,
-                name = genre.name
-            )
-            viewModelScope.launch {
-                genreRepos.insert(genreData)
-            }
+        val genreLocal = genreList.map { genre ->
+            GenreLocal(genreId = genre.id, name = genre.name)
+        }
+        viewModelScope.launch(IO) {
+            genreRepos.update(genreLocal)
         }
     }
 
     fun updateLocalTv(tvList: List<Tv>){
-        tvList.forEachIndexed { i, tv ->
-            val tvData = TvLocal( i,
+        val tvLocal = tvList.map { tv ->
+            TvLocal(
                 tvId = tv.id,
                 title = tv.name,
                 rating = tv.voteAverage,
-                posterPath = tv.posterPath.toString(),
-                backDropPath = tv.backdropPath.toString()
+                posterPath = tv.posterPath,
+                backDropPath = tv.backdropPath
             )
-            viewModelScope.launch {
-                discoverTvLocalRepos.update(tvData)
-            }
+        }
+        viewModelScope.launch(IO) {
+            discoverTvLocalRepos.update(tvLocal)
         }
     }
 
     fun updateLocalMovies(movieList: List<Movies>){
-        movieList.forEachIndexed { i, movies ->
-            val movieData = MoviesLocal( i,
+        val moviesLocal = movieList.map { movies ->
+            MoviesLocal(
                 mvId = movies.id,
                 title = movies.title,
-                dateRelease = DateConverter.convert(movies.releaseDate),
+                dateRelease = movies.releaseDate,
                 rating = movies.voteAverage,
-                posterPath = movies.posterPath.toString(),
-                backDropPath = movies.backdropPath.toString()
+                posterPath = movies.posterPath.orEmpty(),
+                backDropPath = movies.posterPath.orEmpty()
             )
-            viewModelScope.launch {
-                discoverMvLocalRepos.update(movieData)
-            }
+        }
+        viewModelScope.launch {
+            discoverMvLocalRepos.update(moviesLocal)
         }
     }
 

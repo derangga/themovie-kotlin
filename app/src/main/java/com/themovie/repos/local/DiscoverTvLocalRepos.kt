@@ -14,8 +14,16 @@ class DiscoverTvLocalRepos
         tvDao.insertDiscoverTv(tv)
     }
 
+    suspend fun insert(tv: List<TvLocal>){
+        tvDao.insertDiscoverTv(*tv.toTypedArray())
+    }
+
     suspend fun update(tv: TvLocal){
         tvDao.updateDiscoverTv(tv)
+    }
+
+    suspend fun update(tv: List<TvLocal>){
+        tvDao.updateDiscoverTv(*tv.toTypedArray())
     }
 
     fun getDiscoverTvList(): LiveData<List<TvLocal>>{

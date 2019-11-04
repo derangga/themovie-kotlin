@@ -12,9 +12,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class MovieDataSource
-    (private val scope: CoroutineScope,
-     private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
+class MovieDataSource(
+    private val scope: CoroutineScope,
+    private val apiInterface: ApiInterface,
+    private val genre: String
+): PageKeyedDataSource<Int, Movies>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     private var pageSize: Int = 0
@@ -47,7 +49,7 @@ class MovieDataSource
     private fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
         scope.launch(getJobErrorHandler()) {
             val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
-                Constant.SORTING, page, "2019", "")
+                Constant.SORTING, page, "2019", genre)
             if(discover.isSuccessful){
                 updateState(LoadDataState.LOADED)
                 pageSize = discover.body()?.totalPages ?: 0

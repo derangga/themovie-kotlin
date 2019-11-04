@@ -12,8 +12,16 @@ class GenreLocalRepos
         genresDao.insertGenre(genre)
     }
 
+    suspend fun insert(genre: List<GenreLocal>){
+        genresDao.insertGenre(*genre.toTypedArray())
+    }
+
     suspend fun update(genre: GenreLocal){
         genresDao.updateGenre(genre)
+    }
+
+    suspend fun update(genre: List<GenreLocal>){
+        genresDao.updateGenre(*genre.toTypedArray())
     }
 
     fun getPartOfGenre(): LiveData<List<GenreLocal>> = genresDao.getPartOfGenre()

@@ -16,6 +16,12 @@ interface GenresDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGenre(genre: GenreLocal)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGenre(vararg genre: GenreLocal)
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateGenre(genre: GenreLocal)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateGenre(vararg genre: GenreLocal)
 }

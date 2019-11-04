@@ -21,7 +21,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         itemView.mv_descript.text = movies.overview
         itemView.mv_date.text = DateConverter.convert(movies.releaseDate)
         itemView.mv_item.setOnClickListener {
-            onItemClickListener.onItemClick(it, movies, itemView.mv_background)
+            onItemClickListener.onItemClick(it, movies)
         }
     }
 }

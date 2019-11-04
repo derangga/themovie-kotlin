@@ -8,9 +8,10 @@ import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Singleton
-class TvDataSourceFactory
-    (private val scope: CoroutineScope,
-     private val apiInterface: ApiInterface) : DataSource.Factory<Int, Tv>() {
+class TvDataSourceFactory(
+    private val scope: CoroutineScope,
+    private val apiInterface: ApiInterface
+) : DataSource.Factory<Int, Tv>() {
 
     private val tvSourceLiveData = MutableLiveData<TvDataSource>()
 

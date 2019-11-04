@@ -118,7 +118,7 @@ class DetailMovieFragment : BaseFragment() {
         binding.apply {
             dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            dtReviewList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtReviewList.layoutManager = LinearLayoutManager(context)
             dtVideoList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
             dtCastList.adapter = creditsAdapter

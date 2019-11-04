@@ -47,7 +47,7 @@ interface ApiInterface {
         @Query("sort_by") sort_by: String ,
         @Query("page") page: Int ,
         @Query("primary_release_year") primary_release_year: String ,
-        @Query("with_genres") with_genres: String
+        @Query("with_genres") withGenres: String
     ) : Response<MoviesResponse>
 
     @GET(ApiUrl.DISCOVER_TV)

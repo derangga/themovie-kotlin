@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tbl_upcoming")
-class Upcoming (@PrimaryKey @ColumnInfo(name = "id") val id: Int?,
+class Upcoming (@PrimaryKey
                 @ColumnInfo(name = "mvId") val mvId: Int,
                 @ColumnInfo(name = "title") val title: String,
                 @ColumnInfo(name = "date_release") val dateRelease: String,

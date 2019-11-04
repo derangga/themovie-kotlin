@@ -44,7 +44,6 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies, container, false)
-        val view = binding.root
         (activity?.application as MyApplication).getAppComponent().inject(this)
 
         viewModel = ViewModelProvider(this, movieViewFactory).get(MovieViewModel::class.java)
@@ -52,7 +51,7 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             vm = viewModel
             lifecycleOwner = this@MoviesFragment
         }
-        return view
+        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -98,7 +97,7 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         mAdapter.setOnClickAdapter(object: MovieAdapter.OnClickAdapterListener{
-            override fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView) {
+            override fun onItemClick(view: View?, movies: Movies) {
                 val bundle = Bundle().apply {
                     putInt("filmId", movies.id)
                     putString("type", Constant.MOVIE)
