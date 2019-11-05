@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.themovie.helper.DateConverter
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.convertDate
 import com.themovie.model.local.*
 import com.themovie.model.online.FetchMainData
 import com.themovie.model.online.discovermv.Movies
@@ -48,7 +48,7 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
             Trending(
                 mvId = trending.id,
                 title = trending.title,
-                dateRelease = trending.releaseDate,
+                dateRelease = trending.releaseDate.convertDate(),
                 rating = trending.voteAverage,
                 posterPath = trending.posterPath,
                 backDropPath = trending.backdropPath
@@ -64,7 +64,7 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
             Upcoming(
                 mvId = upcoming.id,
                 title = upcoming.title,
-                dateRelease = upcoming.releaseDate,
+                dateRelease = upcoming.releaseDate.convertDate(),
                 posterPath = upcoming.posterPath,
                 backDropPath = upcoming.backdropPath,
                 rating = upcoming.voteAverage
@@ -104,7 +104,7 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
             MoviesLocal(
                 mvId = movies.id,
                 title = movies.title,
-                dateRelease = movies.releaseDate,
+                dateRelease = movies.releaseDate.convertDate(),
                 rating = movies.voteAverage,
                 posterPath = movies.posterPath.orEmpty(),
                 backDropPath = movies.posterPath.orEmpty()
@@ -120,7 +120,7 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
             Trending(
                 mvId = trending.id,
                 title = trending.title,
-                dateRelease = trending.releaseDate,
+                dateRelease = trending.releaseDate.convertDate(),
                 rating = trending.voteAverage,
                 posterPath = trending.posterPath,
                 backDropPath = trending.backdropPath
@@ -136,7 +136,7 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
             Upcoming(
                 mvId = upcoming.id,
                 title = upcoming.title,
-                dateRelease = upcoming.releaseDate,
+                dateRelease = upcoming.releaseDate.convertDate(),
                 posterPath = upcoming.posterPath,
                 backDropPath = upcoming.backdropPath,
                 rating = upcoming.voteAverage
@@ -176,7 +176,7 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
             MoviesLocal(
                 mvId = movies.id,
                 title = movies.title,
-                dateRelease = movies.releaseDate,
+                dateRelease = movies.releaseDate.convertDate(),
                 rating = movies.voteAverage,
                 posterPath = movies.posterPath.orEmpty(),
                 backDropPath = movies.posterPath.orEmpty()

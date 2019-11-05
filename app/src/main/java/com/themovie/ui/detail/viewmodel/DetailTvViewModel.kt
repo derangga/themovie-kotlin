@@ -2,8 +2,8 @@ package com.themovie.ui.detail.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.themovie.helper.DateConverter
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.convertDate
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.DetailTvResponse
 import com.themovie.model.online.detail.Genre
@@ -68,7 +68,7 @@ class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() 
         rating.value = detailTv.voteAverage
         totalVote.value = "(${detailTv.voteCount} Reviews)"
         popularity.value = detailTv.popularity
-        releaseData.value = "Release Date : ${DateConverter.convert(detailTv.firstAirDate)}"
+        releaseData.value = "Release Date : ${detailTv.firstAirDate.convertDate()}"
         description.value = detailTv.overview
         status.value = detailTv.status
         genre.value = "Genre : ${concateGenres(detailTv.genreList)}"
