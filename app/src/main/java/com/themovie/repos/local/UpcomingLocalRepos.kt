@@ -2,7 +2,7 @@ package com.themovie.repos.local
 
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.UpcomingDao
-import com.themovie.model.local.Upcoming
+import com.themovie.model.db.Upcoming
 import javax.inject.Inject
 
 class UpcomingLocalRepos

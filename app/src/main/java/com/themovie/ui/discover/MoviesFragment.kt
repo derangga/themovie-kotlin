@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -21,7 +20,7 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.helper.Constant
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.fragment_movies.*
@@ -64,6 +63,8 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 Navigation.findNavController(it).navigate(action)
             }
         }
+
+        h_title.text = resources.getString(R.string.home_title_5)
 
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {

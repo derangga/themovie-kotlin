@@ -15,7 +15,7 @@
             app:contentInsetStart="@dimen/medium_space"
             app:contentInsetEnd="@dimen/medium_space">
 
-        <FrameLayout
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true">
@@ -24,7 +24,8 @@
                     android:id="@+id/h_back"
                     android:layout_width="40dp"
                     android:layout_height="?android:attr/actionBarSize"
-                    android:layout_gravity="start"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/ic_arrow"
                     android:visibility="gone"
                     style="@style/Widget.AppCompat.ActionButton"/>
@@ -33,19 +34,31 @@
                     android:id="@+id/h_logo"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/tmdb"/>
+
+            <TextView
+                    android:id="@+id/h_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/h_back"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/extra_medium_font"
+                    android:layout_marginStart="@dimen/medium_space"/>
 
 
             <ImageButton
                     android:id="@+id/h_search"
                     android:layout_width="40dp"
                     android:layout_height="?android:attr/actionBarSize"
-                    android:layout_gravity="end"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_search"
                     style="@style/Widget.AppCompat.ActionButton" />
 
-        </FrameLayout>
+        </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
 

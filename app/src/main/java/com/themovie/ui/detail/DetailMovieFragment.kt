@@ -23,7 +23,7 @@ import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Movies
 import com.themovie.model.online.video.Videos
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter

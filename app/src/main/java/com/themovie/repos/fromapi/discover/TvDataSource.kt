@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.CoroutineExceptionHandler

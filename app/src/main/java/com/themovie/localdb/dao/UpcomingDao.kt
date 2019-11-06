@@ -2,7 +2,7 @@ package com.themovie.localdb.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.themovie.model.local.Upcoming
+import com.themovie.model.db.Upcoming
 
 @Dao
 interface UpcomingDao {

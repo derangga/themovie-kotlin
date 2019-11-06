@@ -12,13 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentGenresBinding
-import com.themovie.model.local.GenreLocal
+import com.themovie.model.db.Genre
 import com.themovie.ui.main.adapter.GenreAdapter
 import com.themovie.ui.main.adapter.GenreAdapter.OnClickAdapterListener
 import kotlinx.android.synthetic.main.header.*
@@ -60,6 +59,7 @@ class GenresFragment : BaseFragment() {
             }}
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         h_logo.visibility = View.GONE
+        h_title.text = resources.getString(R.string.home_title_3)
         h_back.apply {
             visibility = View.VISIBLE
             setOnClickListener {
@@ -76,8 +76,8 @@ class GenresFragment : BaseFragment() {
         }
 
         genreAdapter.setGenreClickListener(object: OnClickAdapterListener{
-            override fun itemGenreClick(view: View, genreLocal: GenreLocal) {
-                val action = GenresFragmentDirections.actionGenresFragmentToMovieWithGenreFragment(genreLocal.genreId, "genreList")
+            override fun itemGenreClick(view: View, genreLocal: Genre) {
+                val action = GenresFragmentDirections.actionGenresFragmentToMovieWithGenreFragment(genreLocal.id, "genreList")
                 Navigation.findNavController(view).navigate(action)
             }
         })
@@ -85,7 +85,7 @@ class GenresFragment : BaseFragment() {
 
     private fun getGenreList(){
         viewModel.getGenreList().observe(this,
-            Observer<List<GenreLocal>>{
+            Observer<List<Genre>>{
                 genreAdapter.submitList(it)
             })
     }

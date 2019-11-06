@@ -2,7 +2,7 @@ package com.themovie.localdb.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.themovie.model.local.Trending
+import com.themovie.model.db.Trending
 
 @Dao
 interface TrendingDao {

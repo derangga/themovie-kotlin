@@ -1,6 +1,7 @@
 package com.themovie.model.online.detail
 
 import com.google.gson.annotations.SerializedName
+import com.themovie.model.db.Genre
 
 data class DetailTvResponse(
     @SerializedName("id") val id: Int,

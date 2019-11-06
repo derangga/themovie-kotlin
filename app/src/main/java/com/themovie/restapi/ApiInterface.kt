@@ -1,5 +1,6 @@
 package com.themovie.restapi
 
+import com.themovie.model.online.PopularResponse
 import com.themovie.model.online.detail.CastResponse
 import com.themovie.model.online.detail.ReviewResponse
 import com.themovie.model.online.detail.DetailMovieResponse
@@ -35,7 +36,7 @@ interface ApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Response<MoviesResponse>
+    ): Response<PopularResponse>
 
     @GET(ApiUrl.GENRES)
     suspend fun getGenres(@Query("api_key") api_key: String): Response<GenreResponse>

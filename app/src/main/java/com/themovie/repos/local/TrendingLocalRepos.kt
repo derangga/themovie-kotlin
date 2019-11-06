@@ -2,7 +2,7 @@ package com.themovie.repos.local
 
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.TrendingDao
-import com.themovie.model.local.Trending
+import com.themovie.model.db.Trending
 import javax.inject.Inject
 
 class TrendingLocalRepos

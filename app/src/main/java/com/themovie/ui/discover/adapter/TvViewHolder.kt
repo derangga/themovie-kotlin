@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.helper.ImageCache
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_tv.view.*
 

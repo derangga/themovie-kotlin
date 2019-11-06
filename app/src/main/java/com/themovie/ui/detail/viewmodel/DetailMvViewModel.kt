@@ -3,9 +3,9 @@ package com.themovie.ui.detail.viewmodel
 import androidx.lifecycle.*
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.convertDate
+import com.themovie.model.db.Genre
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.DetailMovieResponse
-import com.themovie.model.online.detail.Genre
 import com.themovie.repos.fromapi.DetailMovieRepos
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable

@@ -23,7 +23,7 @@ import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 import com.themovie.model.online.video.Videos
 import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel

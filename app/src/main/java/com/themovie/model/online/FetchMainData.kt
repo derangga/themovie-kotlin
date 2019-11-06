@@ -6,7 +6,7 @@ import com.themovie.model.online.genre.GenreResponse
 import com.themovie.model.online.upcoming.UpcomingResponse
 
 data class FetchMainData(
-    val popular: MoviesResponse?,
+    val popular: PopularResponse?,
     val genre: GenreResponse?,
     val upcomingResponse: UpcomingResponse?,
     val tvResponse: TvResponse?,

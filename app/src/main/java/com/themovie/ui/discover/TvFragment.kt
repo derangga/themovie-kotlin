@@ -21,7 +21,7 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentTvBinding
 import com.themovie.helper.Constant
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
 import kotlinx.android.synthetic.main.fragment_tv.*
@@ -57,6 +57,7 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onMain(savedInstanceState: Bundle?) {
         swipe.setOnRefreshListener(this)
         h_logo.visibility = View.GONE
+        h_title.text = resources.getString(R.string.home_title_4)
         h_back.apply {
             visibility = View.VISIBLE
             setOnClickListener {

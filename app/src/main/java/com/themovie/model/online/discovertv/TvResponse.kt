@@ -1,7 +1,7 @@
 package com.themovie.model.online.discovertv
 
 import com.google.gson.annotations.SerializedName
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 
 data class TvResponse (
     @SerializedName("results") val results: List<Tv>,

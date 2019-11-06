@@ -2,7 +2,7 @@ package com.themovie.repos.fromapi.discover
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Movies
 import io.reactivex.disposables.CompositeDisposable
 
 class SearchDataSourceFactory(private val composite: CompositeDisposable, private val movieName: String) : DataSource.Factory<Int, Movies>() {

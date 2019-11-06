@@ -2,7 +2,7 @@ package com.themovie.repos.fromapi.discover
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiInterface
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton

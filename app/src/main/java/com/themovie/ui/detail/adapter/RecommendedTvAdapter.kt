@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
 import com.themovie.helper.portraintview.PortraitView
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_recomended.view.*
 

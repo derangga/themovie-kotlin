@@ -7,20 +7,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.model.local.GenreLocal
+import com.themovie.model.db.Genre
 import kotlinx.android.synthetic.main.adapter_genre.view.*
 
-class GenreAdapter : ListAdapter<GenreLocal, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
+class GenreAdapter : ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var listener: OnClickAdapterListener
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<GenreLocal> = object: DiffUtil.ItemCallback<GenreLocal>(){
-            override fun areItemsTheSame(oldItem: GenreLocal, newItem: GenreLocal): Boolean {
-                return oldItem.genreId == newItem.genreId
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Genre> = object: DiffUtil.ItemCallback<Genre>(){
+            override fun areItemsTheSame(oldItem: Genre, newItem: Genre): Boolean {
+                return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: GenreLocal, newItem: GenreLocal): Boolean {
+            override fun areContentsTheSame(oldItem: Genre, newItem: Genre): Boolean {
                 return oldItem.name == newItem.name
             }
         }
@@ -36,7 +36,7 @@ class GenreAdapter : ListAdapter<GenreLocal, GenreAdapter.ViewHolder>(DIFF_CALLB
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(item: GenreLocal){
+        fun bindItem(item: Genre){
             itemView.apply {
                 genre_name.text = item.name
             }
@@ -49,6 +49,6 @@ class GenreAdapter : ListAdapter<GenreLocal, GenreAdapter.ViewHolder>(DIFF_CALLB
     }
 
     interface OnClickAdapterListener {
-        fun itemGenreClick(view: View, genreLocal: GenreLocal)
+        fun itemGenreClick(view: View, genreLocal: Genre)
     }
 }

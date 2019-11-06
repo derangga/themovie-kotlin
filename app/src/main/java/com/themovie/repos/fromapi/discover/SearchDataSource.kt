@@ -3,7 +3,7 @@ package com.themovie.repos.fromapi.discover
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Movies
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

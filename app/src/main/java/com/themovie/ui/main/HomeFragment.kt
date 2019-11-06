@@ -13,8 +13,6 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,10 +26,9 @@ import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentHomeBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.local.*
+import com.themovie.model.db.*
 import com.themovie.model.online.FetchMainData
 import com.themovie.ui.detail.DetailActivity
-import com.themovie.ui.genres.GenresFragmentDirections
 import com.themovie.ui.main.adapter.*
 import kotlinx.android.synthetic.main.header.*
 import java.util.*
@@ -164,7 +161,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             override fun onClick(view: View?, trending: Trending, imageViewRes: ImageView) {
                 snackbar.dismiss()
                 val bundle = Bundle().apply {
-                    putInt("filmId", trending.mvId)
+                    putInt("filmId", trending.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
@@ -185,7 +182,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", upcoming.mvId)
+                    putInt("filmId", upcoming.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
@@ -193,18 +190,18 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         })
 
         genreAdapter.setGenreClickListener(object: GenreAdapter.OnClickAdapterListener{
-            override fun itemGenreClick(view: View, genreLocal: GenreLocal) {
-                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(genreLocal.genreId)
+            override fun itemGenreClick(view: View, genreLocal: Genre) {
+                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(genreLocal.id)
                 Navigation.findNavController(view).navigate(action)
             }
         })
 
         discoverTvAdapter.setOnClickListener(object: DiscoverTvAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, tvLocal: TvLocal) {
+            override fun onClick(view: View?, tvLocal: Tv) {
                 snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", tvLocal.tvId)
+                    putInt("filmId", tvLocal.id)
                     putString("type", Constant.TV)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
@@ -212,11 +209,11 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         })
 
         discoverMvAdapter.setOnClickListener(object: DiscoverMvAdapter.OnClickAdapterListener {
-            override fun onClick(view: View?, moviesLocal: MoviesLocal) {
+            override fun onClick(view: View?, moviesLocal: Movies) {
                 snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", moviesLocal.mvId)
+                    putInt("filmId", moviesLocal.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
@@ -267,7 +264,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 })
 
             getGenreLocalData().observe( this@HomeFragment,
-                Observer<List<GenreLocal>> { t ->
+                Observer<List<Genre>> { t ->
                     isGenreEmpty = t.isEmpty()
                     if(!isGenreEmpty)
                         genreAdapter.submitList(t)
@@ -275,7 +272,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             )
 
             getDiscoverTvLocalData().observe(this@HomeFragment,
-                Observer<List<TvLocal>> { t ->
+                Observer<List<Tv>> { t ->
                     isDiscoverTvEmpty = t.isEmpty()
                     if(!isDiscoverTvEmpty){
                         discoverTvAdapter.submitList(t)
@@ -284,7 +281,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 })
 
             getDiscoverMvLocalData().observe(this@HomeFragment,
-                Observer<List<MoviesLocal>> { t ->
+                Observer<List<Movies>> { t ->
                     isDiscoverMvEmpty = t.isEmpty()
                     if(!isDiscoverMvEmpty){
                         discoverMvAdapter.submitList(t)
@@ -299,31 +296,22 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun fetchData(){
         homeViewModel.getDataRequest().observe(this,
             Observer<FetchMainData> { t ->
-                if(isTrendingEmpty)
-                    homeViewModel.insertLocalTrending(t.popular!!.movies)
-                else
-                    homeViewModel.updateLocalTrending(t?.popular!!.movies)
-
-                if(isUpcomingEmpty)
-                    homeViewModel.insertLocalUpcoming(t.upcomingResponse!!.results)
-                else
-                    homeViewModel.updateLocalUpComing(t.upcomingResponse!!.results)
-
-                if(isGenreEmpty)
-                    homeViewModel.insertLocalGenre(t.genre!!.genres)
-                else homeViewModel.updateLocalGenre(t.genre!!.genres)
-
-                if(isDiscoverTvEmpty)
-                    homeViewModel.insertLocalTv(t.tvResponse!!.results)
-                else
-                    homeViewModel.updateLocalTv(t.tvResponse!!.results)
-
-                if(isDiscoverMvEmpty)
-                    homeViewModel.insertLocalMovies(t.moviesResponse!!.movies)
-                else
-                    homeViewModel.updateLocalMovies(t.moviesResponse!!.movies)
-
-                hideLoading()
+                homeViewModel.apply {
+                    if(isTrendingEmpty && isUpcomingEmpty && isGenreEmpty && isDiscoverTvEmpty && isDiscoverMvEmpty){
+                        insertLocalTrending(t.popular!!.results)
+                        insertLocalUpcoming(t.upcomingResponse!!.results)
+                        insertLocalGenre(t.genre!!.genres)
+                        insertLocalTv(t.tvResponse!!.results)
+                        insertLocalMovies(t.moviesResponse!!.movies)
+                    } else {
+                        updateLocalTrending(t?.popular!!.results)
+                        updateLocalUpComing(t.upcomingResponse!!.results)
+                        updateLocalGenre(t.genre!!.genres)
+                        updateLocalTv(t.tvResponse!!.results)
+                        updateLocalMovies(t.moviesResponse!!.movies)
+                    }
+                    hideLoading()
+                }
             })
     }
 
@@ -354,9 +342,9 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if(!isSliding){
             isSliding = true
             timer = Timer().apply {
-
+                scheduleAtFixedRate(SliderTimer(), 5000, 5000)
             }
-            timer?.scheduleAtFixedRate(SliderTimer(), 5000, 5000)
+
         }
     }
 

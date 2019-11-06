@@ -1,11 +1,10 @@
 package com.themovie.repos.fromapi.discover
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.CoroutineExceptionHandler

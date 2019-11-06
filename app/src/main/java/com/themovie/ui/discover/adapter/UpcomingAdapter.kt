@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Movies
+import com.themovie.model.db.Upcoming
 
-class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private val DATA_VIEW = 1
     private val LOADING_VIEW = 2
@@ -21,15 +21,15 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
     private lateinit var onClickAdapterListener: OnClickAdapterListener
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Movies> = object: DiffUtil.ItemCallback<Movies>(){
-            override fun areItemsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Upcoming> = object: DiffUtil.ItemCallback<Upcoming>(){
+            override fun areItemsTheSame(oldItem: Upcoming, newItem: Upcoming): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+            override fun areContentsTheSame(oldItem: Upcoming, newItem: Upcoming): Boolean {
                 return oldItem.title == newItem.title &&
                         oldItem.posterPath == newItem.posterPath &&
-                         oldItem.backdropPath == newItem.backdropPath
+                        oldItem.backdropPath == newItem.backdropPath
             }
         }
     }
@@ -38,7 +38,7 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
         return if(viewType == DATA_VIEW){
             val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_movies, parent, false)
             context = parent.context
-            MovieViewHolder(view)
+            UpcomingViewHolder(view)
         } else {
             val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_loading, parent, false)
             context = parent.context
@@ -47,7 +47,7 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is MovieViewHolder){
+        if(holder is UpcomingViewHolder){
             holder.bindView(context, getItem(position)!!, onClickAdapterListener)
         }else if(holder is LoadingViewHolder){
             holder.bindView(loadState, onErrorClickListener)
@@ -95,7 +95,7 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
     }
 
     interface OnClickAdapterListener {
-        fun onItemClick(view: View?, movies: Movies)
+        fun onItemClick(view: View?, upcoming: Upcoming)
     }
 
 }

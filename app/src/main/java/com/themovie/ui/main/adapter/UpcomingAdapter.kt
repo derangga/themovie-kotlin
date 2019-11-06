@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
+import com.themovie.helper.convertDate
 import com.themovie.helper.portraintview.PortraitView
-import com.themovie.model.local.Upcoming
+import com.themovie.model.db.Upcoming
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_upcoming.view.*
 
@@ -22,11 +22,11 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Upcoming> = object: DiffUtil.ItemCallback<Upcoming>(){
             override fun areItemsTheSame(oldItem: Upcoming, newItem: Upcoming): Boolean {
-                return oldItem.mvId == newItem.mvId
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Upcoming, newItem: Upcoming): Boolean {
-                return oldItem.title == newItem.title && oldItem.backDropPath == newItem.backDropPath
+                return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
             }
         }
     }
@@ -53,7 +53,7 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
                 upcoming_item.apply {
                     setImage(posterImg)
                     setTitle(upcoming.title)
-                    setDateRelease(upcoming.dateRelease)
+                    setDateRelease(upcoming.releaseDate.convertDate())
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {
                             onClickAdapterListener.onClick(itemView, upcoming)

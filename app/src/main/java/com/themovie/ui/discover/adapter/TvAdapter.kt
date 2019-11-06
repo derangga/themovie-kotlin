@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 
 class TvAdapter: PagedListAdapter<Tv, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 

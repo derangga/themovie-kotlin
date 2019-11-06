@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.portraintview.PortraitView
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_recomended.view.*
 

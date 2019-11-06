@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.convertDate
+import com.themovie.model.db.Genre
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.DetailTvResponse
-import com.themovie.model.online.detail.Genre
 import com.themovie.repos.fromapi.DetailTvRepos
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable

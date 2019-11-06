@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
-import com.themovie.model.local.Trending
+import com.themovie.model.db.Trending
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.item_header_main.view.*
 
@@ -26,11 +26,11 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Trending> = object: DiffUtil.ItemCallback<Trending>(){
             override fun areItemsTheSame(oldItem: Trending, newItem: Trending): Boolean {
-                return oldItem.mvId == newItem.mvId
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Trending, newItem: Trending): Boolean {
-                return oldItem.title == newItem.title && oldItem.backDropPath == newItem.backDropPath
+                return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
             }
         }
     }
@@ -57,7 +57,7 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bindItem(trending: Trending){
             itemView.apply {
-                val urlImg = "${ApiUrl.IMG_BACK}${trending.backDropPath}"
+                val urlImg = "${ApiUrl.IMG_BACK}${trending.backdropPath}"
                 ImageCache.setImageViewUrl(context, urlImg, v_img)
                 v_title.text = trending.title
                 v_card.setOnClickListener {
