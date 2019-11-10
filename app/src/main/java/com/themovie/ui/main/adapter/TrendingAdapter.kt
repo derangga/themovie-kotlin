@@ -7,13 +7,12 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.cacheImage
 import com.themovie.model.db.Trending
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.item_header_main.view.*
@@ -59,7 +58,7 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
         fun bindItem(trending: Trending) {
             itemView.apply {
                 val urlImg = "${ApiUrl.IMG_BACK}${trending.backdropPath}"
-                ImageCache.setImageViewUrl(context, urlImg, v_img)
+                cacheImage(context, urlImg, v_img)
                 v_title.text = trending.title
                 v_card.setOnClickListener {
                     clickListener.onClick(it, trending)

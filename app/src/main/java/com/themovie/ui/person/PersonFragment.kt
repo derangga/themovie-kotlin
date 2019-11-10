@@ -21,7 +21,6 @@ import com.themovie.helper.OnAdapterListener
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.Filmography
 import com.themovie.ui.detail.DetailActivity
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -57,7 +56,7 @@ class PersonFragment : BaseFragment() {
         setupRecycler()
         getPersonData()
         getLoadStatus()
-        h_search.visibility = View.GONE
+        binding.header.setSearchVisibility(View.GONE)
     }
 
     private fun setupRecycler(){

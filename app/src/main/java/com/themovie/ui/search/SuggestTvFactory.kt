@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.themovie.repos.fromapi.search.SearchRepos
 import javax.inject.Inject
 
-class SUggestTvFactory
+class SuggestTvFactory
     @Inject constructor(private val searchRepos: SearchRepos)
     : ViewModelProvider.Factory {
 

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.convertDate
-import com.themovie.helper.portraintview.PortraitView
+import com.themovie.helper.customview.PortraitView
 import com.themovie.model.db.Upcoming
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_upcoming.view.*

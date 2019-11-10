@@ -30,7 +30,6 @@ import com.themovie.model.db.*
 import com.themovie.model.online.FetchMainData
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.main.adapter.*
-import kotlinx.android.synthetic.main.header.*
 import java.util.*
 import javax.inject.Inject
 
@@ -81,7 +80,9 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         binding.homeSwipe.setOnRefreshListener(this)
         snackbar = Snackbar.make(activity!!.findViewById(android.R.id.content),
             getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
-        h_search.visibility = View.GONE
+
+        binding.header.setSearchVisibility(View.GONE)
+
         recyclerViewSetup()
         onClick()
         showData()

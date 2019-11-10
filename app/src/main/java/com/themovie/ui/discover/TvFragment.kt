@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -26,7 +25,6 @@ import com.themovie.model.db.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
 import kotlinx.android.synthetic.main.fragment_tv.*
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -57,15 +55,16 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onMain(savedInstanceState: Bundle?) {
         swipe.setOnRefreshListener(this)
-        h_logo.visibility = View.GONE
-        h_title.text = resources.getString(R.string.home_title_4)
-        h_back.apply {
-            visibility = View.VISIBLE
-            setOnClickListener {
+        binding.header?.apply {
+            setLogoVisibility(View.GONE)
+            setTitleText(resources.getString(R.string.home_title_4))
+            setBackButtonVisibility(View.VISIBLE)
+            setBackButtonOnClickListener(View.OnClickListener {
                 val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
-            }
+            })
         }
+
 
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {

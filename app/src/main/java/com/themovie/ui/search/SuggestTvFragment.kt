@@ -26,9 +26,9 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class SuggestTvFragment : BaseFragment(), SearchActivity.TvSearchFragmentListener {
+class SuggestTvFragment : BaseFragment(), SuggestActivity.TvSearchFragmentListener {
 
-    @Inject lateinit var viewModelFactory: SUggestTvFactory
+    @Inject lateinit var viewModelFactory: SuggestTvFactory
     private lateinit var binding: FragmentSuggestBinding
     private lateinit var viewModel: SuggestTvViewModel
     private lateinit var mAdapter: SuggestTvAdapter
@@ -47,7 +47,7 @@ class SuggestTvFragment : BaseFragment(), SearchActivity.TvSearchFragmentListene
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        SearchActivity.setTextListener(this)
+        SuggestActivity.setTextListener(this)
         setupRecyclerView()
         getLoadStatus()
     }

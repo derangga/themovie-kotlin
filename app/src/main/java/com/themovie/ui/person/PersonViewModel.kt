@@ -1,20 +1,14 @@
 package com.themovie.ui.person
 
-import android.app.Application
 import android.util.Log
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
-import com.themovie.helper.ImageCache
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.convertDate
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.PersonResponse
 import com.themovie.repos.fromapi.PersonRepos
 import com.themovie.restapi.ApiUrl
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import kotlinx.coroutines.launch
 
 class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {

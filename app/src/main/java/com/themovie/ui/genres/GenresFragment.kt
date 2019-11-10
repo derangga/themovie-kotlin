@@ -20,7 +20,6 @@ import com.themovie.databinding.FragmentGenresBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Genre
 import com.themovie.ui.main.adapter.GenreAdapter
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -58,14 +57,15 @@ class GenresFragment : BaseFragment() {
                 Navigation.findNavController(view!!).navigate(action)
             }}
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-        h_logo.visibility = View.GONE
-        h_title.text = resources.getString(R.string.home_title_3)
-        h_back.apply {
-            visibility = View.VISIBLE
-            setOnClickListener {
+        binding.header.apply {
+            setLogoVisibility(View.GONE)
+            setTitleText(resources.getString(R.string.home_title_3))
+            setBackButtonVisibility(View.VISIBLE)
+            setBackButtonOnClickListener(View.OnClickListener {
                 val action = GenresFragmentDirections.actionGenresFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
-            }}
+            })
+        }
     }
 
     private fun setupRecycler(){

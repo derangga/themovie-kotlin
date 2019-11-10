@@ -1,4 +1,4 @@
-package com.themovie.helper.portraintview
+package com.themovie.helper.customview
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.cardview.widget.CardView
 import com.themovie.R
-import com.themovie.helper.ImageCache
+import com.themovie.helper.cacheImage
 import kotlinx.android.synthetic.main.adapter_portrait.view.*
 
 class PortraitView(context: Context,
@@ -69,7 +69,7 @@ class PortraitView(context: Context,
     }
 
     fun setImage(url: String){
-        ImageCache.setImageViewUrl(context, url, poster_img)
+        cacheImage(context, url, poster_img)
     }
 
     fun setTitle(title: String){

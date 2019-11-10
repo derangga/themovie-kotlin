@@ -25,7 +25,6 @@ import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.MovieViewModel
 import com.themovie.ui.discover.MovieViewModelFactory
 import com.themovie.ui.discover.adapter.MovieAdapter
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -60,16 +59,19 @@ class MovieWithGenreFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListe
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        binding.swipe.setOnRefreshListener(this)
-        h_logo.visibility = View.GONE
         val action = if(destinationBackPress == "home"){
             MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToHomeFragment()
         } else MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToGenresFragment()
 
-        h_back.apply {
-            visibility = View.VISIBLE
-            setOnClickListener { Navigation.findNavController(it).navigate(action) }
+        binding.header?.apply {
+            setLogoVisibility(View.GONE)
+            setBackButtonVisibility(View.VISIBLE)
+            setBackButtonOnClickListener(View.OnClickListener {
+                Navigation.findNavController(it).navigate(action)
+            })
         }
+        binding.swipe?.setOnRefreshListener(this)
+
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() { Navigation.findNavController(view!!).navigate(action) }
         }

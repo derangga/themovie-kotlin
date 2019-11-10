@@ -5,15 +5,15 @@ import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.LoadDataState
 import kotlinx.coroutines.CoroutineExceptionHandler
 
-abstract class PagingHandler<V, T>: PageKeyedDataSource<V, T>() {
+abstract class PagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     protected var pageSize: Int = 0
     protected var key = 0
     protected var retry: (() -> Any)? = null
 
-    abstract fun loadFirstPage(params: LoadInitialParams<V>, callback: LoadInitialCallback<V, T>)
-    abstract fun loadNextPage(params: LoadParams<V>, callback: LoadCallback<V, T>)
+    protected abstract fun loadFirstPage(params: LoadInitialParams<V>, callback: LoadInitialCallback<V, T>)
+    protected abstract fun loadNextPage(params: LoadParams<V>, callback: LoadCallback<V, T>)
 
     override fun loadInitial(params: LoadInitialParams<V>, callback: LoadInitialCallback<V, T>) {
         loadFirstPage(params, callback)
@@ -40,4 +40,6 @@ abstract class PagingHandler<V, T>: PageKeyedDataSource<V, T>() {
     protected fun getJobErrorHandler() = CoroutineExceptionHandler { _, _ ->
         updateState(LoadDataState.ERROR)
     }
+
+    protected abstract fun fetchData(page: Int, callback: (List<T>?) -> Unit)
 }

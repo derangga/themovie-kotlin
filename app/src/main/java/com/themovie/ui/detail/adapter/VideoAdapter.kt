@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.cacheImage
 import com.themovie.model.online.video.Videos
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_video.view.*
@@ -49,7 +49,7 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
         fun bindItem(video: Videos){
             itemView.apply {
                 val urlThumbnail = ApiUrl.THUMBNAIL.replace("key", video.key)
-                ImageCache.setImageViewUrl(context, urlThumbnail, t_thumbnail)
+                cacheImage(context, urlThumbnail, t_thumbnail)
                 t_title.text = video.name
                 t_layout.setOnClickListener {
                     listener.onClick(itemView, video)

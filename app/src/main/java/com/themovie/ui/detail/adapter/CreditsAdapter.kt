@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.portraintview.PortraitView
+import com.themovie.helper.customview.PortraitView
 import com.themovie.model.online.detail.Credits
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_credits.view.*

@@ -21,13 +21,10 @@ import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentUpcomingBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
-import com.themovie.model.db.Movies
 import com.themovie.model.db.Upcoming
 import com.themovie.ui.detail.DetailActivity
-import com.themovie.ui.discover.adapter.MovieAdapter
 import com.themovie.ui.discover.adapter.UpcomingAdapter
 import kotlinx.android.synthetic.main.fragment_upcoming.*
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -58,12 +55,14 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onMain(savedInstanceState: Bundle?) {
         swipe.setOnRefreshListener(this)
-        h_logo.visibility = View.GONE
-        h_back.visibility = View.VISIBLE
-        h_title.text = resources.getString(R.string.home_title_2)
-        h_back.setOnClickListener {
-            val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
-            Navigation.findNavController(it).navigate(action)
+        binding.header.apply {
+            setLogoVisibility(View.GONE)
+            setBackButtonVisibility(View.VISIBLE)
+            setTitleText(resources.getString(R.string.home_title_2))
+            setBackButtonOnClickListener(View.OnClickListener {
+                val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
+                Navigation.findNavController(it).navigate(action)
+            })
         }
 
         val callback = object: OnBackPressedCallback(true){

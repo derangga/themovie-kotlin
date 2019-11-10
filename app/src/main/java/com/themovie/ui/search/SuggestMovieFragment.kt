@@ -21,13 +21,12 @@ import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.search.adapter.SuggestMoviesAdapter
-import kotlinx.android.synthetic.main.fragment_suggest.*
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
-class SuggestMovieFragment : BaseFragment(), SearchActivity.MoviesSearchFragmentListener {
+class SuggestMovieFragment : BaseFragment(), SuggestActivity.MoviesSearchFragmentListener {
 
     @Inject lateinit var viewModelFactory: SuggestMoviesFactory
     private lateinit var binding: FragmentSuggestBinding
@@ -48,7 +47,7 @@ class SuggestMovieFragment : BaseFragment(), SearchActivity.MoviesSearchFragment
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        SearchActivity.setTextListener(this)
+        SuggestActivity.setTextListener(this)
         setupRecyclerView()
         getLoadStatus()
     }

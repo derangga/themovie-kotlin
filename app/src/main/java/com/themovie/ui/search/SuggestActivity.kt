@@ -1,35 +1,33 @@
 package com.themovie.ui.search
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.themovie.R
 import com.themovie.base.BaseActivity
-import com.themovie.databinding.ActivitySearchBinding
+import com.themovie.databinding.ActivitySuggestBinding
 import com.themovie.helper.ViewPagerFragment
-import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.activity_suggest.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SearchActivity : BaseActivity() {
+class SuggestActivity : BaseActivity() {
 
     private lateinit var imm: InputMethodManager
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var binding: ActivitySuggestBinding
     private lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_suggest)
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         initTab()
         binding.hSearch?.requestFocus()
@@ -122,7 +120,7 @@ class SearchActivity : BaseActivity() {
     private fun searchSoftKeyboardAction(){
         binding.hSearch.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                Toast.makeText(this, h_search.text.toString(), Toast.LENGTH_SHORT).show()
+                showToastMessage(h_search.text.toString())
             }
             false
         }
