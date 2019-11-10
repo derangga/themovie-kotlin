@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Upcoming
 
 class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
@@ -18,7 +19,7 @@ class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_
     private var loadState: LoadDataState? = null
     private lateinit var context: Context
     private lateinit var onErrorClickListener: OnErrorClickListener
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var onClickAdapterListener: OnAdapterListener<Upcoming>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Upcoming> = object: DiffUtil.ItemCallback<Upcoming>(){
@@ -86,16 +87,11 @@ class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_
         this.onErrorClickListener = onErrorClickListener
     }
 
-    fun setOnClickAdapter(onClickAdapterListener: OnClickAdapterListener){
+    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<Upcoming>){
         this.onClickAdapterListener = onClickAdapterListener
     }
 
     interface OnErrorClickListener {
         fun onClick(view: View?)
     }
-
-    interface OnClickAdapterListener {
-        fun onItemClick(view: View?, upcoming: Upcoming)
-    }
-
 }

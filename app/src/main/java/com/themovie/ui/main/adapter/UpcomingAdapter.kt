@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.convertDate
 import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.db.Upcoming
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.adapter_upcoming.view.*
 class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var listener: OnAdapterListener<Upcoming>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Upcoming> = object: DiffUtil.ItemCallback<Upcoming>(){
@@ -31,8 +32,8 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
         }
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
-        this.onClickAdapterListener = onClickAdapterListener
+    fun setOnClickListener(listener: OnAdapterListener<Upcoming>){
+        this.listener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -56,15 +57,11 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
                     setDateRelease(upcoming.releaseDate.convertDate())
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {
-                            onClickAdapterListener.onClick(itemView, upcoming)
+                            listener.onClick(itemView, upcoming)
                         }
                     })
                 }
             }
         }
-    }
-
-    interface OnClickAdapterListener {
-        fun onClick(view: View?, upcoming: Upcoming)
     }
 }

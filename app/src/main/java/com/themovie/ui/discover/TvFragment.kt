@@ -21,6 +21,7 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentTvBinding
 import com.themovie.helper.Constant
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
@@ -97,10 +98,10 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             adapter = tvAdapter
         }
 
-        tvAdapter.setOnClickAdapter(object: TvAdapter.OnClickAdapterListener{
-            override fun onItemClick(view: View?, tv: Tv, imageViewRes: ImageView) {
+        tvAdapter.setOnClickAdapter(object: OnAdapterListener<Tv>{
+            override fun onClick(view: View, item: Tv) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", tv.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
                 changeActivity(bundle, DetailActivity::class.java)

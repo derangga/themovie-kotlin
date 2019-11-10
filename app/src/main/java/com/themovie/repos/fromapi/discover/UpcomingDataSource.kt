@@ -8,6 +8,7 @@ import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class UpcomingDataSource
@@ -43,7 +44,7 @@ class UpcomingDataSource
     }
 
     private fun fetchData(page: Int, callback: (List<Upcoming>?) -> Unit){
-        scope.launch(getJobErrorHandler()) {
+        scope.launch(IO + getJobErrorHandler()) {
             val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, page)
             if(upcoming.isSuccessful){
                 updateState(LoadDataState.LOADED)

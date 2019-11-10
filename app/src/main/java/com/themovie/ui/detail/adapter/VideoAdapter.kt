@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.online.video.Videos
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_video.view.*
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.adapter_video.view.*
 class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var listener: OnClickAdapterListener
+    private lateinit var listener: OnAdapterListener<Videos>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Videos> = object: DiffUtil.ItemCallback<Videos>(){
@@ -30,7 +31,7 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
         }
     }
 
-    fun setOnClickAdapter(onClickAdapterListener: OnClickAdapterListener){
+    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<Videos>){
         this.listener = onClickAdapterListener
     }
 
@@ -51,13 +52,9 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
                 ImageCache.setImageViewUrl(context, urlThumbnail, t_thumbnail)
                 t_title.text = video.name
                 t_layout.setOnClickListener {
-                    listener.onClick(video)
+                    listener.onClick(itemView, video)
                 }
             }
         }
-    }
-
-    interface OnClickAdapterListener {
-        fun onClick(videos: Videos)
     }
 }

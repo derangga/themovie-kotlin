@@ -8,6 +8,8 @@ import com.themovie.ui.genres.MovieWithGenreFragment
 import com.themovie.ui.main.HomeFragment
 import com.themovie.ui.main.MainActivity
 import com.themovie.ui.person.PersonFragment
+import com.themovie.ui.search.SuggestMovieFragment
+import com.themovie.ui.search.SuggestTvFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -24,4 +26,6 @@ interface AppComponent {
     fun inject(personFragment: PersonFragment)
     fun inject(genresFragment: GenresFragment)
     fun inject(movieWithGenreFragment: MovieWithGenreFragment)
+    fun inject(suggestMovieFragment: SuggestMovieFragment)
+    fun inject(suggestTvFragment: SuggestTvFragment)
 }

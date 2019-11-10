@@ -20,6 +20,7 @@ import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailMovieBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
@@ -131,35 +132,35 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun adapterOnClick(){
-        creditsAdapter.setOnClickListener(object: CreditsAdapter.OnClickAdapterListener{
-            override fun onClick(view: View, credits: Credits) {
-                val action = DetailMovieFragmentDirections.actionDetailMovieFragmentToPersonFragment(credits.id)
+        creditsAdapter.setOnClickListener(object: OnAdapterListener<Credits>{
+            override fun onClick(view: View, item: Credits) {
+                val action = DetailMovieFragmentDirections.actionDetailMovieFragmentToPersonFragment(item.id)
                 Navigation.findNavController(view).navigate(action)
             }
         })
 
-        recommendedAdapter.setOnClickListener(object: RecommendedAdapter.OnClickAdapterListener{
-            override fun onClick(movies: Movies) {
+        recommendedAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
+            override fun onClick(view: View, item: Movies) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", movies.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
 
-        reviewsAdapter.setOnClickListener(object: ReviewsAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, reviews: Reviews) {
-                val uri: Uri = Uri.parse(reviews.url)
+        reviewsAdapter.setOnClickListener(object: OnAdapterListener<Reviews>{
+            override fun onClick(view: View, item: Reviews) {
+                val uri: Uri = Uri.parse(item.url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context?.startActivity(intent)
             }
         })
 
-        videoAdapter.setOnClickAdapter(object: VideoAdapter.OnClickAdapterListener{
-            override fun onClick(videos: Videos) {
+        videoAdapter.setOnClickAdapter(object: OnAdapterListener<Videos>{
+            override fun onClick(view: View, item: Videos) {
                 val bundle = Bundle()
-                bundle.putString("key", videos.key)
+                bundle.putString("key", item.key)
                 changeActivity(bundle, YoutubeActivity::class.java)
             }
         })

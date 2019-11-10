@@ -9,6 +9,7 @@ import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class TvDataSource(
@@ -55,7 +56,7 @@ class TvDataSource(
     }
 
     private fun fetchData(page: Int, callback: (List<Tv>?) -> Unit){
-        scope.launch(getJobErrorHandler()) {
+        scope.launch(IO + getJobErrorHandler()) {
             val discover = apiInterface.getDiscoverTvs(
                 ApiUrl.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, page, "")

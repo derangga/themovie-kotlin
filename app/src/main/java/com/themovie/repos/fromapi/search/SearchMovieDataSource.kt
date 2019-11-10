@@ -1,4 +1,4 @@
-package com.themovie.repos.fromapi.discover
+package com.themovie.repos.fromapi.search
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
@@ -12,10 +12,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class MovieDataSource(
+class SearchMovieDataSource(
     private val scope: CoroutineScope,
     private val apiInterface: ApiInterface,
-    private val genre: String
+    private val query: String
 ): PageKeyedDataSource<Int, Movies>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
@@ -25,7 +25,8 @@ class MovieDataSource(
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
         updateState(LoadDataState.LOADING)
-        retry = {loadInitial(params, callback)}
+        retry = { loadInitial(params, callback) }
+
         fetchData(1){
             callback.onResult(it!!.toMutableList(), null, 2)
         }
@@ -34,7 +35,7 @@ class MovieDataSource(
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
-            retry = {loadAfter(params, callback)}
+            retry = { loadAfter(params, callback) }
             fetchData(params.key){
                 key = params.key + 1
                 callback.onResult(it!!.toMutableList(), key)
@@ -48,14 +49,17 @@ class MovieDataSource(
 
     private fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
         scope.launch(IO + getJobErrorHandler()) {
-            val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
-                Constant.SORTING, page, "2019", genre)
+            val discover = apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query, page)
             if(discover.isSuccessful){
                 updateState(LoadDataState.LOADED)
                 pageSize = discover.body()?.totalPages ?: 0
                 callback(discover.body()?.movies)
             } else updateState(LoadDataState.ERROR)
         }
+    }
+
+    private fun getJobErrorHandler() = CoroutineExceptionHandler { _, _ ->
+        updateState(LoadDataState.ERROR)
     }
 
     private fun updateState(state: LoadDataState) {
@@ -66,9 +70,5 @@ class MovieDataSource(
         val reCall = retry
         retry = null
         reCall?.invoke()
-    }
-
-    private fun getJobErrorHandler() = CoroutineExceptionHandler { _, _ ->
-        updateState(LoadDataState.ERROR)
     }
 }

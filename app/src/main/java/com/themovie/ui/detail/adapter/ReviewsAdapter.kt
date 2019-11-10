@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.online.detail.Reviews
 import kotlinx.android.synthetic.main.adapter_review.view.*
 
 class ReviewsAdapter : ListAdapter<Reviews, ReviewsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var onClickAdapterListener: OnAdapterListener<Reviews>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Reviews> = object: DiffUtil.ItemCallback<Reviews>(){
@@ -28,7 +29,7 @@ class ReviewsAdapter : ListAdapter<Reviews, ReviewsAdapter.ViewHolder>(DIFF_CALL
         }
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
+    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<Reviews>){
         this.onClickAdapterListener = onClickAdapterListener
     }
 
@@ -53,9 +54,5 @@ class ReviewsAdapter : ListAdapter<Reviews, ReviewsAdapter.ViewHolder>(DIFF_CALL
                 }
             }
         }
-    }
-
-    interface OnClickAdapterListener {
-        fun onClick(view: View?, reviews: Reviews)
     }
 }

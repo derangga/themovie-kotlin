@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
@@ -26,6 +25,7 @@ import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentHomeBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.*
 import com.themovie.model.online.FetchMainData
 import com.themovie.ui.detail.DetailActivity
@@ -84,7 +84,6 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         h_search.visibility = View.GONE
         recyclerViewSetup()
         onClick()
-        fetchData()
         showData()
         observeNetworkLoad()
 
@@ -157,11 +156,11 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun onClick(){
 
-        trendingAdapter.setOnClickListener(object: TrendingAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, trending: Trending, imageViewRes: ImageView) {
+        trendingAdapter.setOnClickListener(object: OnAdapterListener<Trending>{
+            override fun onClick(view: View, item: Trending) {
                 snackbar.dismiss()
                 val bundle = Bundle().apply {
-                    putInt("filmId", trending.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
@@ -177,43 +176,43 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
-        upcomingAdapter.setOnClickListener(object: UpcomingAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, upcoming: Upcoming) {
+        upcomingAdapter.setOnClickListener(object: OnAdapterListener<Upcoming>{
+            override fun onClick(view: View, item: Upcoming) {
                 snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", upcoming.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
 
-        genreAdapter.setGenreClickListener(object: GenreAdapter.OnClickAdapterListener{
-            override fun itemGenreClick(view: View, genreLocal: Genre) {
-                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(genreLocal.id)
+        genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
+            override fun onClick(view: View, item: Genre) {
+                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(item.id)
                 Navigation.findNavController(view).navigate(action)
             }
         })
 
-        discoverTvAdapter.setOnClickListener(object: DiscoverTvAdapter.OnClickAdapterListener{
-            override fun onClick(view: View?, tvLocal: Tv) {
+        discoverTvAdapter.setOnClickListener(object: OnAdapterListener<Tv>{
+            override fun onClick(view: View, item: Tv) {
                 snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", tvLocal.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
 
-        discoverMvAdapter.setOnClickListener(object: DiscoverMvAdapter.OnClickAdapterListener {
-            override fun onClick(view: View?, moviesLocal: Movies) {
+        discoverMvAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
+            override fun onClick(view: View, item: Movies) {
                 snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", moviesLocal.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
@@ -288,6 +287,8 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                         //discmv_card.visibility = View.VISIBLE
                     }
                 })
+
+            fetchData()
         }
 
 

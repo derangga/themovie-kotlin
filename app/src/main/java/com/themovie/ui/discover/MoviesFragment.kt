@@ -1,6 +1,7 @@
 package com.themovie.ui.discover
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,9 +21,11 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.helper.Constant
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
+import com.themovie.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
@@ -54,25 +57,7 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        swipe.setOnRefreshListener(this)
-        h_logo.visibility = View.GONE
-        h_back.apply {
-            visibility = View.VISIBLE
-            setOnClickListener {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(it).navigate(action)
-            }
-        }
-
-        h_title.text = resources.getString(R.string.home_title_5)
-
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+        setupUIComponent()
         recyclerViewSetup()
     }
 
@@ -90,6 +75,33 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         viewModel.refresh()
     }
 
+    private fun setupUIComponent(){
+        swipe.setOnRefreshListener(this)
+        h_logo.visibility = View.GONE
+        h_back.apply {
+            visibility = View.VISIBLE
+            setOnClickListener {
+                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
+                Navigation.findNavController(it).navigate(action)
+            }
+        }
+
+        h_title.text = resources.getString(R.string.home_title_5)
+        h_search.setOnClickListener {
+            //val action = MoviesFragmentDirections.actionMoviesFragmentToSearchFragment(Constant.MOVIE)
+            //Navigation.findNavController(it).navigate(action)
+            changeActivity(SearchActivity::class.java)
+        }
+
+        val callback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
+                Navigation.findNavController(view!!).navigate(action)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
     private fun recyclerViewSetup(){
         mAdapter = MovieAdapter()
         movie_rec.apply {
@@ -97,10 +109,10 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             adapter = mAdapter
         }
 
-        mAdapter.setOnClickAdapter(object: MovieAdapter.OnClickAdapterListener{
-            override fun onItemClick(view: View?, movies: Movies) {
+        mAdapter.setOnClickAdapter(object: OnAdapterListener<Movies>{
+            override fun onClick(view: View, item: Movies) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", movies.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)

@@ -1,5 +1,6 @@
 package com.themovie.restapi
 
+import com.themovie.helper.Constant
 import com.themovie.model.online.PopularResponse
 import com.themovie.model.online.detail.CastResponse
 import com.themovie.model.online.detail.ReviewResponse
@@ -142,11 +143,19 @@ interface ApiInterface {
         @Query("api_key") api_key: String
     ) : Response<PersonResponse>
 
-    @GET("search/movie")
-    fun getSearchMovie (
-        @Query("api_key") api_key: String,
+    @GET(ApiUrl.SEARCH_MOVIE)
+    suspend fun getSearchMovie(
+        @Query("api_key") token: String,
         @Query("language") language: String,
-        @Query("query") movie_name: String,
+        @Query("query") query: String,
         @Query("page") page: Int
-    ) : Single<MoviesResponse>
+    ) : Response<MoviesResponse>
+
+    @GET(ApiUrl.SEARCH_TV)
+    suspend fun getSearchTv(
+        @Query("api_key") token: String,
+        @Query("language") language: String,
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ) : Response<TvResponse>
 }

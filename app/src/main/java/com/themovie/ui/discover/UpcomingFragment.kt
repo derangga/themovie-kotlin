@@ -20,6 +20,7 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentUpcomingBinding
 import com.themovie.helper.Constant
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
 import com.themovie.model.db.Upcoming
 import com.themovie.ui.detail.DetailActivity
@@ -96,10 +97,10 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             adapter = mAdapter
         }
 
-        mAdapter.setOnClickAdapter(object: UpcomingAdapter.OnClickAdapterListener{
-            override fun onItemClick(view: View?, upcoming: Upcoming) {
+        mAdapter.setOnClickAdapter(object: OnAdapterListener<Upcoming>{
+            override fun onClick(view: View, item: Upcoming) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", upcoming.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)

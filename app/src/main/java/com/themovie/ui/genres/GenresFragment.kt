@@ -17,9 +17,9 @@ import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentGenresBinding
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Genre
 import com.themovie.ui.main.adapter.GenreAdapter
-import com.themovie.ui.main.adapter.GenreAdapter.OnClickAdapterListener
 import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
@@ -75,9 +75,9 @@ class GenresFragment : BaseFragment() {
             adapter = genreAdapter
         }
 
-        genreAdapter.setGenreClickListener(object: OnClickAdapterListener{
-            override fun itemGenreClick(view: View, genreLocal: Genre) {
-                val action = GenresFragmentDirections.actionGenresFragmentToMovieWithGenreFragment(genreLocal.id, "genreList")
+        genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
+            override fun onClick(view: View, item: Genre) {
+                val action = GenresFragmentDirections.actionGenresFragmentToMovieWithGenreFragment(item.id, "genreList")
                 Navigation.findNavController(view).navigate(action)
             }
         })

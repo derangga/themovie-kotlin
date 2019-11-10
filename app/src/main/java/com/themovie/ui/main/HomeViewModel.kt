@@ -20,8 +20,8 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
                     private val discoverMvLocalRepos: DiscoverMvLocalRepos
 ) : ViewModel() {
 
-    private val onlineLiveDataFetch: MutableLiveData<FetchMainData> = MutableLiveData()
-    private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
+    private val onlineLiveDataFetch = MutableLiveData<FetchMainData>()
+    private val loadDataStatus = MutableLiveData<LoadDataState>()
 
     fun getDataRequest(): MutableLiveData<FetchMainData>{
 

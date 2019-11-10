@@ -1,10 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
         tools:context=".ui.search.SearchActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark">
+
+        <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/header_search">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <androidx.appcompat.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:theme="@style/Toolbar"
+                        app:layout_scrollFlags="scroll|enterAlways"
+                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                        app:contentInsetStart="@dimen/medium_space"
+                        app:contentInsetEnd="@dimen/medium_space">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:fitsSystemWindows="true">
+
+                        <ImageButton
+                                android:id="@+id/h_back"
+                                android:layout_width="40dp"
+                                android:layout_height="?android:attr/actionBarSize"
+                                android:src="@drawable/ic_arrow"
+                                style="@style/Widget.AppCompat.ActionButton"/>
+
+                        <LinearLayout
+                                android:layout_width="240dp"
+                                android:layout_height="32dp"
+                                android:layout_marginStart="@dimen/medium_space"
+                                android:layout_gravity="center_vertical"
+                                android:paddingStart="@dimen/medium_space"
+                                android:paddingEnd="@dimen/medium_space"
+                                android:background="@drawable/rectangle_rounded">
+
+                            <EditText
+                                    android:id="@+id/h_search"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/colorWhite"
+                                    android:hint="@string/search_box"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    android:imeOptions="actionSearch"
+                                    android:layout_gravity="center_vertical"
+                                    android:background="@android:color/transparent"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+
+                <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:tabIndicatorColor="@color/colorAccent"
+                        app:tabSelectedTextColor="@color/colorAccent"
+                        app:tabTextAppearance="@style/CustomTextAppearance"/>
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:visibility="gone"
+                android:layout_below="@id/header_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+
+
+</layout>

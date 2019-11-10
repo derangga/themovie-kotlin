@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Genre
 import kotlinx.android.synthetic.main.adapter_genre.view.*
 
 class GenreAdapter : ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private lateinit var listener: OnClickAdapterListener
+    private lateinit var listener: OnAdapterListener<Genre>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Genre> = object: DiffUtil.ItemCallback<Genre>(){
@@ -40,15 +41,11 @@ class GenreAdapter : ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) 
             itemView.apply {
                 genre_name.text = item.name
             }
-            itemView.setOnClickListener { listener.itemGenreClick(itemView, item) }
+            itemView.setOnClickListener { listener.onClick(itemView, item) }
         }
     }
 
-    fun setGenreClickListener(listener: OnClickAdapterListener){
+    fun setGenreClickListener(listener: OnAdapterListener<Genre>){
         this.listener = listener
-    }
-
-    interface OnClickAdapterListener {
-        fun itemGenreClick(view: View, genreLocal: Genre)
     }
 }

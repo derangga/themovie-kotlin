@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiUrl
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.adapter_maindmv.view.*
 class DiscoverMvAdapter : ListAdapter<Movies, DiscoverMvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var listener: OnClickAdapterListener
+    private lateinit var listener: OnAdapterListener<Movies>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Movies> = object: DiffUtil.ItemCallback<Movies>(){
@@ -25,7 +26,7 @@ class DiscoverMvAdapter : ListAdapter<Movies, DiscoverMvAdapter.ViewHolder>(DIFF
             }
 
             override fun areContentsTheSame(oldItem: Movies, newItem: Movies): Boolean {
-                return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
+                return oldItem.title == newItem.title && oldItem.posterPath == newItem.posterPath
             }
         }
     }
@@ -37,8 +38,8 @@ class DiscoverMvAdapter : ListAdapter<Movies, DiscoverMvAdapter.ViewHolder>(DIFF
         return ViewHolder(view)
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
-        this.listener = onClickAdapterListener
+    fun setOnClickListener(listener: OnAdapterListener<Movies>){
+        this.listener = listener
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -61,9 +62,5 @@ class DiscoverMvAdapter : ListAdapter<Movies, DiscoverMvAdapter.ViewHolder>(DIFF
                 }
             }
         }
-    }
-
-    interface OnClickAdapterListener {
-        fun onClick(view: View?, moviesLocal: Movies)
     }
 }

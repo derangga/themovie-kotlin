@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.ImageCache
+import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.portraintview.PortraitView
 import com.themovie.model.online.person.Filmography
 import com.themovie.restapi.ApiUrl
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.adapter_recomended.view.*
 class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickItemListener: OnClickItemListener
+    private lateinit var onClickItemListener: OnAdapterListener<Filmography>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Filmography> = object: DiffUtil.ItemCallback<Filmography>(){
@@ -31,7 +32,7 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
         }
     }
 
-    fun setOnItemCLickListener(onClickItemListener: OnClickItemListener){
+    fun setOnItemCLickListener(onClickItemListener: OnAdapterListener<Filmography>){
         this.onClickItemListener = onClickItemListener
     }
 
@@ -55,16 +56,12 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
                     setRating(item.rating.orEmpty())
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {
-                            onClickItemListener.onClick(item)
+                            onClickItemListener.onClick(itemView, item)
                         }
                     })
                 }
 
             }
         }
-    }
-
-    interface OnClickItemListener {
-        fun onClick(personFilm: Filmography)
     }
 }

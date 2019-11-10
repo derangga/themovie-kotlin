@@ -17,6 +17,7 @@ import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentPersonBinding
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.OnAdapterListener
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.Filmography
 import com.themovie.ui.detail.DetailActivity
@@ -67,10 +68,10 @@ class PersonFragment : BaseFragment() {
             adapter = personFilmAdapter
         }
 
-        personFilmAdapter.setOnItemCLickListener(object: PersonFilmAdapter.OnClickItemListener{
-            override fun onClick(personFilm: Filmography) {
+        personFilmAdapter.setOnItemCLickListener(object: OnAdapterListener<Filmography>{
+            override fun onClick(view: View, item: Filmography) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", personFilm.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
