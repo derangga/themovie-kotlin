@@ -1,4 +1,4 @@
-package com.themovie.helper.portraintview
+package com.themovie.helper.customview
 
 import android.content.res.TypedArray
 

@@ -2,21 +2,29 @@ package com.themovie.repos.local
 
 import androidx.lifecycle.LiveData
 import com.themovie.localdb.dao.GenresDao
-import com.themovie.model.local.GenreLocal
+import com.themovie.model.db.Genre
 import javax.inject.Inject
 
 class GenreLocalRepos
 @Inject constructor(private val genresDao: GenresDao){
 
-    suspend fun insert(genre: GenreLocal){
+    suspend fun insert(genre: Genre){
         genresDao.insertGenre(genre)
     }
 
-    suspend fun update(genre: GenreLocal){
+    suspend fun insert(genre: List<Genre>){
+        genresDao.insertGenre(*genre.toTypedArray())
+    }
+
+    suspend fun update(genre: Genre){
         genresDao.updateGenre(genre)
     }
 
-    fun getPartOfGenre(): LiveData<List<GenreLocal>> = genresDao.getPartOfGenre()
+    suspend fun update(genre: List<Genre>){
+        genresDao.updateGenre(*genre.toTypedArray())
+    }
 
-    fun getAllGenre(): LiveData<List<GenreLocal>> = genresDao.getAllGenre()
+    fun getPartOfGenre(): LiveData<List<Genre>> = genresDao.getPartOfGenre()
+
+    fun getAllGenre(): LiveData<List<Genre>> = genresDao.getAllGenre()
 }

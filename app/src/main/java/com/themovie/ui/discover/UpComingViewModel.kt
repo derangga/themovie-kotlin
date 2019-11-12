@@ -4,15 +4,14 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Upcoming
 import com.themovie.repos.fromapi.discover.UpcomingDataSource
 import com.themovie.repos.fromapi.discover.UpcomingDataSourceFactory
 import com.themovie.restapi.ApiInterface
-import io.reactivex.disposables.CompositeDisposable
 
 class UpComingViewModel(apiInterface: ApiInterface): ViewModel() {
-    private val upcomingLiveData: LiveData<PagedList<Movies>>
-    private val uiList = MediatorLiveData<PagedList<Movies>>()
+    private val upcomingLiveData: LiveData<PagedList<Upcoming>>
+    private val uiList = MediatorLiveData<PagedList<Upcoming>>()
     private val upcomingSourceFactory = UpcomingDataSourceFactory(viewModelScope, apiInterface)
 
     init {
@@ -23,7 +22,7 @@ class UpComingViewModel(apiInterface: ApiInterface): ViewModel() {
         upcomingLiveData = LivePagedListBuilder(upcomingSourceFactory, pageConfig).build()
     }
 
-    fun getUpcomingData(): MediatorLiveData<PagedList<Movies>> {
+    fun getUpcomingData(): MediatorLiveData<PagedList<Upcoming>> {
         uiList.addSource(upcomingLiveData){
             uiList.value = it
         }

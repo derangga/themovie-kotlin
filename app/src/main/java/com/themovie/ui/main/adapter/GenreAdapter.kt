@@ -7,19 +7,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.model.local.GenreLocal
+import com.themovie.helper.OnAdapterListener
+import com.themovie.model.db.Genre
 import kotlinx.android.synthetic.main.adapter_genre.view.*
 
-class GenreAdapter : ListAdapter<GenreLocal, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
+class GenreAdapter : ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
 
+    private lateinit var listener: OnAdapterListener<Genre>
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<GenreLocal> = object: DiffUtil.ItemCallback<GenreLocal>(){
-            override fun areItemsTheSame(oldItem: GenreLocal, newItem: GenreLocal): Boolean {
-                return oldItem.genreId == newItem.genreId
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Genre> = object: DiffUtil.ItemCallback<Genre>(){
+            override fun areItemsTheSame(oldItem: Genre, newItem: Genre): Boolean {
+                return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: GenreLocal, newItem: GenreLocal): Boolean {
+            override fun areContentsTheSame(oldItem: Genre, newItem: Genre): Boolean {
                 return oldItem.name == newItem.name
             }
         }
@@ -34,11 +36,16 @@ class GenreAdapter : ListAdapter<GenreLocal, GenreAdapter.ViewHolder>(DIFF_CALLB
         holder.bindItem(getItem(position))
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(item: GenreLocal){
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bindItem(item: Genre){
             itemView.apply {
                 genre_name.text = item.name
             }
+            itemView.setOnClickListener { listener.onClick(itemView, item) }
         }
+    }
+
+    fun setGenreClickListener(listener: OnAdapterListener<Genre>){
+        this.listener = listener
     }
 }

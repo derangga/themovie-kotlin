@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <com.themovie.helper.portraintview.PortraitView
+    <com.themovie.helper.customview.PortraitView
             android:id="@+id/movie_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

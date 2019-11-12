@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -21,11 +20,12 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentTvBinding
 import com.themovie.helper.Constant
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.helper.OnAdapterListener
+import com.themovie.model.db.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
+import com.themovie.ui.search.SuggestActivity
 import kotlinx.android.synthetic.main.fragment_tv.*
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -56,14 +56,17 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onMain(savedInstanceState: Bundle?) {
         swipe.setOnRefreshListener(this)
-        h_logo.visibility = View.GONE
-        h_back.apply {
-            visibility = View.VISIBLE
-            setOnClickListener {
+        binding.header.apply {
+            setLogoVisibility(View.GONE)
+            setTitleText(resources.getString(R.string.home_title_4))
+            setBackButtonVisibility(View.VISIBLE)
+            setBackButtonOnClickListener(View.OnClickListener {
                 val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
-            }
+            })
+            setSearchButtonOnClickListener(View.OnClickListener { changeActivity(SuggestActivity::class.java) })
         }
+
 
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
@@ -96,10 +99,10 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             adapter = tvAdapter
         }
 
-        tvAdapter.setOnClickAdapter(object: TvAdapter.OnClickAdapterListener{
-            override fun onItemClick(view: View?, tv: Tv, imageViewRes: ImageView) {
+        tvAdapter.setOnClickAdapter(object: OnAdapterListener<Tv>{
+            override fun onClick(view: View, item: Tv) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", tv.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
                 changeActivity(bundle, DetailActivity::class.java)

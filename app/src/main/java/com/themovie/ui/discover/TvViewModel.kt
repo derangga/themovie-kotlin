@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovertv.Tv
+import com.themovie.model.db.Tv
 import com.themovie.repos.fromapi.discover.TvDataSource
 import com.themovie.repos.fromapi.discover.TvDataSourceFactory
 import com.themovie.restapi.ApiInterface

@@ -60,4 +60,6 @@
     <string name="movie_title_1">Release date :</string>
     <string name="movie_title_2">Connection Error\nTap to retry.</string>
 
+    <string name="search_box">Search</string>
+
 </resources>

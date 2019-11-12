@@ -4,35 +4,34 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.ImageCache
-import com.themovie.helper.portraintview.PortraitView
-import com.themovie.model.local.TvLocal
+import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.customview.PortraitView
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_maindtv.view.*
 
-class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIFF_CALLBACK) {
+class DiscoverTvAdapter : ListAdapter<Tv, DiscoverTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var listener: OnClickAdapterListener
+    private lateinit var listener: OnAdapterListener<Tv>
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<TvLocal> = object: DiffUtil.ItemCallback<TvLocal>(){
-            override fun areItemsTheSame(oldItem: TvLocal, newItem: TvLocal): Boolean {
-                return oldItem.tvId == newItem.tvId
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Tv> = object: DiffUtil.ItemCallback<Tv>(){
+            override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+                return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TvLocal, newItem: TvLocal): Boolean {
-                return oldItem.title == newItem.title && oldItem.backDropPath == newItem.backDropPath
+            override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+                return oldItem.name == newItem.name && oldItem.posterPath == newItem.posterPath
             }
         }
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
-        this.listener = onClickAdapterListener
+    fun setOnClickListener(listener: OnAdapterListener<Tv>){
+        this.listener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,13 +47,13 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun bindItem(tvLocal: TvLocal){
+        fun bindItem(tvLocal: Tv){
             itemView.apply {
                 val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
                 tv_item.apply {
-                    setTitle(tvLocal.title)
+                    setTitle(tvLocal.name)
                     setImage(imgPoster)
-                    setRating(tvLocal.rating.orEmpty())
+                    setRating(tvLocal.voteAverage)
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {
                             listener.onClick(itemView, tvLocal)
@@ -63,9 +62,5 @@ class DiscoverTvAdapter : ListAdapter<TvLocal, DiscoverTvAdapter.ViewHolder>(DIF
                 }
             }
         }
-    }
-
-    interface OnClickAdapterListener {
-        fun onClick(view: View?, tvLocal: TvLocal)
     }
 }

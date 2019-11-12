@@ -26,5 +26,7 @@ class ApiUrl {
         const val THUMBNAIL = "https://img.youtube.com/vi/key/0.jpg"
         const val PERSON_FILM = "person/{person_id}/movie_credits"
         const val BIOGRAPHY = "person/{person_id}"
+        const val SEARCH_MOVIE = "search/movie"
+        const val SEARCH_TV = "search/tv"
     }
 }

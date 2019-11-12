@@ -1,20 +1,14 @@
 package com.themovie.ui.person
 
-import android.app.Application
 import android.util.Log
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
-import com.themovie.helper.DateConverter
-import com.themovie.helper.ImageCache
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.convertDate
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.PersonResponse
 import com.themovie.repos.fromapi.PersonRepos
 import com.themovie.restapi.ApiUrl
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import kotlinx.coroutines.launch
 
 class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
@@ -63,9 +57,9 @@ class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
     fun setPersonData(personData: PersonResponse){
         Log.e("vm", personData.name)
         name.value = personData.name
-        birthday.value = if(personData.birthday != null) DateConverter.convert(personData.birthday) else ""
-        place.value = if(personData.placeOfBirth != null) personData.placeOfBirth else ""
-        biography.value = if(personData.biography != null) personData.biography else ""
+        birthday.value = if(personData.birthday != null) personData.birthday.convertDate() else ""
+        place.value = personData.placeOfBirth ?: ""
+        biography.value = personData.biography ?: ""
         photoUrl.value = ApiUrl.IMG_POSTER + personData.profilePath.toString()
     }
 

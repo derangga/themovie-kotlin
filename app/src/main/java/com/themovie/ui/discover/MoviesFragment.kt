@@ -1,12 +1,10 @@
 package com.themovie.ui.discover
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -21,11 +19,12 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.helper.Constant
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.helper.OnAdapterListener
+import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
+import com.themovie.ui.search.SuggestActivity
 import kotlinx.android.synthetic.main.fragment_movies.*
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -44,7 +43,6 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies, container, false)
-        val view = binding.root
         (activity?.application as MyApplication).getAppComponent().inject(this)
 
         viewModel = ViewModelProvider(this, movieViewFactory).get(MovieViewModel::class.java)
@@ -52,27 +50,11 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             vm = viewModel
             lifecycleOwner = this@MoviesFragment
         }
-        return view
+        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        swipe.setOnRefreshListener(this)
-        h_logo.visibility = View.GONE
-        h_back.apply {
-            visibility = View.VISIBLE
-            setOnClickListener {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(it).navigate(action)
-            }
-        }
-
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+        setupUIComponent()
         recyclerViewSetup()
     }
 
@@ -90,6 +72,30 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         viewModel.refresh()
     }
 
+    private fun setupUIComponent(){
+        swipe.setOnRefreshListener(this)
+        binding.header.apply {
+            setLogoVisibility(View.GONE)
+            setBackButtonVisibility(View.VISIBLE)
+            setTitleText(resources.getString(R.string.home_title_5))
+            setBackButtonOnClickListener(View.OnClickListener {
+                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
+                Navigation.findNavController(it).navigate(action)
+            })
+
+            setSearchButtonOnClickListener(View.OnClickListener { changeActivity(SuggestActivity::class.java) })
+        }
+
+
+        val callback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
+                Navigation.findNavController(view!!).navigate(action)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
     private fun recyclerViewSetup(){
         mAdapter = MovieAdapter()
         movie_rec.apply {
@@ -97,10 +103,10 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             adapter = mAdapter
         }
 
-        mAdapter.setOnClickAdapter(object: MovieAdapter.OnClickAdapterListener{
-            override fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView) {
+        mAdapter.setOnClickAdapter(object: OnAdapterListener<Movies>{
+            override fun onClick(view: View, item: Movies) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", movies.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
@@ -123,9 +129,7 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 })
 
             getLoadState().observe(this@MoviesFragment,
-                Observer{
-                    mAdapter.setLoadState(it)
-                })
+                Observer{ mAdapter.setLoadState(it) })
         }
     }
 

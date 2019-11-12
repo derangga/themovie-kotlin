@@ -1,26 +1,20 @@
 package com.themovie.repos.fromapi.discover
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.model.db.Upcoming
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
-import kotlinx.coroutines.CoroutineExceptionHandler
+import com.themovie.restapi.PagingDataSource
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class UpcomingDataSource
-    (private val scope: CoroutineScope,
-     private val apiInterface: ApiInterface): PageKeyedDataSource<Int, Movies>() {
+class UpcomingDataSource(
+    private val scope: CoroutineScope,
+    private val apiInterface: ApiInterface
+): PagingDataSource<Int, Upcoming>() {
 
-    val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
-    private var pageSize: Int = 0
-    private var retry: (() -> Any)? = null
-    private var key = 0
-
-    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
+    override fun loadFirstPage(params: LoadInitialParams<Int>,callback: LoadInitialCallback<Int, Upcoming>) {
         updateState(LoadDataState.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
@@ -28,7 +22,7 @@ class UpcomingDataSource
         }
     }
 
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
+    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Upcoming>) {
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             retry = { loadAfter(params, callback) }
@@ -39,12 +33,8 @@ class UpcomingDataSource
         }
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
-
-    }
-
-    private fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
-        scope.launch(getJobErrorHandler()) {
+    override fun fetchData(page: Int, callback: (List<Upcoming>?) -> Unit) {
+        scope.launch(IO + getJobErrorHandler()) {
             val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, page)
             if(upcoming.isSuccessful){
                 updateState(LoadDataState.LOADED)
@@ -52,19 +42,5 @@ class UpcomingDataSource
                 callback(upcoming.body()?.results)
             } else updateState(LoadDataState.ERROR)
         }
-    }
-
-    private fun getJobErrorHandler() = CoroutineExceptionHandler { _, _ ->
-        updateState(LoadDataState.ERROR)
-    }
-
-    private fun updateState(state: LoadDataState) {
-        this.loadState.postValue(state)
-    }
-
-    fun retry(){
-        val reCall = retry
-        retry = null
-        reCall?.invoke()
     }
 }

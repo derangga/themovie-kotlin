@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -21,11 +20,11 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentUpcomingBinding
 import com.themovie.helper.Constant
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.helper.OnAdapterListener
+import com.themovie.model.db.Upcoming
 import com.themovie.ui.detail.DetailActivity
-import com.themovie.ui.discover.adapter.MovieAdapter
+import com.themovie.ui.discover.adapter.UpcomingAdapter
 import kotlinx.android.synthetic.main.fragment_upcoming.*
-import kotlinx.android.synthetic.main.header.*
 import javax.inject.Inject
 
 /**
@@ -35,7 +34,7 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     @Inject lateinit var upcomingViewFactory: UpcomingViewModelFactory
     private lateinit var viewModel: UpComingViewModel
-    private lateinit var mAdapter: MovieAdapter
+    private lateinit var mAdapter: UpcomingAdapter
     private lateinit var binding: FragmentUpcomingBinding
 
     override fun onCreateView(
@@ -56,11 +55,15 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onMain(savedInstanceState: Bundle?) {
         swipe.setOnRefreshListener(this)
-        h_logo.visibility = View.GONE
-        h_back.visibility = View.VISIBLE
-        h_back.setOnClickListener {
-            val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
-            Navigation.findNavController(it).navigate(action)
+        binding.header.apply {
+            setLogoVisibility(View.GONE)
+            setSearchVisibility(View.GONE)
+            setBackButtonVisibility(View.VISIBLE)
+            setTitleText(resources.getString(R.string.home_title_2))
+            setBackButtonOnClickListener(View.OnClickListener {
+                val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
+                Navigation.findNavController(it).navigate(action)
+            })
         }
 
         val callback = object: OnBackPressedCallback(true){
@@ -88,23 +91,23 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun recyclerViewSetup(){
-        mAdapter = MovieAdapter()
+        mAdapter = UpcomingAdapter()
         upcoming_rec.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdapter
         }
 
-        mAdapter.setOnClickAdapter(object: MovieAdapter.OnClickAdapterListener{
-            override fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView) {
+        mAdapter.setOnClickAdapter(object: OnAdapterListener<Upcoming>{
+            override fun onClick(view: View, item: Upcoming) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", movies.id)
+                    putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity(bundle, DetailActivity::class.java)
             }
         })
 
-        mAdapter.setOnErrorClickListener(object: MovieAdapter.OnErrorClickListener{
+        mAdapter.setOnErrorClickListener(object: UpcomingAdapter.OnErrorClickListener{
             override fun onClick(view: View?) {
                 viewModel.retry()
             }
@@ -114,7 +117,7 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun getUpcomingMovie(){
         viewModel.apply {
             getUpcomingData().observe(this@UpcomingFragment,
-                Observer<PagedList<Movies>> {
+                Observer<PagedList<Upcoming>> {
                     mAdapter.submitList(it)
                     swipe.isRefreshing = false
                 })

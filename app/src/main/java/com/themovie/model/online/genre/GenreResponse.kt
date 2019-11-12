@@ -1,10 +1,7 @@
 package com.themovie.model.online.genre
 
+import com.themovie.model.db.Genre
+
 data class GenreResponse(
     val genres: List<Genre>
-)
-
-data class Genre(
-    val id: Int,
-    val name: String
 )

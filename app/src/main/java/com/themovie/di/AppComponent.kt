@@ -4,9 +4,14 @@ import com.themovie.ui.detail.DetailMovieFragment
 import com.themovie.ui.detail.DetailTvFragment
 import com.themovie.ui.discover.*
 import com.themovie.ui.genres.GenresFragment
+import com.themovie.ui.genres.MovieWithGenreFragment
 import com.themovie.ui.main.HomeFragment
 import com.themovie.ui.main.MainActivity
 import com.themovie.ui.person.PersonFragment
+import com.themovie.ui.search.SearchMovieFragment
+import com.themovie.ui.search.SearchTvFragment
+import com.themovie.ui.search.SuggestMovieFragment
+import com.themovie.ui.search.SuggestTvFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -22,4 +27,9 @@ interface AppComponent {
     fun inject(tvFragment: TvFragment)
     fun inject(personFragment: PersonFragment)
     fun inject(genresFragment: GenresFragment)
+    fun inject(movieWithGenreFragment: MovieWithGenreFragment)
+    fun inject(suggestMovieFragment: SuggestMovieFragment)
+    fun inject(suggestTvFragment: SuggestTvFragment)
+    fun inject(searchMovieFragment: SearchMovieFragment)
+    fun inject(searchTvFragment: SearchTvFragment)
 }

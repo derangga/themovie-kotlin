@@ -16,8 +16,10 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark">
 
-        <include
-            layout="@layout/header"/>
+        <com.themovie.helper.customview.HeaderView
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/genre_list"

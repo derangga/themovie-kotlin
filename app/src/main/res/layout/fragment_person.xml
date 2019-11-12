@@ -21,12 +21,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <include
+            <com.themovie.helper.customview.HeaderView
                     android:id="@+id/header"
-                    layout="@layout/header"
-                    android:layout_alignParentTop="true"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
             <LinearLayout
                     android:id="@+id/person_layout"

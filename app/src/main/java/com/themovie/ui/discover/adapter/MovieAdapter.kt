@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
 import com.themovie.helper.LoadDataState
-import com.themovie.model.online.discovermv.Movies
+import com.themovie.helper.OnAdapterListener
+import com.themovie.model.db.Movies
 
 class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
@@ -19,7 +19,7 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
     private var loadState: LoadDataState? = null
     private lateinit var context: Context
     private lateinit var onErrorClickListener: OnErrorClickListener
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var onClickAdapterListener: OnAdapterListener<Movies>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Movies> = object: DiffUtil.ItemCallback<Movies>(){
@@ -87,16 +87,11 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
         this.onErrorClickListener = onErrorClickListener
     }
 
-    fun setOnClickAdapter(onClickAdapterListener: OnClickAdapterListener){
+    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<Movies>){
         this.onClickAdapterListener = onClickAdapterListener
     }
 
     interface OnErrorClickListener {
         fun onClick(view: View?)
     }
-
-    interface OnClickAdapterListener {
-        fun onItemClick(view: View?, movies: Movies, imageViewRes: ImageView)
-    }
-
 }

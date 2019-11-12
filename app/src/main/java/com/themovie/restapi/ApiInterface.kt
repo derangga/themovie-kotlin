@@ -1,5 +1,7 @@
 package com.themovie.restapi
 
+import com.themovie.helper.Constant
+import com.themovie.model.online.PopularResponse
 import com.themovie.model.online.detail.CastResponse
 import com.themovie.model.online.detail.ReviewResponse
 import com.themovie.model.online.detail.DetailMovieResponse
@@ -35,7 +37,7 @@ interface ApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): Response<MoviesResponse>
+    ): Response<PopularResponse>
 
     @GET(ApiUrl.GENRES)
     suspend fun getGenres(@Query("api_key") api_key: String): Response<GenreResponse>
@@ -47,7 +49,7 @@ interface ApiInterface {
         @Query("sort_by") sort_by: String ,
         @Query("page") page: Int ,
         @Query("primary_release_year") primary_release_year: String ,
-        @Query("with_genres") with_genres: String
+        @Query("with_genres") withGenres: String
     ) : Response<MoviesResponse>
 
     @GET(ApiUrl.DISCOVER_TV)
@@ -141,11 +143,19 @@ interface ApiInterface {
         @Query("api_key") api_key: String
     ) : Response<PersonResponse>
 
-    @GET("search/movie")
-    fun getSearchMovie (
-        @Query("api_key") api_key: String,
+    @GET(ApiUrl.SEARCH_MOVIE)
+    suspend fun getSearchMovie(
+        @Query("api_key") token: String,
         @Query("language") language: String,
-        @Query("query") movie_name: String,
+        @Query("query") query: String,
         @Query("page") page: Int
-    ) : Single<MoviesResponse>
+    ) : Response<MoviesResponse>
+
+    @GET(ApiUrl.SEARCH_TV)
+    suspend fun getSearchTv(
+        @Query("api_key") token: String,
+        @Query("language") language: String,
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ) : Response<TvResponse>
 }

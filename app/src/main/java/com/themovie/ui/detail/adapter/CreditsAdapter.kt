@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
-import com.themovie.helper.portraintview.PortraitView
+import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.customview.PortraitView
 import com.themovie.model.online.detail.Credits
 import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_credits.view.*
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.adapter_credits.view.*
 class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnClickAdapterListener
+    private lateinit var onClickAdapterListener: OnAdapterListener<Credits>
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Credits> = object: DiffUtil.ItemCallback<Credits>(){
@@ -30,7 +31,7 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
         }
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnClickAdapterListener){
+    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<Credits>){
         this.onClickAdapterListener = onClickAdapterListener
     }
 
@@ -42,10 +43,6 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(getItem(position))
-    }
-
-    interface OnClickAdapterListener {
-        fun onClick(view: View, credits: Credits)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

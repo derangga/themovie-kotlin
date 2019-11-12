@@ -1,0 +1,17 @@
+package com.themovie.model.db
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+
+@Entity(tableName = "tbl_genre")
+data class Genre(
+    @ColumnInfo(name = "genreId")
+    @SerializedName("id") val id: Int,
+    @ColumnInfo(name = "name")
+    @SerializedName("name") val name: String
+){
+    @PrimaryKey(autoGenerate = true)
+    var pkId: Int = 0
+}

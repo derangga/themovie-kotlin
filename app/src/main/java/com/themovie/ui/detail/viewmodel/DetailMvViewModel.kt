@@ -1,11 +1,11 @@
 package com.themovie.ui.detail.viewmodel
 
 import androidx.lifecycle.*
-import com.themovie.helper.DateConverter
 import com.themovie.helper.LoadDataState
+import com.themovie.helper.convertDate
+import com.themovie.model.db.Genre
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.DetailMovieResponse
-import com.themovie.model.online.detail.Genre
 import com.themovie.repos.fromapi.DetailMovieRepos
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
@@ -66,7 +66,7 @@ class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewMo
         rating.value = detailMovie.rate
         totalVote.value = "(${detailMovie.voteCount} Reviews)"
         popularity.value = detailMovie.popularity
-        releaseDate.value = "Date Release : ${DateConverter.convert(detailMovie.releaseDate)}"
+        releaseDate.value = "Date Release : ${detailMovie.releaseDate.convertDate()}"
         description.value = detailMovie.overview
         status.value = detailMovie.status
         genre.value = "Genre : ${concateGenres(detailMovie.genreList)}"

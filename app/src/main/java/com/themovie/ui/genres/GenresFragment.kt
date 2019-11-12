@@ -12,13 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentGenresBinding
-import com.themovie.model.local.GenreLocal
+import com.themovie.helper.OnAdapterListener
+import com.themovie.model.db.Genre
 import com.themovie.ui.main.adapter.GenreAdapter
 import javax.inject.Inject
 
@@ -57,6 +57,16 @@ class GenresFragment : BaseFragment() {
                 Navigation.findNavController(view!!).navigate(action)
             }}
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+        binding.header.apply {
+            setLogoVisibility(View.GONE)
+            setTitleText(resources.getString(R.string.home_title_3))
+            setBackButtonVisibility(View.VISIBLE)
+            setSearchVisibility(View.GONE)
+            setBackButtonOnClickListener(View.OnClickListener {
+                val action = GenresFragmentDirections.actionGenresFragmentToHomeFragment()
+                Navigation.findNavController(it).navigate(action)
+            })
+        }
     }
 
     private fun setupRecycler(){
@@ -65,11 +75,19 @@ class GenresFragment : BaseFragment() {
             layoutManager = GridLayoutManager(context, 2)
             adapter = genreAdapter
         }
+
+        genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
+            override fun onClick(view: View, item: Genre) {
+                val action = GenresFragmentDirections
+                    .actionGenresFragmentToMovieWithGenreFragment(item.id, item.name, "genreList")
+                Navigation.findNavController(view).navigate(action)
+            }
+        })
     }
 
     private fun getGenreList(){
         viewModel.getGenreList().observe(this,
-            Observer<List<GenreLocal>>{
+            Observer<List<Genre>>{
                 genreAdapter.submitList(it)
             })
     }

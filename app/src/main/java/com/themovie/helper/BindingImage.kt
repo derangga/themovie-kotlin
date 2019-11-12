@@ -7,6 +7,7 @@ object BindingImage {
     @BindingAdapter("loadImage")
     @JvmStatic
     fun loadImage(view: ImageView, imageUrl: String?){
-        ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)
+        //ImageCache.setImageViewUrl(view.context, imageUrl.toString(), view)
+        cacheImage(view.context, imageUrl.toString(), view)
     }
 }
