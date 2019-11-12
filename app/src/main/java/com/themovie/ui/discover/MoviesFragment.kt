@@ -74,15 +74,15 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun setupUIComponent(){
         swipe.setOnRefreshListener(this)
-        binding.header?.apply {
+        binding.header.apply {
             setLogoVisibility(View.GONE)
             setBackButtonVisibility(View.VISIBLE)
+            setTitleText(resources.getString(R.string.home_title_5))
             setBackButtonOnClickListener(View.OnClickListener {
                 val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
             })
 
-            setTitleText(resources.getString(R.string.home_title_5))
             setSearchButtonOnClickListener(View.OnClickListener { changeActivity(SuggestActivity::class.java) })
         }
 
@@ -129,9 +129,7 @@ class MoviesFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 })
 
             getLoadState().observe(this@MoviesFragment,
-                Observer{
-                    mAdapter.setLoadState(it)
-                })
+                Observer{ mAdapter.setLoadState(it) })
         }
     }
 

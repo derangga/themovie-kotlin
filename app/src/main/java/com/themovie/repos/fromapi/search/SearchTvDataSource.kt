@@ -2,7 +2,7 @@ package com.themovie.repos.fromapi.search
 
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Movies
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import com.themovie.restapi.PagingDataSource
@@ -10,13 +10,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class SearchMovieDataSource(
+class SearchTvDataSource(
     private val scope: CoroutineScope,
     private val apiInterface: ApiInterface,
-    private val query: String? =""
-): PagingDataSource<Int, Movies>() {
+    private val query: String? = ""
+): PagingDataSource<Int, Tv>() {
 
-    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
+    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(LoadDataState.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
@@ -24,7 +24,7 @@ class SearchMovieDataSource(
         }
     }
 
-    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
+    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Tv>) {
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             retry = { loadAfter(params, callback) }
@@ -35,13 +35,14 @@ class SearchMovieDataSource(
         }
     }
 
-    override fun fetchData(page: Int, callback: (List<Movies>?) -> Unit) {
+    override fun fetchData(page: Int, callback: (List<Tv>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val response = apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query.orEmpty(), page)
+            val response = apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE,
+                query.orEmpty(), page)
             if(response.isSuccessful){
                 updateState(LoadDataState.LOADED)
                 pageSize = response.body()?.totalPages ?: 0
-                callback(response.body()?.movies)
+                callback(response.body()?.results)
             } else updateState(LoadDataState.ERROR)
         }
     }

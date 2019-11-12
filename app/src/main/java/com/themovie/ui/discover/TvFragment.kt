@@ -24,6 +24,7 @@ import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
+import com.themovie.ui.search.SuggestActivity
 import kotlinx.android.synthetic.main.fragment_tv.*
 import javax.inject.Inject
 
@@ -55,7 +56,7 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onMain(savedInstanceState: Bundle?) {
         swipe.setOnRefreshListener(this)
-        binding.header?.apply {
+        binding.header.apply {
             setLogoVisibility(View.GONE)
             setTitleText(resources.getString(R.string.home_title_4))
             setBackButtonVisibility(View.VISIBLE)
@@ -63,6 +64,7 @@ class TvFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
             })
+            setSearchButtonOnClickListener(View.OnClickListener { changeActivity(SuggestActivity::class.java) })
         }
 
 

@@ -37,6 +37,7 @@ class MovieWithGenreFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var mAdapter: MovieAdapter
     private lateinit var binding: FragmentMoviesBinding
     private var destinationBackPress = ""
+    private var title = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +49,7 @@ class MovieWithGenreFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListe
         arguments?.let {
             MovieViewModel.genre = MovieWithGenreFragmentArgs.fromBundle(it).genreId.toString()
             destinationBackPress = MovieWithGenreFragmentArgs.fromBundle(it).from
+            title = MovieWithGenreFragmentArgs.fromBundle(it).genreName
         }
         viewModel = ViewModelProvider(this, movieFactory).get(MovieViewModel::class.java)
         binding.apply {
@@ -63,14 +65,16 @@ class MovieWithGenreFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListe
             MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToHomeFragment()
         } else MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToGenresFragment()
 
-        binding.header?.apply {
+        binding.header.apply {
             setLogoVisibility(View.GONE)
             setBackButtonVisibility(View.VISIBLE)
+            setSearchVisibility(View.GONE)
+            setTitleText("Genres: $title")
             setBackButtonOnClickListener(View.OnClickListener {
                 Navigation.findNavController(it).navigate(action)
             })
         }
-        binding.swipe?.setOnRefreshListener(this)
+        binding.swipe.setOnRefreshListener(this)
 
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() { Navigation.findNavController(view!!).navigate(action) }

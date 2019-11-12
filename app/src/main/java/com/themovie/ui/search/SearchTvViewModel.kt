@@ -4,16 +4,16 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Movies
-import com.themovie.repos.fromapi.search.SearchMovieDataSource
-import com.themovie.repos.fromapi.search.SearchMovieSourceFactory
+import com.themovie.model.db.Tv
+import com.themovie.repos.fromapi.search.SearchTvDataSource
+import com.themovie.repos.fromapi.search.SearchTvSourceFactory
 import com.themovie.restapi.ApiInterface
 
-class SearchMoviesViewModel(apiInterface: ApiInterface): ViewModel() {
+class SearchTvViewModel(private val apiInterface: ApiInterface): ViewModel() {
 
-    private val searchLiveData: LiveData<PagedList<Movies>>
-    private val uiList = MediatorLiveData<PagedList<Movies>>()
-    private val searchSourceFactory = SearchMovieSourceFactory(viewModelScope, apiInterface, query)
+    private val searchLiveData: LiveData<PagedList<Tv>>
+    private val uiList = MediatorLiveData<PagedList<Tv>>()
+    private val searchSourceFactory = SearchTvSourceFactory(viewModelScope, apiInterface, query)
 
     companion object{
         var query = ""
@@ -27,8 +27,7 @@ class SearchMoviesViewModel(apiInterface: ApiInterface): ViewModel() {
         searchLiveData = LivePagedListBuilder(searchSourceFactory, pageConfig).build()
     }
 
-
-    fun getSearchMovies(): MutableLiveData<PagedList<Movies>>{
+    fun getSearchTvResult(): MutableLiveData<PagedList<Tv>>{
         uiList.addSource(searchLiveData){
             uiList.value = it
         }
@@ -39,11 +38,11 @@ class SearchMoviesViewModel(apiInterface: ApiInterface): ViewModel() {
         uiList.removeSource(searchLiveData)
     }
 
-    fun getLoadState(): LiveData<LoadDataState> {
-        return Transformations.switchMap<SearchMovieDataSource, LoadDataState>(
-            searchSourceFactory.getResultSearch(),
-            SearchMovieDataSource::loadState
-        )
+    fun getLoadState(): LiveData<LoadDataState>{
+        return Transformations.switchMap<SearchTvDataSource, LoadDataState>(
+                searchSourceFactory.getResultSearch(),
+                SearchTvDataSource::loadState
+            )
     }
 
     fun retry(){

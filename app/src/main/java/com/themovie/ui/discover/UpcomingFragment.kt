@@ -57,6 +57,7 @@ class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         swipe.setOnRefreshListener(this)
         binding.header.apply {
             setLogoVisibility(View.GONE)
+            setSearchVisibility(View.GONE)
             setBackButtonVisibility(View.VISIBLE)
             setTitleText(resources.getString(R.string.home_title_2))
             setBackButtonOnClickListener(View.OnClickListener {

@@ -41,7 +41,10 @@ class MovieViewModel(apiInterface: ApiInterface) : ViewModel() {
 
 
     fun getLoadState(): LiveData<LoadDataState> {
-        return Transformations.switchMap<MovieDataSource, LoadDataState>(moviesSourceFactory.getMovieDataSource(), MovieDataSource::loadState)
+        return Transformations.switchMap<MovieDataSource, LoadDataState>(
+            moviesSourceFactory.getMovieDataSource(),
+            MovieDataSource::loadState
+        )
     }
 
     fun retry(){

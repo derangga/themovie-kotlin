@@ -10,9 +10,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import com.themovie.R
 import com.themovie.base.BaseActivity
-import com.themovie.databinding.ActivitySuggestBinding
+import com.themovie.databinding.ActivitySearchBinding
 import com.themovie.helper.ViewPagerFragment
-import kotlinx.android.synthetic.main.activity_suggest.*
+import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
@@ -22,15 +22,15 @@ import kotlinx.coroutines.launch
 class SuggestActivity : BaseActivity() {
 
     private lateinit var imm: InputMethodManager
-    private lateinit var binding: ActivitySuggestBinding
+    private lateinit var binding: ActivitySearchBinding
     private lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_suggest)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         initTab()
-        binding.hSearch?.requestFocus()
+        binding.hSearch.requestFocus()
         h_back.setOnClickListener {
             hideSoftKeyboard(findViewById(android.R.id.content))
             onBackPressed()
@@ -49,7 +49,7 @@ class SuggestActivity : BaseActivity() {
 
     private fun initTab(){
         binding.apply {
-            tabLayout?.apply {
+            tabLayout.apply {
                 addTab(this.newTab().setText("Movies"))
                 addTab(this.newTab().setText("Tv"))
             }
@@ -58,7 +58,7 @@ class SuggestActivity : BaseActivity() {
                 addFragment("Movies", SuggestMovieFragment())
                 addFragment("Tv", SuggestTvFragment())
             }
-            viewPager?.apply {
+            viewPager.apply {
                 adapter = pagerAdapter
                 offscreenPageLimit = 2
             }
@@ -120,7 +120,9 @@ class SuggestActivity : BaseActivity() {
     private fun searchSoftKeyboardAction(){
         binding.hSearch.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                showToastMessage(h_search.text.toString())
+                val bundle = Bundle().apply { putString("query", h_search.text.toString()) }
+                changeActivity(bundle, SearchActivity::class.java)
+                finish()
             }
             false
         }

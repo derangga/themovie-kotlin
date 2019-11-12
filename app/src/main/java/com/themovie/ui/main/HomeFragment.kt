@@ -191,7 +191,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
         genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
             override fun onClick(view: View, item: Genre) {
-                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(item.id)
+                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(item.id, item.name)
                 Navigation.findNavController(view).navigate(action)
             }
         })

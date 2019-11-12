@@ -61,6 +61,7 @@ class GenresFragment : BaseFragment() {
             setLogoVisibility(View.GONE)
             setTitleText(resources.getString(R.string.home_title_3))
             setBackButtonVisibility(View.VISIBLE)
+            setSearchVisibility(View.GONE)
             setBackButtonOnClickListener(View.OnClickListener {
                 val action = GenresFragmentDirections.actionGenresFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
@@ -77,7 +78,8 @@ class GenresFragment : BaseFragment() {
 
         genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
             override fun onClick(view: View, item: Genre) {
-                val action = GenresFragmentDirections.actionGenresFragmentToMovieWithGenreFragment(item.id, "genreList")
+                val action = GenresFragmentDirections
+                    .actionGenresFragmentToMovieWithGenreFragment(item.id, item.name, "genreList")
                 Navigation.findNavController(view).navigate(action)
             }
         })
