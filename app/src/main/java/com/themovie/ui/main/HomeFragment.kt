@@ -276,7 +276,6 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                     isDiscoverTvEmpty = t.isEmpty()
                     if(!isDiscoverTvEmpty){
                         discoverTvAdapter.submitList(t)
-                        //disctv_card.visibility = View.VISIBLE
                     }
                 })
 
@@ -285,7 +284,6 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                     isDiscoverMvEmpty = t.isEmpty()
                     if(!isDiscoverMvEmpty){
                         discoverMvAdapter.submitList(t)
-                        //discmv_card.visibility = View.VISIBLE
                     }
                 })
 

@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "tbl_tv")
 data class Tv (
+    @PrimaryKey(autoGenerate = true)
+    val pkId: Int? = 0,
     @ColumnInfo(name = "tvId")
     @SerializedName("id") val id: Int,
     @ColumnInfo(name = "title")
@@ -21,7 +23,4 @@ data class Tv (
     @SerializedName("backdrop_path") val backdropPath: String?,
     @ColumnInfo(name = "overview")
     @SerializedName("overview") val overview: String
-){
-    @PrimaryKey(autoGenerate = true)
-    var pkId: Int = 0
-}
+)

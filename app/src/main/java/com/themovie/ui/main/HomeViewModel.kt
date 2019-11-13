@@ -69,32 +69,64 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
     }
 
     fun updateLocalTrending(trendingList: List<Trending>){
+
         viewModelScope.launch(IO) {
-            trendingLocalRepos.update(trendingList)
+            trendingList.forEachIndexed { index, trending ->
+                val data = Trending(
+                    index + 1, trending.id, trending.title,
+                    trending.posterPath, trending.backdropPath,
+                    trending.overview, trending.voteAverage, trending.releaseDate
+                )
+                trendingLocalRepos.update(data)
+            }
         }
     }
 
     fun updateLocalUpComing(upcomingList: List<Upcoming>){
         viewModelScope.launch(IO) {
-            upcomingLocalRepos.update(upcomingList)
+            upcomingList.forEachIndexed { index, upcoming ->
+                val data = Upcoming(
+                    index + 1, upcoming.id, upcoming.title,
+                    upcoming.posterPath, upcoming.backdropPath,
+                    upcoming.overview, upcoming.voteAverage, upcoming.releaseDate
+                )
+                upcomingLocalRepos.update(data)
+            }
         }
     }
 
     fun updateLocalGenre(genreList: List<Genre>){
         viewModelScope.launch(IO) {
-            genreRepos.update(genreList)
+            genreList.forEachIndexed { index, genre ->
+                val data = Genre(index + 1, genre.id, genre.name)
+                genreRepos.update(data)
+            }
         }
     }
 
     fun updateLocalTv(tvList: List<Tv>){
         viewModelScope.launch(IO) {
-            discoverTvLocalRepos.update(tvList)
+            tvList.forEachIndexed { index, tv ->
+                val data = Tv(
+                    index + 1, tv.id, tv.name,
+                    tv.voteAverage, tv.voteCount,
+                    tv.posterPath, tv.backdropPath, tv.overview
+                )
+                discoverTvLocalRepos.update(data)
+            }
         }
     }
 
     fun updateLocalMovies(movieList: List<Movies>){
         viewModelScope.launch {
-            discoverMvLocalRepos.update(movieList)
+            movieList.forEachIndexed { index, movies ->
+                val data = Movies(
+                    index + 1, movies.id,
+                    movies.title, movies.posterPath, movies.backdropPath,
+                    movies.overview, movies.voteAverage, movies.releaseDate
+                )
+                discoverMvLocalRepos.update(data)
+            }
         }
     }
 
