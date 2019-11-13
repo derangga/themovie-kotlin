@@ -6,12 +6,12 @@ import com.themovie.helper.LoadDataState
 import com.themovie.helper.convertDate
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.PersonResponse
-import com.themovie.repos.fromapi.PersonRepos
+import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 
-class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
+class PersonViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
     private val personLiveData: MutableLiveData<FetchPersonData> = MutableLiveData()
@@ -34,7 +34,7 @@ class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
     init {
         viewModelScope.launch {
             try {
-                val response = personRepos.getPersonData(ApiUrl.TOKEN, personId)
+                val response = apiRepository.getPersonData(ApiUrl.TOKEN, personId)
                 if(response != null){
                     personLiveData.value = response
                     loadDataState.value = LoadDataState.LOADED

@@ -7,13 +7,13 @@ import com.themovie.helper.convertDate
 import com.themovie.model.db.Genre
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.DetailTvResponse
-import com.themovie.repos.fromapi.DetailTvRepos
+import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() {
+class DetailTvViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
     private val detailTvLiveData: MutableLiveData<FetchDetailTvData> = MutableLiveData()
@@ -43,7 +43,7 @@ class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() 
     init {
         viewModelScope.launch {
             try {
-                val response = detailTvRepos.getDetailData(ApiUrl.TOKEN, filmId)
+                val response = apiRepository.getDetailDataTv(ApiUrl.TOKEN, filmId)
                 if(response != null){
                     detailTvLiveData.value = response
                     loadDataStatus.value = LoadDataState.LOADED

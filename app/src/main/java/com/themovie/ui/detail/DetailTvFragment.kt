@@ -116,6 +116,9 @@ class DetailTvFragment : BaseFragment() {
                 if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visibility = View.VISIBLE
                 else binding.dtCastEmpty.visibility = View.GONE
 
+                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visibility = View.VISIBLE
+                else binding.videoEmpty.visibility = View.GONE
+
                 if(it.reviews?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
                 else binding.dtReviewEmpty.visibility = View.GONE
             }

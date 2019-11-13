@@ -228,9 +228,18 @@
                                 android:id="@+id/dt_castList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"/>
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                        <TextView
+                                android:id="@+id/dt_cast_empty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:text="@string/detail_title_17"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginBottom="8dp"
+                                android:textAlignment="center"
+                                android:visibility="gone"/>
 
                     </LinearLayout>
 
@@ -270,9 +279,18 @@
                                 android:id="@+id/dt_video_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"/>
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                        <TextView
+                                android:id="@+id/video_empty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:text="@string/detail_title_19"
+                                android:layout_marginBottom="8dp"
+                                android:textAlignment="center"
+                                android:textColor="@color/colorWhite"
+                                android:visibility="gone"/>
 
                     </LinearLayout>
 

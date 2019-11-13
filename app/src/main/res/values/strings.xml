@@ -50,6 +50,7 @@
     <string name="detail_title_16">Seasons</string>
     <string name="detail_title_17">No Cast Available</string>
     <string name="detail_title_18">Videos</string>
+    <string name="detail_title_19">No Video Available</string>
 
     <!-- Person Activity -->
     <string name="person_title_1">Born :</string>

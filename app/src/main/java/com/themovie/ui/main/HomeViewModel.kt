@@ -5,16 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.themovie.helper.LoadDataState
-import com.themovie.helper.convertDate
 import com.themovie.model.db.*
 import com.themovie.model.online.FetchMainData
-import com.themovie.repos.fromapi.MainRepos
+import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.repos.local.*
 import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalRepos: TrendingLocalRepos,
+class HomeViewModel(private val apiRepository: ApiRepository, private val trendingLocalRepos: TrendingLocalRepos,
                     private val genreRepos: GenreLocalRepos, private val upcomingLocalRepos: UpcomingLocalRepos,
                     private val discoverTvLocalRepos: DiscoverTvLocalRepos,
                     private val discoverMvLocalRepos: DiscoverMvLocalRepos
@@ -27,7 +26,7 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
 
         viewModelScope.launch {
             try {
-                val response = mainRepos.getDataMovie(ApiUrl.TOKEN)
+                val response = apiRepository.getDataMovie(ApiUrl.TOKEN)
                 if(response != null){
                     onlineLiveDataFetch.value = response
                 } else loadDataStatus.value = LoadDataState.ERROR
@@ -130,27 +129,10 @@ class HomeViewModel(private val mainRepos: MainRepos, private val trendingLocalR
         }
     }
 
-    fun getTrendingLocalData(): LiveData<List<Trending>>{
-        return trendingLocalRepos.getTrendingList()
-    }
-
-    fun getUpcomingLocalData(): LiveData<List<Upcoming>>{
-        return upcomingLocalRepos.getAllUpcoming()
-    }
-
-    fun getDiscoverTvLocalData(): LiveData<List<Tv>>{
-        return discoverTvLocalRepos.getDiscoverTvList()
-    }
-
-    fun getDiscoverMvLocalData(): LiveData<List<Movies>>{
-        return discoverMvLocalRepos.getDiscoverMovieLis()
-    }
-
-    fun getLoadDataStatus(): MutableLiveData<LoadDataState>{
-        return loadDataStatus
-    }
-
-    fun getGenreLocalData(): LiveData<List<Genre>>{
-        return genreRepos.getPartOfGenre()
-    }
+    fun getTrendingLocalData(): LiveData<List<Trending>> = trendingLocalRepos.getTrendingList()
+    fun getUpcomingLocalData(): LiveData<List<Upcoming>> = upcomingLocalRepos.getAllUpcoming()
+    fun getDiscoverTvLocalData(): LiveData<List<Tv>> = discoverTvLocalRepos.getDiscoverTvList()
+    fun getDiscoverMvLocalData(): LiveData<List<Movies>> = discoverMvLocalRepos.getDiscoverMovieLis()
+    fun getLoadDataStatus(): MutableLiveData<LoadDataState> = loadDataStatus
+    fun getGenreLocalData(): LiveData<List<Genre>> = genreRepos.getPartOfGenre()
 }
