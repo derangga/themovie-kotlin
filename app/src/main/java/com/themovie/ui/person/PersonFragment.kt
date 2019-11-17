@@ -90,12 +90,14 @@ class PersonFragment : BaseFragment() {
     private fun getLoadStatus(){
         personViewModel.getLoadStatus().observe(
             this, Observer<LoadDataState> {
-                if(it == LoadDataState.LOADED) hideLoading()
-                else {
-                    showNetworkError()
-                    binding.prRetry.setOnClickListener {
-                        showLoading()
-                        getPersonData()
+                when (it) {
+                    LoadDataState.LOADING -> showLoading()
+                    LoadDataState.LOADED -> hideLoading()
+                    else -> {
+                        showNetworkError()
+                        binding.prNoInternet.retryOnClick(View.OnClickListener {
+                            getPersonData()
+                        })
                     }
                 }
             }

@@ -40,7 +40,7 @@ class DetailTvViewModel(private val apiRepository: ApiRepository) : ViewModel() 
         }
     }
 
-    init {
+    fun getDetailTvRequest(): MutableLiveData<FetchDetailTvData> {
         viewModelScope.launch {
             try {
                 val response = apiRepository.getDetailDataTv(ApiUrl.TOKEN, filmId)
@@ -53,9 +53,6 @@ class DetailTvViewModel(private val apiRepository: ApiRepository) : ViewModel() 
                 loadDataStatus.value = LoadDataState.ERROR
             }
         }
-    }
-
-    fun getDetailTvRequest(): MutableLiveData<FetchDetailTvData> {
         return detailTvLiveData
     }
 

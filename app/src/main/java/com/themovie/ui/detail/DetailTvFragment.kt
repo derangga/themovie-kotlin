@@ -128,12 +128,14 @@ class DetailTvFragment : BaseFragment() {
     private fun observeLoadData(){
         detailTvViewModel.getLoadDataStatus().observe( this,
             Observer<LoadDataState> {
-                if(it == LoadDataState.LOADED) hideLoading()
-                else {
-                    showErrorConnection()
-                    binding.dtRetry.setOnClickListener {
-                        showLoading()
-                        getAllDetailData()
+                when (it) {
+                    LoadDataState.LOADING -> showLoading()
+                    LoadDataState.LOADED -> hideLoading()
+                    else -> {
+                        showErrorConnection()
+                        binding.dtNoInternet.retryOnClick(View.OnClickListener {
+                            getAllDetailData()
+                        })
                     }
                 }
             }

@@ -17,17 +17,18 @@
                 android:name=".ui.search.SearchActivity"
                 android:theme="@style/AppTheme.NoActionBar"
                 android:screenOrientation="portrait">
-
         </activity>
         <activity
                 android:name=".ui.search.SuggestActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar"
-                android:windowSoftInputMode="stateVisible"></activity>
+                android:windowSoftInputMode="stateVisible">
+        </activity>
         <activity
                 android:name=".ui.detail.DetailActivity"
                 android:label="@string/title_activity_detail_movie"
-                android:theme="@style/AppTheme.NoActionBar" />
+                android:theme="@style/AppTheme.NoActionBar"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.main.MainActivity"
                 android:screenOrientation="portrait"

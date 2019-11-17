@@ -37,7 +37,7 @@ class DetailMvViewModel(private val apiRepository: ApiRepository) : ViewModel() 
         }
     }
 
-    init {
+    fun getDetailMovieRequest(): MutableLiveData<FetchDetailMovieData> {
         viewModelScope.launch {
             try {
                 val response = apiRepository.getDetailDataMovie(ApiUrl.TOKEN, filmId)
@@ -50,10 +50,6 @@ class DetailMvViewModel(private val apiRepository: ApiRepository) : ViewModel() 
                 loadDataStatus.value = LoadDataState.ERROR
             }
         }
-    }
-
-    fun getDetailMovieRequest(): MutableLiveData<FetchDetailMovieData> {
-
         return detailLiveMovieData
     }
 

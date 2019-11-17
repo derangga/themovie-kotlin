@@ -104,13 +104,14 @@ class DetailMovieFragment : BaseFragment() {
 
     private fun observeNetworkLoad(){
         detailMvViewModel.getLoadDataStatus().observe(this, Observer<LoadDataState>{
-            if(it == LoadDataState.LOADED) {
-                hideLoading()
-            } else{
-                showErrorConnection()
-                binding.dtRetry.setOnClickListener {
-                    showLoading()
-                    getAllDetailData()
+            when (it) {
+                LoadDataState.LOADED -> hideLoading()
+                else -> {
+                    showErrorConnection()
+                    binding.dtNoInternet.retryOnClick(View.OnClickListener {
+                        showLoading()
+                        getAllDetailData()
+                    })
                 }
             }
         })

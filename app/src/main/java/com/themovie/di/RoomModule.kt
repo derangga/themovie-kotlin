@@ -12,9 +12,9 @@ import javax.inject.Singleton
 class RoomModule
     (val application: Application) {
 
-    private val theMovieDatabase: TheMovieDatabase = Room.databaseBuilder(
+    private val theMovieDatabase: TheMovieDatabase by lazy { Room.databaseBuilder(
         application, TheMovieDatabase::class.java, "TheMovieDatabase"
-    ).build()
+    ).build() }
 
     @Provides
     @Singleton

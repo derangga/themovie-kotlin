@@ -1,12 +1,9 @@
 package com.themovie.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.*
-import com.themovie.model.online.FetchMainData
 import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.repos.local.*
 import com.themovie.restapi.ApiUrl
@@ -19,56 +16,61 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
                     private val discoverMvLocalRepos: DiscoverMvLocalRepos
 ) : ViewModel() {
 
-    private val onlineLiveDataFetch = MutableLiveData<FetchMainData>()
-    private val loadDataStatus = MutableLiveData<LoadDataState>()
+    private val loadDataStatus by lazy { MutableLiveData<LoadDataState>() }
+    private val trendingData by lazy { MediatorLiveData<List<Trending>>() }
+    private val upcomingData by lazy { MediatorLiveData<List<Upcoming>>() }
+    private val genreData by lazy { MediatorLiveData<List<Genre>>() }
+    private val discoverTvData by lazy { MediatorLiveData<List<Tv>>() }
+    private val discoverMvData by lazy { MediatorLiveData<List<Movies>>() }
+    var isFirstLoad = false
 
-    fun getDataRequest(): MutableLiveData<FetchMainData>{
-
+    fun getDataRequest() {
         viewModelScope.launch {
             try {
+                loadDataStatus.value = LoadDataState.LOADING
                 val response = apiRepository.getDataMovie(ApiUrl.TOKEN)
                 if(response != null){
-                    onlineLiveDataFetch.value = response
+                    loadDataStatus.value = LoadDataState.LOADED
+                    if(isFirstLoad){
+                        response.let {
+                            insertDataFirstLoad(
+                                it.popular?.results!!, it.upcomingResponse?.results!!,
+                                it.genre?.genres!!, it.tvResponse?.results!!,
+                                it.moviesResponse?.movies!!
+                            )
+                        }
+                    } else {
+                        response.let {
+                            updateLocalData(
+                                it.popular?.results!!, it.upcomingResponse?.results!!,
+                                it.genre?.genres!!, it.tvResponse?.results!!,
+                                it.moviesResponse?.movies!!
+                            )
+                        }
+                    }
+
                 } else loadDataStatus.value = LoadDataState.ERROR
             } catch (e: Exception){
                 loadDataStatus.value = LoadDataState.ERROR
             }
         }
-        return onlineLiveDataFetch
     }
 
-    fun insertLocalTrending(trendingList: List<Trending>){
+    private fun insertDataFirstLoad(trendingList: List<Trending>, upcomingList: List<Upcoming>,
+                                    genreList: List<Genre>, tvList: List<Tv>, movieList: List<Movies>)
+    {
         viewModelScope.launch(IO) {
             trendingLocalRepos.insert(trendingList)
-        }
-    }
-
-    fun insertLocalUpcoming(upcomingList: List<Upcoming>){
-        viewModelScope.launch(IO) {
             upcomingLocalRepos.insert(upcomingList)
-        }
-    }
-
-    fun insertLocalGenre(genreList: List<Genre>){
-        viewModelScope.launch(IO) {
             genreRepos.insert(genreList)
-        }
-    }
-
-    fun insertLocalTv(tvList: List<Tv>){
-        viewModelScope.launch(IO) {
             discoverTvLocalRepos.insert(tvList)
-        }
-    }
-
-    fun insertLocalMovies(movieList: List<Movies>){
-        viewModelScope.launch {
             discoverMvLocalRepos.insert(movieList)
         }
     }
 
-    fun updateLocalTrending(trendingList: List<Trending>){
-
+    private fun updateLocalData(trendingList: List<Trending>, upcomingList: List<Upcoming>,
+                                genreList: List<Genre>, tvList: List<Tv>, movieList: List<Movies>)
+    {
         viewModelScope.launch(IO) {
             trendingList.forEachIndexed { index, trending ->
                 val data = Trending(
@@ -78,11 +80,7 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
                 )
                 trendingLocalRepos.update(data)
             }
-        }
-    }
 
-    fun updateLocalUpComing(upcomingList: List<Upcoming>){
-        viewModelScope.launch(IO) {
             upcomingList.forEachIndexed { index, upcoming ->
                 val data = Upcoming(
                     index + 1, upcoming.id, upcoming.title,
@@ -91,20 +89,12 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
                 )
                 upcomingLocalRepos.update(data)
             }
-        }
-    }
 
-    fun updateLocalGenre(genreList: List<Genre>){
-        viewModelScope.launch(IO) {
             genreList.forEachIndexed { index, genre ->
                 val data = Genre(index + 1, genre.id, genre.name)
                 genreRepos.update(data)
             }
-        }
-    }
 
-    fun updateLocalTv(tvList: List<Tv>){
-        viewModelScope.launch(IO) {
             tvList.forEachIndexed { index, tv ->
                 val data = Tv(
                     index + 1, tv.id, tv.name,
@@ -113,11 +103,7 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
                 )
                 discoverTvLocalRepos.update(data)
             }
-        }
-    }
 
-    fun updateLocalMovies(movieList: List<Movies>){
-        viewModelScope.launch {
             movieList.forEachIndexed { index, movies ->
                 val data = Movies(
                     index + 1, movies.id,
@@ -129,10 +115,41 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
         }
     }
 
-    fun getTrendingLocalData(): LiveData<List<Trending>> = trendingLocalRepos.getTrendingList()
-    fun getUpcomingLocalData(): LiveData<List<Upcoming>> = upcomingLocalRepos.getAllUpcoming()
-    fun getDiscoverTvLocalData(): LiveData<List<Tv>> = discoverTvLocalRepos.getDiscoverTvList()
-    fun getDiscoverMvLocalData(): LiveData<List<Movies>> = discoverMvLocalRepos.getDiscoverMovieLis()
-    fun getLoadDataStatus(): MutableLiveData<LoadDataState> = loadDataStatus
-    fun getGenreLocalData(): LiveData<List<Genre>> = genreRepos.getPartOfGenre()
+    fun getLocalData(){
+        trendingData.addSource(trendingLocalRepos.getTrendingList()){
+            trendingData.value = it
+            isFirstLoad = it.isEmpty()
+        }
+
+        upcomingData.addSource(upcomingLocalRepos.getAllUpcoming()){
+            upcomingData.value = it
+        }
+
+        genreData.addSource(genreRepos.getPartOfGenre()){
+            genreData.value = it
+        }
+
+        discoverTvData.addSource(discoverTvLocalRepos.getDiscoverTvList()){
+            discoverTvData.value = it
+        }
+
+        discoverMvData.addSource(discoverMvLocalRepos.getDiscoverMovieLis()){
+            discoverMvData.value = it
+        }
+    }
+
+
+    fun getTrendingLocalData(): LiveData<List<Trending>> = trendingData
+    fun getUpcomingLocalData(): LiveData<List<Upcoming>> = upcomingData
+    fun getGenreLocalData(): LiveData<List<Genre>> = genreData
+    fun getDiscoverTvLocalData(): LiveData<List<Tv>> = discoverTvData
+    fun getDiscoverMvLocalData(): LiveData<List<Movies>> = discoverMvData
+    fun getLoadDataStatus(): LiveData<LoadDataState> = loadDataStatus
+
+    private fun checkIsFirstLoad(trendingSize: Int, upcomingSize: Int,
+                         genreSize: Int, discoverTvSize: Int,
+                         discoverMvSize: Int): Boolean {
+        return trendingSize == 0 && upcomingSize == 0 && genreSize == 0 &&
+                discoverTvSize == 0 && discoverMvSize == 0
+    }
 }

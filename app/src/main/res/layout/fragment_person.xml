@@ -188,38 +188,12 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent" />
 
-            <LinearLayout
+            <com.themovie.helper.customview.NoInternetView
                     android:id="@+id/pr_no_internet"
-                    android:orientation="vertical"
+                    android:layout_below="@id/header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_below="@id/header"
-                    android:layout_centerInParent="true">
-
-                <ImageView
-                        android:src="@drawable/no_internet"
-                        android:layout_width="match_parent"
-                        android:layout_height="220dp"/>
-
-                <TextView
-                        android:layout_marginTop="@dimen/small_space"
-                        android:text="@string/detail_title_11"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"/>
-
-                <Button
-                        android:id="@+id/pr_retry"
-                        android:layout_marginTop="@dimen/small_space"
-                        android:text="@string/detail_title_12"
-                        android:layout_width="80dp"
-                        android:layout_height="40dp"
-                        android:textColor="@color/colorWhite"
-                        android:background="@drawable/btn_rounded"
-                        android:layout_gravity="center_horizontal"/>
-
-            </LinearLayout>
+                    android:visibility="gone"/>
 
         </RelativeLayout>
 

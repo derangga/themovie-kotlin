@@ -31,9 +31,10 @@ class PersonViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         }
     }
 
-    init {
+    fun getPersonData(): MutableLiveData<FetchPersonData> {
         viewModelScope.launch {
             try {
+                loadDataState.value = LoadDataState.LOADING
                 val response = apiRepository.getPersonData(ApiUrl.TOKEN, personId)
                 if(response != null){
                     personLiveData.value = response
@@ -44,9 +45,6 @@ class PersonViewModel(private val apiRepository: ApiRepository) : ViewModel() {
                 loadDataState.value = LoadDataState.ERROR
             }
         }
-    }
-
-    fun getPersonData(): MutableLiveData<FetchPersonData> {
         return  personLiveData
     }
 
