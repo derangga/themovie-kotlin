@@ -6,12 +6,14 @@ import com.themovie.helper.LoadDataState
 import com.themovie.helper.convertDate
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.PersonResponse
-import com.themovie.repos.fromapi.PersonRepos
+import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 
-class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
+class PersonViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
     private val personLiveData: MutableLiveData<FetchPersonData> = MutableLiveData()
@@ -31,22 +33,23 @@ class PersonViewModel(private val personRepos: PersonRepos) : ViewModel() {
         }
     }
 
-    init {
-        viewModelScope.launch {
-            try {
-                val response = personRepos.getPersonData(ApiUrl.TOKEN, personId)
-                if(response != null){
-                    personLiveData.value = response
-                    loadDataState.value = LoadDataState.LOADED
-                } else loadDataState.value = LoadDataState.ERROR
-
-            } catch (e: Exception){
-                loadDataState.value = LoadDataState.ERROR
-            }
-        }
-    }
-
     fun getPersonData(): MutableLiveData<FetchPersonData> {
+        viewModelScope.launch {
+            apiRepository.getPersonData(personId, object: ApiCallback<FetchPersonData>{
+                override fun onSuccessRequest(response: FetchPersonData?) {
+                    loadDataState.value = LoadDataState.LOADED
+                    personLiveData.value = response
+                }
+
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataState.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataState.value = LoadDataState.ERROR
+                }
+            })
+        }
         return  personLiveData
     }
 

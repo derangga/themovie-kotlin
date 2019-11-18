@@ -228,9 +228,18 @@
                                 android:id="@+id/dt_castList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"/>
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                        <TextView
+                                android:id="@+id/dt_cast_empty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:text="@string/detail_title_17"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginBottom="8dp"
+                                android:textAlignment="center"
+                                android:visibility="gone"/>
 
                     </LinearLayout>
 
@@ -270,9 +279,18 @@
                                 android:id="@+id/dt_video_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"/>
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                        <TextView
+                                android:id="@+id/video_empty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:text="@string/detail_title_19"
+                                android:layout_marginBottom="8dp"
+                                android:textAlignment="center"
+                                android:textColor="@color/colorWhite"
+                                android:visibility="gone"/>
 
                     </LinearLayout>
 
@@ -386,37 +404,11 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <com.themovie.helper.customview.NoInternetView
                     android:id="@+id/dt_no_internet"
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_centerInParent="true">
-
-                <ImageView
-                        android:src="@drawable/no_internet"
-                        android:layout_width="match_parent"
-                        android:layout_height="220dp"/>
-
-                <TextView
-                        android:layout_marginTop="@dimen/small_space"
-                        android:text="@string/detail_title_11"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"/>
-
-                <Button
-                        android:id="@+id/dt_retry"
-                        android:layout_marginTop="@dimen/small_space"
-                        android:text="@string/detail_title_12"
-                        android:layout_width="80dp"
-                        android:layout_height="40dp"
-                        android:textColor="@color/colorWhite"
-                        android:background="@drawable/btn_rounded"
-                        android:layout_gravity="center_horizontal"/>
-
-            </LinearLayout>
+                    android:visibility="gone"/>
 
         </RelativeLayout>
 

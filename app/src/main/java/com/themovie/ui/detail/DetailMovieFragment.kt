@@ -90,6 +90,12 @@ class DetailMovieFragment : BaseFragment() {
                 if(it.moviesResponse?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
                 else binding.dtRecomEmpty.visibility = View.GONE
 
+                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visibility = View.VISIBLE
+                else binding.dtCastEmpty.visibility = View.GONE
+
+                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visibility = View.VISIBLE
+                else binding.videoEmpty.visibility = View.GONE
+
                 if(it.reviewResponse?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
                 else binding.dtReviewEmpty.visibility = View.GONE
             }
@@ -98,13 +104,14 @@ class DetailMovieFragment : BaseFragment() {
 
     private fun observeNetworkLoad(){
         detailMvViewModel.getLoadDataStatus().observe(this, Observer<LoadDataState>{
-            if(it == LoadDataState.LOADED) {
-                hideLoading()
-            } else{
-                showErrorConnection()
-                binding.dtRetry.setOnClickListener {
-                    showLoading()
-                    getAllDetailData()
+            when (it) {
+                LoadDataState.LOADED -> hideLoading()
+                else -> {
+                    showErrorConnection()
+                    binding.dtNoInternet.retryOnClick(View.OnClickListener {
+                        showLoading()
+                        getAllDetailData()
+                    })
                 }
             }
         })

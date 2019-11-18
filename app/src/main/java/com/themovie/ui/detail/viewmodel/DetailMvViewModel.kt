@@ -1,18 +1,21 @@
 package com.themovie.ui.detail.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.convertDate
 import com.themovie.model.db.Genre
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.detail.DetailMovieResponse
-import com.themovie.repos.fromapi.DetailMovieRepos
+import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import okhttp3.ResponseBody
+import kotlin.Exception
 
-class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewModel() {
+class DetailMvViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
     private val detailLiveMovieData: MutableLiveData<FetchDetailMovieData> = MutableLiveData()
@@ -37,23 +40,24 @@ class DetailMvViewModel(private val detailMovieRepos: DetailMovieRepos) : ViewMo
         }
     }
 
-    init {
-        viewModelScope.launch {
-            try {
-                val response = detailMovieRepos.getDetailData(ApiUrl.TOKEN, filmId)
-                if(response != null){
-                    detailLiveMovieData.value = response
-                    loadDataStatus.value = LoadDataState.LOADED
-                } else loadDataStatus.value = LoadDataState.ERROR
-
-            } catch (e: Exception){
-                loadDataStatus.value = LoadDataState.ERROR
-            }
-        }
-    }
-
     fun getDetailMovieRequest(): MutableLiveData<FetchDetailMovieData> {
+        viewModelScope.launch {
 
+            apiRepository.getDetailDataMovie(filmId, object: ApiCallback<FetchDetailMovieData>{
+                override fun onSuccessRequest(response: FetchDetailMovieData?) {
+                    loadDataStatus.value = LoadDataState.LOADED
+                    detailLiveMovieData.value = response
+                }
+
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+            })
+        }
         return detailLiveMovieData
     }
 

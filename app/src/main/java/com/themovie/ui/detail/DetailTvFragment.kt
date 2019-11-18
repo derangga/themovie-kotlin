@@ -116,6 +116,9 @@ class DetailTvFragment : BaseFragment() {
                 if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visibility = View.VISIBLE
                 else binding.dtCastEmpty.visibility = View.GONE
 
+                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visibility = View.VISIBLE
+                else binding.videoEmpty.visibility = View.GONE
+
                 if(it.reviews?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
                 else binding.dtReviewEmpty.visibility = View.GONE
             }
@@ -125,12 +128,14 @@ class DetailTvFragment : BaseFragment() {
     private fun observeLoadData(){
         detailTvViewModel.getLoadDataStatus().observe( this,
             Observer<LoadDataState> {
-                if(it == LoadDataState.LOADED) hideLoading()
-                else {
-                    showErrorConnection()
-                    binding.dtRetry.setOnClickListener {
-                        showLoading()
-                        getAllDetailData()
+                when (it) {
+                    LoadDataState.LOADING -> showLoading()
+                    LoadDataState.LOADED -> hideLoading()
+                    else -> {
+                        showErrorConnection()
+                        binding.dtNoInternet.retryOnClick(View.OnClickListener {
+                            getAllDetailData()
+                        })
                     }
                 }
             }

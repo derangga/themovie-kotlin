@@ -1,6 +1,6 @@
 package com.themovie.di
 
-import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.themovie.localdb.TheMovieDatabase
 import com.themovie.localdb.dao.*
@@ -9,46 +9,43 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RoomModule
-    (val application: Application) {
-
-    private val theMovieDatabase: TheMovieDatabase = Room.databaseBuilder(
-        application, TheMovieDatabase::class.java, "TheMovieDatabase"
-    ).build()
+class RoomModule {
 
     @Provides
     @Singleton
-    fun provideTheMovieDatabase(): TheMovieDatabase {
-        return theMovieDatabase
+    fun provideTheMovieDatabase(context: Context): TheMovieDatabase {
+        return Room.databaseBuilder(
+            context, TheMovieDatabase::class.java, "TheMovieDatabase"
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
     @Singleton
-    fun provideTrendingDao(): TrendingDao {
+    fun provideTrendingDao(theMovieDatabase: TheMovieDatabase): TrendingDao {
         return theMovieDatabase.trendingDao()
     }
 
     @Provides
     @Singleton
-    fun provideUpcomingDao(): UpcomingDao {
+    fun provideUpcomingDao(theMovieDatabase: TheMovieDatabase): UpcomingDao {
         return theMovieDatabase.upcomingDao()
     }
 
     @Provides
     @Singleton
-    fun provideTvDao(): TvDao {
+    fun provideTvDao(theMovieDatabase: TheMovieDatabase): TvDao {
         return  theMovieDatabase.discoverTv()
     }
 
     @Provides
     @Singleton
-    fun provideMoviesDao(): MoviesDao {
+    fun provideMoviesDao(theMovieDatabase: TheMovieDatabase): MoviesDao {
         return theMovieDatabase.discoverMovies()
     }
 
     @Provides
     @Singleton
-    fun provideGenreDao(): GenresDao {
+    fun provideGenreDao(theMovieDatabase: TheMovieDatabase): GenresDao {
         return theMovieDatabase.genreDao()
     }
 }

@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,11 +44,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var timer: Timer? = null
     private lateinit var homeViewModel: HomeViewModel
-    private var isUpcomingEmpty: Boolean = true
-    private var isTrendingEmpty: Boolean = true
-    private var isGenreEmpty: Boolean = true
-    private var isDiscoverTvEmpty: Boolean = true
-    private var isDiscoverMvEmpty: Boolean = true
+    private var isFirstLoad = false
     private var isSliding: Boolean = false
     private var isFirstTouch: Boolean = true
     private lateinit var upcomingAdapter: UpcomingAdapter
@@ -60,6 +57,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private var currentPosition: Int = 0
     private var sizeOfHeader = 0
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,6 +67,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         (activity?.application as MyApplication).getAppComponent().inject(this)
 
         homeViewModel = ViewModelProvider(this, homeViewFactory).get(HomeViewModel::class.java)
+        homeViewModel.getLocalData()
         binding.apply {
             vm = homeViewModel
             lifecycleOwner = this@HomeFragment
@@ -82,12 +81,11 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
 
         binding.header.setSearchVisibility(View.GONE)
-
         recyclerViewSetup()
         onClick()
         showData()
+        fetchData()
         observeNetworkLoad()
-
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 activity?.finishAffinity()
@@ -139,7 +137,6 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 adapter = discoverTvAdapter
             }
 
-
             homeMovies.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = discoverMvAdapter
@@ -156,7 +153,6 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun onClick(){
-
         trendingAdapter.setOnClickListener(object: OnAdapterListener<Trending>{
             override fun onClick(view: View, item: Trending) {
                 snackbar.dismiss()
@@ -224,32 +220,36 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             seeUpco.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToUpcomingFragment()
                 Navigation.findNavController(it).navigate(action)
+                snackbar.dismiss()
             }
 
             seeGenre.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToGenresFragment()
                 Navigation.findNavController(it).navigate(action)
+                snackbar.dismiss()
             }
 
             seeTv.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToTvFragment()
                 Navigation.findNavController(it).navigate(action)
+                snackbar.dismiss()
             }
 
             seeMovies.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToMoviesFragment()
                 Navigation.findNavController(it).navigate(action)
+                snackbar.dismiss()
             }
+
+            noInternet.retryOnClick(View.OnClickListener { fetchData() })
         }
     }
 
     private fun showData(){
-
         homeViewModel.apply {
             getTrendingLocalData().observe(this@HomeFragment,
                 Observer<List<Trending>>{ t ->
-                    isTrendingEmpty = t.isEmpty()
-                    if(!isTrendingEmpty){
+                    if(t.isNotEmpty()){
                         hideLoading()
                         sizeOfHeader = t.size
                         trendingAdapter.submitList(t)
@@ -258,74 +258,60 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
             getUpcomingLocalData().observe(this@HomeFragment,
                 Observer<List<Upcoming>> { t ->
-                    isUpcomingEmpty = t.isEmpty()
-                    if(!isUpcomingEmpty)
+                    if(t.isNotEmpty())
                         upcomingAdapter.submitList(t)
                 })
 
             getGenreLocalData().observe( this@HomeFragment,
                 Observer<List<Genre>> { t ->
-                    isGenreEmpty = t.isEmpty()
-                    if(!isGenreEmpty)
+                    if(t.isNotEmpty())
                         genreAdapter.submitList(t)
                 }
             )
 
             getDiscoverTvLocalData().observe(this@HomeFragment,
                 Observer<List<Tv>> { t ->
-                    isDiscoverTvEmpty = t.isEmpty()
-                    if(!isDiscoverTvEmpty){
+                    if(t.isNotEmpty()){
                         discoverTvAdapter.submitList(t)
                     }
                 })
 
             getDiscoverMvLocalData().observe(this@HomeFragment,
                 Observer<List<Movies>> { t ->
-                    isDiscoverMvEmpty = t.isEmpty()
-                    if(!isDiscoverMvEmpty){
+                    if(t.isNotEmpty()){
                         discoverMvAdapter.submitList(t)
                     }
                 })
-
-            fetchData()
         }
-
-
     }
 
     private fun fetchData(){
-        homeViewModel.getDataRequest().observe(this,
-            Observer<FetchMainData> { t ->
-                homeViewModel.apply {
-                    if(isTrendingEmpty && isUpcomingEmpty && isGenreEmpty && isDiscoverTvEmpty && isDiscoverMvEmpty){
-                        insertLocalTrending(t.popular!!.results)
-                        insertLocalUpcoming(t.upcomingResponse!!.results)
-                        insertLocalGenre(t.genre!!.genres)
-                        insertLocalTv(t.tvResponse!!.results)
-                        insertLocalMovies(t.moviesResponse!!.movies)
-                    } else {
-                        updateLocalTrending(t?.popular!!.results)
-                        updateLocalUpComing(t.upcomingResponse!!.results)
-                        updateLocalGenre(t.genre!!.genres)
-                        updateLocalTv(t.tvResponse!!.results)
-                        updateLocalMovies(t.moviesResponse!!.movies)
-                    }
-                    hideLoading()
-                }
-            })
+        lifecycleScope.launchWhenStarted {
+            isFirstLoad = homeViewModel.isFirstLoad
+            homeViewModel.getDataRequest()
+        }
     }
 
     private fun observeNetworkLoad(){
         homeViewModel.getLoadDataStatus().observe(this,
             Observer<LoadDataState>{
-                if(it == LoadDataState.ERROR) {
-                    binding.homeSwipe.isRefreshing = false
-                    val view = snackbar.view
-                    view.setBackgroundColor(getColor(context!!, R.color.colorBlackTransparent))
-                    snackbar.setAction(getString(R.string.detail_title_12), View.OnClickListener {
-                        fetchData()
+                when(it){
+                    LoadDataState.LOADING -> {
+                        if(isFirstLoad) showLoading()
                         snackbar.dismiss()
-                    }).show()
+                    }
+                    LoadDataState.LOADED -> hideLoading()
+                    else -> {
+                        binding.homeSwipe.isRefreshing = false
+                        val view = snackbar.view
+                        view.setBackgroundColor(getColor(context!!, R.color.colorBlackTransparent))
+                        if(!isFirstLoad){
+                            snackbar.setAction(getString(R.string.detail_title_12), View.OnClickListener {
+                                fetchData()
+                                snackbar.dismiss()
+                            }).show()
+                        } else networkError()
+                    }
                 }
             })
     }
@@ -335,6 +321,25 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             homeSwipe.isRefreshing = false
             shimmerHome.visibility = View.GONE
             homeLayout.visibility = View.VISIBLE
+            noInternet.visibility = View.GONE
+        }
+    }
+
+    private fun showLoading(){
+        binding.apply {
+            shimmerHome.visibility = View.VISIBLE
+            homeLayout.visibility = View.GONE
+            noInternet.visibility = View.GONE
+        }
+    }
+
+    private fun networkError(){
+        binding.apply {
+            shimmerHome.visibility = View.GONE
+            if(isFirstLoad){
+                homeLayout.visibility = View.GONE
+                noInternet.visibility = View.VISIBLE
+            } else homeLayout.visibility = View.VISIBLE
         }
     }
 

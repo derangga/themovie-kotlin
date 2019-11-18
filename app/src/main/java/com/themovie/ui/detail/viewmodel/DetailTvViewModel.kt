@@ -7,13 +7,15 @@ import com.themovie.helper.convertDate
 import com.themovie.model.db.Genre
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.DetailTvResponse
-import com.themovie.repos.fromapi.DetailTvRepos
+import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import okhttp3.ResponseBody
+import kotlin.Exception
 
-class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() {
+class DetailTvViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     private val composite: CompositeDisposable = CompositeDisposable()
     private val detailTvLiveData: MutableLiveData<FetchDetailTvData> = MutableLiveData()
@@ -40,22 +42,23 @@ class DetailTvViewModel(private val detailTvRepos: DetailTvRepos) : ViewModel() 
         }
     }
 
-    init {
-        viewModelScope.launch {
-            try {
-                val response = detailTvRepos.getDetailData(ApiUrl.TOKEN, filmId)
-                if(response != null){
-                    detailTvLiveData.value = response
-                    loadDataStatus.value = LoadDataState.LOADED
-                } else loadDataStatus.value = LoadDataState.ERROR
-
-            }catch (e: Exception){
-                loadDataStatus.value = LoadDataState.ERROR
-            }
-        }
-    }
-
     fun getDetailTvRequest(): MutableLiveData<FetchDetailTvData> {
+        viewModelScope.launch {
+            apiRepository.getDetailDataTv(filmId, object: ApiCallback<FetchDetailTvData>{
+                override fun onSuccessRequest(response: FetchDetailTvData?) {
+                    loadDataStatus.value = LoadDataState.LOADED
+                    detailTvLiveData.value = response
+                }
+
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+            })
+        }
         return detailTvLiveData
     }
 
