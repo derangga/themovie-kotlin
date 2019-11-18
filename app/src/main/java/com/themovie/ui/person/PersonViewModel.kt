@@ -7,9 +7,11 @@ import com.themovie.helper.convertDate
 import com.themovie.model.online.FetchPersonData
 import com.themovie.model.online.person.PersonResponse
 import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 
 class PersonViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
@@ -33,17 +35,20 @@ class PersonViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     fun getPersonData(): MutableLiveData<FetchPersonData> {
         viewModelScope.launch {
-            try {
-                loadDataState.value = LoadDataState.LOADING
-                val response = apiRepository.getPersonData(ApiUrl.TOKEN, personId)
-                if(response != null){
-                    personLiveData.value = response
+            apiRepository.getPersonData(personId, object: ApiCallback<FetchPersonData>{
+                override fun onSuccessRequest(response: FetchPersonData?) {
                     loadDataState.value = LoadDataState.LOADED
-                } else loadDataState.value = LoadDataState.ERROR
+                    personLiveData.value = response
+                }
 
-            } catch (e: Exception){
-                loadDataState.value = LoadDataState.ERROR
-            }
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataState.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataState.value = LoadDataState.ERROR
+                }
+            })
         }
         return  personLiveData
     }

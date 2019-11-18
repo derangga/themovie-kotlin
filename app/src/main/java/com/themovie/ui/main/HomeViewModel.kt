@@ -28,7 +28,7 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
         viewModelScope.launch {
             try {
                 loadDataStatus.value = LoadDataState.LOADING
-                val response = apiRepository.getDataMovie(ApiUrl.TOKEN)
+                val response = apiRepository.getDataMovie()
                 if(response != null){
                     loadDataStatus.value = LoadDataState.LOADED
                     if(isFirstLoad){

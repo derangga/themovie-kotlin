@@ -5,7 +5,9 @@ import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.FetchMainData
 import com.themovie.model.online.FetchPersonData
+import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiInterface
+import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -14,15 +16,15 @@ import javax.inject.Inject
 class ApiRepository
 @Inject constructor(private val apiInterface: ApiInterface){
 
-    suspend fun getDetailDataMovie(token: String, movieId: Int): FetchDetailMovieData? {
-        var data: FetchDetailMovieData? = null
+    suspend fun getDetailDataMovie(movieId: Int, callback: ApiCallback<FetchDetailMovieData>) {
+        var data: FetchDetailMovieData?
         try {
             coroutineScope {
-                val detail = async(IO) { return@async apiInterface.getMovieDetail(movieId, token) }
-                val cast = async(IO) { return@async apiInterface.getCredits(movieId, token) }
-                val recommendation = async(IO) { return@async apiInterface.getRecomendedMovies(movieId, token, Constant.LANGUAGE, 1) }
-                val reviews = async(IO) { return@async apiInterface.getReviews(movieId, token, Constant.LANGUAGE, 1) }
-                val videos = async(IO) { return@async apiInterface.getVideosMovie(movieId, token, "") }
+                val detail = async(IO) { return@async apiInterface.getMovieDetail(movieId, ApiUrl.TOKEN) }
+                val cast = async(IO) { return@async apiInterface.getCredits(movieId, ApiUrl.TOKEN) }
+                val recommendation = async(IO) { return@async apiInterface.getRecomendedMovies(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val reviews = async(IO) { return@async apiInterface.getReviews(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val videos = async(IO) { return@async apiInterface.getVideosMovie(movieId, ApiUrl.TOKEN, "") }
 
                 if(detail.await().isSuccessful && cast.await().isSuccessful &&
                     videos.await().isSuccessful && recommendation.await().isSuccessful &&
@@ -35,23 +37,24 @@ class ApiRepository
                         recommendation.await().body(),
                         reviews.await().body()
                     )
-                }
+
+                    callback.onSuccessRequest(data)
+                } else callback.onErrorRequest(detail.await().errorBody())
             }
         } catch (e: Exception){
-            throw e
+            callback.onFailure(e)
         }
-        return data
     }
 
-    suspend fun getDetailDataTv(token: String, tvId: Int): FetchDetailTvData? {
-        var data: FetchDetailTvData? = null
+    suspend fun getDetailDataTv(tvId: Int, callback: ApiCallback<FetchDetailTvData>) {
+        var data: FetchDetailTvData?
         try {
             coroutineScope {
-                val detail = async(IO) { return@async apiInterface.getTvDetail(tvId, token) }
-                val cast = async(IO) { return@async apiInterface.getCreditsTv(tvId, token) }
-                val recommendation = async(IO) { return@async apiInterface.getRecomendedTv(tvId, token, Constant.LANGUAGE, 1) }
-                val reviews = async(IO) { return@async apiInterface.getReviewsTV(tvId, token, Constant.LANGUAGE, 1) }
-                val videos = async(IO) { return@async apiInterface.getVideosTv(tvId, token, Constant.LANGUAGE) }
+                val detail = async(IO) { return@async apiInterface.getTvDetail(tvId, ApiUrl.TOKEN) }
+                val cast = async(IO) { return@async apiInterface.getCreditsTv(tvId, ApiUrl.TOKEN) }
+                val recommendation = async(IO) { return@async apiInterface.getRecomendedTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val reviews = async(IO) { return@async apiInterface.getReviewsTV(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val videos = async(IO) { return@async apiInterface.getVideosTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE) }
 
                 if(detail.await().isSuccessful && cast.await().isSuccessful &&
                     videos.await().isSuccessful && recommendation.await().isSuccessful &&
@@ -64,26 +67,26 @@ class ApiRepository
                         recommendation.await().body(),
                         reviews.await().body()
                     )
-                }
+                    callback.onSuccessRequest(data)
+                } else callback.onErrorRequest(detail.await().errorBody())
             }
-        } catch (e: java.lang.Exception){
-            throw e
+        } catch (e: Exception){
+            callback.onFailure(e)
         }
-        return data
     }
 
-    suspend fun getDataMovie(token: String): FetchMainData? {
+    suspend fun getDataMovie(): FetchMainData? {
         var data: FetchMainData? = null
         try {
             coroutineScope {
-                val popular = async(IO) { return@async apiInterface.getPopularMovie(token, Constant.LANGUAGE, 1) }
-                val genre = async(IO) { return@async apiInterface.getGenres(token) }
-                val upcoming = async(IO) { return@async apiInterface.getUpcomingMovies(token, 1) }
+                val popular = async(IO) { return@async apiInterface.getPopularMovie(ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val genre = async(IO) { return@async apiInterface.getGenres(ApiUrl.TOKEN) }
+                val upcoming = async(IO) { return@async apiInterface.getUpcomingMovies(ApiUrl.TOKEN, 1) }
                 val discoverTv = async(IO) {
-                    return@async apiInterface.getDiscoverTvs(token, Constant.LANGUAGE, Constant.SORTING, 1, "US")
+                    return@async apiInterface.getDiscoverTvs(ApiUrl.TOKEN, Constant.LANGUAGE, Constant.SORTING, 1, "US")
                 }
                 val discoverMv = async(IO) {
-                    return@async apiInterface.getDiscoverMovies(token, Constant.LANGUAGE, Constant.SORTING, 1,
+                    return@async apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE, Constant.SORTING, 1,
                         "2019", "")
                 }
                 if(popular.await().isSuccessful && upcoming.await().isSuccessful &&
@@ -103,19 +106,19 @@ class ApiRepository
         return data
     }
 
-    suspend fun getPersonData(token: String, personId: Int): FetchPersonData? {
-        var data: FetchPersonData? = null
+    suspend fun getPersonData(personId: Int, callback: ApiCallback<FetchPersonData>) {
+        var data: FetchPersonData?
         try {
             coroutineScope {
-                val detail = async(IO) { return@async apiInterface.getPerson(personId, token) }
-                val person = async(IO) { return@async apiInterface.getFilmography(personId, token) }
+                val detail = async(IO) { return@async apiInterface.getPerson(personId, ApiUrl.TOKEN) }
+                val person = async(IO) { return@async apiInterface.getFilmography(personId, ApiUrl.TOKEN) }
                 if(detail.await().isSuccessful && person.await().isSuccessful){
                     data = FetchPersonData(detail.await().body(), person.await().body())
-                }
+                    callback.onSuccessRequest(data)
+                } else callback.onErrorRequest(detail.await().errorBody())
             }
         } catch (e: Exception){
-            throw e
+            callback.onFailure(e)
         }
-        return data
     }
 }

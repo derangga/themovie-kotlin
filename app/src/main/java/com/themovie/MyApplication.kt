@@ -16,7 +16,7 @@ class MyApplication : Application() {
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this, this))
             .networkModule(NetworkModule())
-            .roomModule(RoomModule(this)).build()
+            .roomModule(RoomModule()).build()
     }
 
     fun getAppComponent(): AppComponent {

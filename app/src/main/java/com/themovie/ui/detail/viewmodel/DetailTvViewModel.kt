@@ -8,10 +8,12 @@ import com.themovie.model.db.Genre
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.detail.DetailTvResponse
 import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiUrl
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import okhttp3.ResponseBody
+import kotlin.Exception
 
 class DetailTvViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
@@ -42,16 +44,20 @@ class DetailTvViewModel(private val apiRepository: ApiRepository) : ViewModel() 
 
     fun getDetailTvRequest(): MutableLiveData<FetchDetailTvData> {
         viewModelScope.launch {
-            try {
-                val response = apiRepository.getDetailDataTv(ApiUrl.TOKEN, filmId)
-                if(response != null){
-                    detailTvLiveData.value = response
+            apiRepository.getDetailDataTv(filmId, object: ApiCallback<FetchDetailTvData>{
+                override fun onSuccessRequest(response: FetchDetailTvData?) {
                     loadDataStatus.value = LoadDataState.LOADED
-                } else loadDataStatus.value = LoadDataState.ERROR
+                    detailTvLiveData.value = response
+                }
 
-            }catch (e: Exception){
-                loadDataStatus.value = LoadDataState.ERROR
-            }
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+            })
         }
         return detailTvLiveData
     }
