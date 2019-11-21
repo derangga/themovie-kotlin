@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 
 abstract class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Fabric.with(context, Crashlytics())
         onMain(savedInstanceState)
     }
 
