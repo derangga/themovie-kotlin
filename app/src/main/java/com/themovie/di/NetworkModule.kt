@@ -47,7 +47,4 @@ class NetworkModule {
     fun provideApiInterface(retrofit: Retrofit): ApiInterface {
         return retrofit.create(ApiInterface::class.java)
     }
-
-    @Provides
-    fun provideCoroutineScope() = CoroutineScope(Dispatchers.Main)
 }

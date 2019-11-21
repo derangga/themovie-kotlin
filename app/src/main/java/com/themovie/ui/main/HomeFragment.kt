@@ -117,33 +117,33 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         genreAdapter = GenreAdapter()
 
         binding.apply {
-            homePopular.apply {
+            homePopular?.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = trendingAdapter
             }
 
-            homeUpcoming.apply {
+            homeUpcoming?.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = upcomingAdapter
             }
 
-            homeGenre.apply {
+            homeGenre?.apply {
                 layoutManager = GridLayoutManager(context, 2)
                 adapter = genreAdapter
             }
 
-            homeTv.apply {
+            homeTv?.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = discoverTvAdapter
             }
 
-            homeMovies.apply {
+            homeMovies?.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = discoverMvAdapter
             }
 
             val pagerSnapHelper = PagerSnapHelper()
-            homePopular.let {
+            homePopular?.let {
                 pagerSnapHelper.attachToRecyclerView(it)
                 binding.indicator.attachToRecyclerView(it, pagerSnapHelper)
                 trendingAdapter.registerAdapterDataObserver(binding.indicator.adapterDataObserver)
