@@ -49,6 +49,7 @@ class SuggestMovieFragment : BaseFragment(), SuggestActivity.MoviesSearchFragmen
     override fun onMain(savedInstanceState: Bundle?) {
         SuggestActivity.setTextListener(this)
         setupRecyclerView()
+        observeSuggestData()
         getLoadStatus()
     }
 
@@ -70,6 +71,13 @@ class SuggestMovieFragment : BaseFragment(), SuggestActivity.MoviesSearchFragmen
         }
     }
 
+    private fun observeSuggestData(){
+        viewModel.getSuggestMovies().observe(this,
+            Observer {
+                mAdapter.submitList(it)
+            })
+    }
+
     private fun getLoadStatus(){
         viewModel.getLoadStatus().observe(this, Observer {
             if(it == LoadDataState.LOADED) binding.recyclerView.visibility = View.VISIBLE
@@ -78,9 +86,6 @@ class SuggestMovieFragment : BaseFragment(), SuggestActivity.MoviesSearchFragmen
     }
 
     override fun textChange(text: String) {
-        viewModel.getSuggestMovies(text).observe(this,
-            Observer {
-                mAdapter.submitList(it)
-            })
+        viewModel.fetchSuggestMovie(text)
     }
 }

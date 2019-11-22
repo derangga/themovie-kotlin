@@ -6,26 +6,37 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
-import com.themovie.repos.fromapi.search.SearchRepos
+import com.themovie.model.online.discovertv.TvResponse
+import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.restapi.ApiCallback
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 
-class SuggestTvViewModel(private val searchRepos: SearchRepos): ViewModel() {
+class SuggestTvViewModel(private val apiRepository: ApiRepository): ViewModel() {
 
     private val suggestLiveData = MutableLiveData<List<Tv>?>()
     private val loadDataStatus = MutableLiveData<LoadDataState>()
 
-    fun getSuggestTv(query: String): MutableLiveData<List<Tv>?> {
+    fun fetchSuggestTv(query: String){
         viewModelScope.launch {
-            try {
-                val response = searchRepos.getSuggestionTvSearch(query)
-                if(response.isSuccessful){
-                    suggestLiveData.value = response.body()?.results
+            apiRepository.getSuggestionTvSearch(query, object: ApiCallback<TvResponse>{
+                override fun onSuccessRequest(response: TvResponse?) {
                     loadDataStatus.value = LoadDataState.LOADED
-                } else loadDataStatus.value = LoadDataState.ERROR
-            }catch (e: Exception){
-                loadDataStatus.value = LoadDataState.ERROR
-            }
+                    suggestLiveData.value = response?.results
+                }
+
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+            })
         }
+    }
+
+    fun getSuggestTv(): MutableLiveData<List<Tv>?> {
         return suggestLiveData
     }
 

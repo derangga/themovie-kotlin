@@ -1,16 +1,20 @@
 package com.themovie.repos.fromapi
 
+import android.util.Log
 import com.themovie.helper.Constant
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.FetchMainData
 import com.themovie.model.online.FetchPersonData
+import com.themovie.model.online.discovermv.MoviesResponse
+import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ApiRepository
@@ -75,8 +79,8 @@ class ApiRepository
         }
     }
 
-    suspend fun getDataMovie(): FetchMainData? {
-        var data: FetchMainData? = null
+    suspend fun getMainData(callback: ApiCallback<FetchMainData>){
+        var data: FetchMainData?
         try {
             coroutineScope {
                 val popular = async(IO) { return@async apiInterface.getPopularMovie(ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
@@ -98,12 +102,12 @@ class ApiRepository
                         discoverTv.await().body(),
                         discoverMv.await().body()
                     )
-                }
+                    callback.onSuccessRequest(data)
+                } else callback.onErrorRequest(null)
             }
         } catch (e: Exception){
-            throw e
+            callback.onFailure(e)
         }
-        return data
     }
 
     suspend fun getPersonData(personId: Int, callback: ApiCallback<FetchPersonData>) {
@@ -116,6 +120,34 @@ class ApiRepository
                     data = FetchPersonData(detail.await().body(), person.await().body())
                     callback.onSuccessRequest(data)
                 } else callback.onErrorRequest(detail.await().errorBody())
+            }
+        } catch (e: Exception){
+            callback.onFailure(e)
+        }
+    }
+
+    suspend fun getSuggestionMoviesSearch(query: String, callback: ApiCallback<MoviesResponse>){
+        try {
+            coroutineScope {
+                val response = async(IO){
+                    return@async apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
+                }
+                if(response.await().isSuccessful) callback.onSuccessRequest(response.await().body())
+                else callback.onErrorRequest(response.await().errorBody())
+            }
+        } catch (e: Exception){
+            callback.onFailure(e)
+        }
+    }
+
+    suspend fun getSuggestionTvSearch(query: String, callback: ApiCallback<TvResponse>){
+        try {
+            coroutineScope{
+                val response = async(IO) {
+                    return@async apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
+                }
+                if(response.await().isSuccessful) callback.onSuccessRequest(response.await().body())
+                else callback.onErrorRequest(response.await().errorBody())
             }
         } catch (e: Exception){
             callback.onFailure(e)
