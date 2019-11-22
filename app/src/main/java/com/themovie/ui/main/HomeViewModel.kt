@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.*
+import com.themovie.model.online.FetchMainData
 import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.repos.local.*
+import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 
 class HomeViewModel(private val apiRepository: ApiRepository, private val trendingLocalRepos: TrendingLocalRepos,
                     private val genreRepos: GenreLocalRepos, private val upcomingLocalRepos: UpcomingLocalRepos,
@@ -26,13 +29,12 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
 
     fun getDataRequest() {
         viewModelScope.launch {
-            try {
-                loadDataStatus.value = LoadDataState.LOADING
-                val response = apiRepository.getDataMovie()
-                if(response != null){
+            loadDataStatus.value = LoadDataState.LOADING
+            apiRepository.getMainData(object: ApiCallback<FetchMainData>{
+                override fun onSuccessRequest(response: FetchMainData?) {
                     loadDataStatus.value = LoadDataState.LOADED
                     if(isFirstLoad){
-                        response.let {
+                        response?.let {
                             insertDataFirstLoad(
                                 it.popular?.results!!, it.upcomingResponse?.results!!,
                                 it.genre?.genres!!, it.tvResponse?.results!!,
@@ -40,7 +42,7 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
                             )
                         }
                     } else {
-                        response.let {
+                        response?.let {
                             updateLocalData(
                                 it.popular?.results!!, it.upcomingResponse?.results!!,
                                 it.genre?.genres!!, it.tvResponse?.results!!,
@@ -48,11 +50,16 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
                             )
                         }
                     }
+                }
 
-                } else loadDataStatus.value = LoadDataState.ERROR
-            } catch (e: Exception){
-                loadDataStatus.value = LoadDataState.ERROR
-            }
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+            })
         }
     }
 
@@ -145,11 +152,4 @@ class HomeViewModel(private val apiRepository: ApiRepository, private val trendi
     fun getDiscoverTvLocalData(): LiveData<List<Tv>> = discoverTvData
     fun getDiscoverMvLocalData(): LiveData<List<Movies>> = discoverMvData
     fun getLoadDataStatus(): LiveData<LoadDataState> = loadDataStatus
-
-    private fun checkIsFirstLoad(trendingSize: Int, upcomingSize: Int,
-                         genreSize: Int, discoverTvSize: Int,
-                         discoverMvSize: Int): Boolean {
-        return trendingSize == 0 && upcomingSize == 0 && genreSize == 0 &&
-                discoverTvSize == 0 && discoverMvSize == 0
-    }
 }

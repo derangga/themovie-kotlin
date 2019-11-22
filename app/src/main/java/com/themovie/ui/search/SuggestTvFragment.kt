@@ -49,6 +49,7 @@ class SuggestTvFragment : BaseFragment(), SuggestActivity.TvSearchFragmentListen
     override fun onMain(savedInstanceState: Bundle?) {
         SuggestActivity.setTextListener(this)
         setupRecyclerView()
+        observeSuggestData()
         getLoadStatus()
     }
 
@@ -71,6 +72,13 @@ class SuggestTvFragment : BaseFragment(), SuggestActivity.TvSearchFragmentListen
         }
     }
 
+    private fun observeSuggestData(){
+        viewModel.getSuggestTv().observe(this,
+            Observer{
+                mAdapter.submitList(it)
+            })
+    }
+
     private fun getLoadStatus(){
         viewModel.getLoadStatus().observe(this, Observer {
             if(it == LoadDataState.LOADED) binding.recyclerView.visibility = View.VISIBLE
@@ -79,9 +87,7 @@ class SuggestTvFragment : BaseFragment(), SuggestActivity.TvSearchFragmentListen
     }
 
     override fun textChange(text: String) {
-        viewModel.getSuggestTv(text).observe(this,
-            Observer{
-                mAdapter.submitList(it)
-            })
+        viewModel.fetchSuggestTv(text)
+
     }
 }

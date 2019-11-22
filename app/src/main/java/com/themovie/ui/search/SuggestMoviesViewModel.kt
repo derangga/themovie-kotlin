@@ -4,29 +4,37 @@ import androidx.lifecycle.*
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Movies
 import com.themovie.model.online.discovermv.MoviesResponse
-import com.themovie.repos.fromapi.search.SearchRepos
+import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.restapi.ApiCallback
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import okhttp3.ResponseBody
+import kotlin.Exception
 
-class SuggestMoviesViewModel(private val searchRepos: SearchRepos): ViewModel() {
+class SuggestMoviesViewModel(private val apiRepository: ApiRepository): ViewModel() {
 
     private val suggestLiveData = MutableLiveData<List<Movies>?>()
     private val loadDataStatus = MutableLiveData<LoadDataState>()
 
-
-    fun getSuggestMovies(query: String): MutableLiveData<List<Movies>?> {
+    fun fetchSuggestMovie(query: String){
         viewModelScope.launch {
-            try {
-                val response = searchRepos.getSuggestionMoviesSearch(query)
-                if(response.isSuccessful){
-                    suggestLiveData.value = response.body()?.movies
+            apiRepository.getSuggestionMoviesSearch(query, object: ApiCallback<MoviesResponse>{
+                override fun onSuccessRequest(response: MoviesResponse?) {
                     loadDataStatus.value = LoadDataState.LOADED
-                } else loadDataStatus.value = LoadDataState.ERROR
-            } catch (e: Exception){
-                loadDataStatus.value = LoadDataState.ERROR
-            }
-        }
+                    suggestLiveData.value = response?.movies
+                }
 
+                override fun onErrorRequest(errorBody: ResponseBody?) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+
+                override fun onFailure(e: Exception) {
+                    loadDataStatus.value = LoadDataState.ERROR
+                }
+            })
+        }
+    }
+
+    fun getSuggestMovies(): MutableLiveData<List<Movies>?> {
         return suggestLiveData
     }
 
