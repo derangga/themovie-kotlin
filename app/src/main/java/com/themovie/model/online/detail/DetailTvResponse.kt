@@ -1,7 +1,10 @@
 package com.themovie.model.online.detail
 
 import com.google.gson.annotations.SerializedName
+import com.themovie.helper.concatListGenres
+import com.themovie.helper.convertDate
 import com.themovie.model.db.Genre
+import com.themovie.restapi.ApiUrl
 
 data class DetailTvResponse(
     @SerializedName("id") val id: Int,
@@ -18,7 +21,13 @@ data class DetailTvResponse(
     @SerializedName("number_of_seasons") val numberOfSeasons: Int,
     @SerializedName("genres") val genreList: List<Genre>,
     @SerializedName("seasons") val seasons: List<SeasonTv>
-)
+){
+    fun getConcatListGenre(): String = "Genre: ${genreList.concatListGenres()}"
+    fun getFormatReleaseDate(): String = "Date Release: ${firstAirDate.convertDate()}"
+    fun getReviews(): String = "(${voteCount} Reviews)"
+    fun getPosterImageUrl(): String = "${ApiUrl.IMG_POSTER}${posterPath.toString()}"
+    fun getBackdropImageUrl(): String = "${ApiUrl.IMG_BACK}${backdropPath.toString()}"
+}
 
 data class SeasonTv(
     @SerializedName("id") val id: Int,

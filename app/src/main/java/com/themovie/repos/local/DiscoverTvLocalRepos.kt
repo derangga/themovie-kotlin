@@ -8,8 +8,6 @@ import javax.inject.Inject
 class DiscoverTvLocalRepos
     @Inject constructor(private val tvDao: TvDao) {
 
-    private var discoverTvList: LiveData<List<Tv>> = tvDao.getAllDiscoverTv()
-
     suspend fun insert(tv: Tv){
         tvDao.insertDiscoverTv(tv)
     }
@@ -26,7 +24,5 @@ class DiscoverTvLocalRepos
         tvDao.updateDiscoverTv(*tv.toTypedArray())
     }
 
-    fun getDiscoverTvList(): LiveData<List<Tv>>{
-        return  discoverTvList
-    }
+    fun getDiscoverTvList(): LiveData<List<Tv>> = tvDao.getAllDiscoverTv()
 }

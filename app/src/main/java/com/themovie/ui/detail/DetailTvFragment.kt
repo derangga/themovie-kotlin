@@ -63,7 +63,6 @@ class DetailTvFragment : BaseFragment() {
 
         detailTvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailTvViewModel::class.java)
         binding.apply {
-            vm = detailTvViewModel
             lifecycleOwner = this@DetailTvFragment
         }
 
@@ -103,8 +102,8 @@ class DetailTvFragment : BaseFragment() {
     private fun getAllDetailData(){
         detailTvViewModel.getDetailTvRequest().observe(
             this, Observer<FetchDetailTvData> {
-                detailTvViewModel.setDetailTvData(it.detailTvResponse!!)
-                seasonAdapter.submitList(it.detailTvResponse.seasons)
+                binding.tv = it.detailTvResponse
+                seasonAdapter.submitList(it.detailTvResponse?.seasons)
                 creditsAdapter.submitList(it.castResponse?.credits)
                 recommendedTvAdapter.submitList(it.tvResponse?.results)
                 reviewsAdapter.submitList(it.reviews?.reviewList)

@@ -64,7 +64,6 @@ class DetailMovieFragment : BaseFragment() {
 
         detailMvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.apply {
-            vm = detailMvViewModel
             lifecycleOwner = this@DetailMovieFragment
         }
 
@@ -81,7 +80,7 @@ class DetailMovieFragment : BaseFragment() {
     private fun getAllDetailData(){
         detailMvViewModel.getDetailMovieRequest().observe (
             this, Observer<FetchDetailMovieData>{
-                detailMvViewModel.setDetailMovieData(it.detailMovieResponse!!)
+                binding.movies = it.detailMovieResponse
                 creditsAdapter.submitList(it.castResponse?.credits)
                 recommendedAdapter.submitList(it.moviesResponse?.movies)
                 reviewsAdapter.submitList(it.reviewResponse?.reviewList)

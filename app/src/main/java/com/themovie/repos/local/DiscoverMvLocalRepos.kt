@@ -25,7 +25,6 @@ class DiscoverMvLocalRepos
         moviesDao.updateDiscoverMovies(*movies.toTypedArray())
     }
 
-    fun getDiscoverMovieLis(): LiveData<List<Movies>>{
-        return moviesDao.getAllDiscoverMovies()
-    }
+    fun getDiscoverMovieLis(): LiveData<List<Movies>> = moviesDao.getAllDiscoverMovies()
+
 }

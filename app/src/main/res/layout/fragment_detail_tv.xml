@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="vm" type="com.themovie.ui.detail.viewmodel.DetailTvViewModel"/>
+        <variable name="tv" type="com.themovie.model.online.detail.DetailTvResponse"/>
         <import type="android.view.View"/>
     </data>
 
@@ -37,7 +37,7 @@
                         android:tint="#11000000"
                         android:background="@color/colorWhite"
                         android:scaleType="centerCrop"
-                        app:loadImage="@{vm.backdropImage}"
+                        app:loadImage="@{tv.backdropImageUrl}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -77,7 +77,7 @@
                                 android:layout_width="108dp"
                                 android:layout_height="match_parent"
                                 android:fitsSystemWindows="true"
-                                app:loadImage="@{vm.imageUrl}"
+                                app:loadImage="@{tv.posterImageUrl}"
                                 android:scaleType="centerCrop"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -88,11 +88,11 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/extra_small_space"
-                                android:layout_marginTop="@dimen/extra_small_space"
+                                android:layout_marginTop="4dp"
                                 android:textColor="@color/colorAccent"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
-                                android:text="@{vm.title}"
+                                android:text="@{tv.name}"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/poster_img"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -103,7 +103,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="@dimen/extra_small_space"
                                 android:textColor="@color/colorWhite"
-                                android:text="@{vm.genre}"
+                                android:text="@{tv.concatListGenre}"
                                 android:layout_marginStart="@dimen/extra_small_space"
                                 android:layout_marginTop="4dp"
                                 app:layout_constraintStart_toEndOf="@id/poster_img"
@@ -115,7 +115,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorWhite"
-                                android:text="@{vm.releaseDate}"
+                                android:text="@{tv.formatReleaseDate}"
                                 android:layout_marginStart="@dimen/extra_small_space"
                                 android:layout_marginTop="4dp"
                                 app:layout_constraintTop_toBottomOf="@id/genre"
@@ -139,7 +139,7 @@
                                     android:textColor="@color/colorAccent"
                                     android:layout_marginEnd="4dp"
                                     android:textSize="18sp"
-                                    android:text="@{vm.rating}"/>
+                                    android:text="@{tv.voteAverage}"/>
 
                             <ImageView
                                     android:id="@+id/start_img"
@@ -157,7 +157,7 @@
                                 android:layout_marginTop="4dp"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="11sp"
-                                android:text="@{vm.totalVote}"
+                                android:text="@{tv.reviews}"
                                 app:layout_constraintTop_toBottomOf="@id/rate_layout"
                                 app:layout_constraintStart_toEndOf="@id/poster_img"
                                 tools:ignore="SmallSp" />
@@ -184,7 +184,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorWhite"
-                        android:text="@{vm.description}"
+                        android:text="@{tv.overview}"
                         android:layout_marginTop="@dimen/extra_small_space"
                         android:layout_marginStart="@dimen/small_space"
                         android:layout_marginEnd="@dimen/small_space"
