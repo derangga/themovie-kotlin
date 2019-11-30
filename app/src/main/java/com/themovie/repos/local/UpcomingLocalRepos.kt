@@ -8,8 +8,6 @@ import javax.inject.Inject
 class UpcomingLocalRepos
     @Inject constructor(private val upcomingDao: UpcomingDao) {
 
-    private var allUpcomingMovie: LiveData<List<Upcoming>> = upcomingDao.getAllUpcomingMv()
-
     suspend fun insert(upcoming: Upcoming){
         upcomingDao.insertUpcoming(upcoming)
     }
@@ -26,7 +24,6 @@ class UpcomingLocalRepos
         upcomingDao.updateUpcoming(*upcoming.toTypedArray())
     }
 
-    fun getAllUpcoming(): LiveData<List<Upcoming>>{
-        return allUpcomingMovie
-    }
+    fun getAllUpcoming(): LiveData<List<Upcoming>> = upcomingDao.getAllUpcomingMv()
+
 }

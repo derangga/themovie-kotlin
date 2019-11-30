@@ -64,7 +64,6 @@ class DetailMovieFragment : BaseFragment() {
 
         detailMvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.apply {
-            vm = detailMvViewModel
             lifecycleOwner = this@DetailMovieFragment
         }
 
@@ -79,9 +78,10 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailMvViewModel.getDetailMovieRequest().observe (
+        detailMvViewModel.getDetailMovieRequest()
+        detailMvViewModel.setDetailMovie().observe (
             this, Observer<FetchDetailMovieData>{
-                detailMvViewModel.setDetailMovieData(it.detailMovieResponse!!)
+                binding.movies = it.detailMovieResponse
                 creditsAdapter.submitList(it.castResponse?.credits)
                 recommendedAdapter.submitList(it.moviesResponse?.movies)
                 reviewsAdapter.submitList(it.reviewResponse?.reviewList)
@@ -103,14 +103,14 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun observeNetworkLoad(){
-        detailMvViewModel.getLoadDataStatus().observe(this, Observer<LoadDataState>{
+        detailMvViewModel.getLoadStatus().observe(this, Observer<LoadDataState>{
             when (it) {
                 LoadDataState.LOADED -> hideLoading()
                 else -> {
                     showErrorConnection()
                     binding.dtNoInternet.retryOnClick(View.OnClickListener {
                         showLoading()
-                        getAllDetailData()
+                        detailMvViewModel.getDetailMovieRequest()
                     })
                 }
             }

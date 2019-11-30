@@ -24,8 +24,7 @@ class TrendingLocalRepos
         trendingDao.updateTrendingData(*trending.toTypedArray())
     }
 
-    fun getTrendingList(): LiveData<List<Trending>>{
-        return trendingDao.getAllTrendingTv()
-    }
+    fun getTrendingList(): LiveData<List<Trending>> = trendingDao.getAllTrendingTv()
+
 
 }

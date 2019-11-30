@@ -14,7 +14,6 @@ import com.themovie.restapi.ApiUrl
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ApiRepository

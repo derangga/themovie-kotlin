@@ -63,7 +63,6 @@ class DetailTvFragment : BaseFragment() {
 
         detailTvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailTvViewModel::class.java)
         binding.apply {
-            vm = detailTvViewModel
             lifecycleOwner = this@DetailTvFragment
         }
 
@@ -101,10 +100,11 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailTvViewModel.getDetailTvRequest().observe(
+        detailTvViewModel.getDetailTvRequest()
+        detailTvViewModel.setDetailTv().observe(
             this, Observer<FetchDetailTvData> {
-                detailTvViewModel.setDetailTvData(it.detailTvResponse!!)
-                seasonAdapter.submitList(it.detailTvResponse.seasons)
+                binding.tv = it.detailTvResponse
+                seasonAdapter.submitList(it.detailTvResponse?.seasons)
                 creditsAdapter.submitList(it.castResponse?.credits)
                 recommendedTvAdapter.submitList(it.tvResponse?.results)
                 reviewsAdapter.submitList(it.reviews?.reviewList)
@@ -126,7 +126,7 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun observeLoadData(){
-        detailTvViewModel.getLoadDataStatus().observe( this,
+        detailTvViewModel.getLoadStatus().observe( this,
             Observer<LoadDataState> {
                 when (it) {
                     LoadDataState.LOADING -> showLoading()
@@ -134,7 +134,8 @@ class DetailTvFragment : BaseFragment() {
                     else -> {
                         showErrorConnection()
                         binding.dtNoInternet.retryOnClick(View.OnClickListener {
-                            getAllDetailData()
+                            showLoading()
+                            detailTvViewModel.getDetailTvRequest()
                         })
                     }
                 }

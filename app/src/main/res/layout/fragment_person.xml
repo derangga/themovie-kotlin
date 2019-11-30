@@ -6,8 +6,8 @@
 
     <data>
         <variable
-                name="vm"
-                type="com.themovie.ui.person.PersonViewModel" />
+                name="cast"
+                type="com.themovie.model.online.person.PersonResponse" />
         <import type="android.view.View"/>
     </data>
 
@@ -50,7 +50,7 @@
                             android:layout_marginBottom="10dp">
 
                         <TextView
-                                android:text="@{vm.name}"
+                                android:text="@{cast.name}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
@@ -74,7 +74,8 @@
                                     android:layout_height="180dp"
                                     android:layout_marginEnd="@dimen/small_space"
                                     android:transitionName="@string/transition_cast"
-                                    app:loadImage="@{vm.photoUrl}"/>
+                                    android:scaleType="centerCrop"
+                                    app:loadImage="@{cast.profilePict}"/>
 
                             <LinearLayout
                                     android:layout_width="match_parent"
@@ -82,7 +83,7 @@
                                     android:orientation="vertical">
 
                                 <TextView
-                                        android:text="@{vm.biography}"
+                                        android:text="@{cast.biography}"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:maxLines="6"
@@ -90,13 +91,7 @@
                                         android:layout_marginBottom="20dp"/>
 
                                 <TextView
-                                        android:text="@{vm.birthday}"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/colorWhite"/>
-
-                                <TextView
-                                        android:text="@{vm.place}"
+                                        android:text="@{cast.birthDate}"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:textColor="@color/colorWhite"/>

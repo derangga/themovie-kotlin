@@ -119,11 +119,11 @@ class SuggestActivity : BaseActivity() {
 
     private fun searchSoftKeyboardAction(){
         binding.hSearch.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+            if(actionId == EditorInfo.IME_ACTION_SEARCH && binding.hSearch.text.isNotEmpty()){
                 val bundle = Bundle().apply { putString("query", h_search.text.toString()) }
                 changeActivity(bundle, SearchActivity::class.java)
                 finish()
-            }
+            } else showToastMessage(resources.getString(R.string.suggest_search_1))
             false
         }
     }
