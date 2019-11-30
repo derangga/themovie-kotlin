@@ -6,16 +6,14 @@ import com.themovie.helper.LoadDataState
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.restapi.ApiCallback
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import kotlin.Exception
 
 class DetailMvViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
-    private val composite: CompositeDisposable = CompositeDisposable()
-    private val detailLiveMovieData: MutableLiveData<FetchDetailMovieData> = MutableLiveData()
-    private val loadDataStatus: MutableLiveData<LoadDataState> = MutableLiveData()
+    private val detailLiveMovieData by lazy { MutableLiveData<FetchDetailMovieData>() }
+    private val loadDataStatus by lazy { MutableLiveData<LoadDataState>() }
 
     companion object{
         private var filmId = 0
@@ -24,9 +22,8 @@ class DetailMvViewModel(private val apiRepository: ApiRepository) : ViewModel() 
         }
     }
 
-    fun getDetailMovieRequest(): MutableLiveData<FetchDetailMovieData> {
+    fun getDetailMovieRequest(){
         viewModelScope.launch {
-
             apiRepository.getDetailDataMovie(filmId, object: ApiCallback<FetchDetailMovieData>{
                 override fun onSuccessRequest(response: FetchDetailMovieData?) {
                     loadDataStatus.value = LoadDataState.LOADED
@@ -42,14 +39,8 @@ class DetailMvViewModel(private val apiRepository: ApiRepository) : ViewModel() 
                 }
             })
         }
-        return detailLiveMovieData
     }
 
-    fun getLoadDataStatus(): MutableLiveData<LoadDataState> {
-        return loadDataStatus
-    }
-
-    override fun onCleared() {
-        composite.clear()
-    }
+    fun setDetailMovie(): MutableLiveData<FetchDetailMovieData> = detailLiveMovieData
+    fun getLoadStatus(): MutableLiveData<LoadDataState> = loadDataStatus
 }

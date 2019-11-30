@@ -78,7 +78,8 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailMvViewModel.getDetailMovieRequest().observe (
+        detailMvViewModel.getDetailMovieRequest()
+        detailMvViewModel.setDetailMovie().observe (
             this, Observer<FetchDetailMovieData>{
                 binding.movies = it.detailMovieResponse
                 creditsAdapter.submitList(it.castResponse?.credits)
@@ -102,14 +103,14 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun observeNetworkLoad(){
-        detailMvViewModel.getLoadDataStatus().observe(this, Observer<LoadDataState>{
+        detailMvViewModel.getLoadStatus().observe(this, Observer<LoadDataState>{
             when (it) {
                 LoadDataState.LOADED -> hideLoading()
                 else -> {
                     showErrorConnection()
                     binding.dtNoInternet.retryOnClick(View.OnClickListener {
                         showLoading()
-                        getAllDetailData()
+                        detailMvViewModel.getDetailMovieRequest()
                     })
                 }
             }

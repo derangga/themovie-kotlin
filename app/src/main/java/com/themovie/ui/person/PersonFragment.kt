@@ -46,7 +46,6 @@ class PersonFragment : BaseFragment() {
         }
         personViewModel = ViewModelProvider(this, viewModelFactory).get(PersonViewModel::class.java)
         binding.apply {
-            vm = personViewModel
             lifecycleOwner = this@PersonFragment
         }
         return binding.root
@@ -79,9 +78,10 @@ class PersonFragment : BaseFragment() {
     }
 
     private fun getPersonData(){
-        personViewModel.getPersonData().observe(
+        personViewModel.getPersonData()
+        personViewModel.setPersonData().observe(
             this, Observer<FetchPersonData> {
-                personViewModel.setPersonData(it.personResponse!!)
+                binding.cast = it.personResponse
                 personFilmAdapter.submitList(it.personFilmResponse?.filmographies)
             }
         )
@@ -96,7 +96,8 @@ class PersonFragment : BaseFragment() {
                     else -> {
                         showNetworkError()
                         binding.prNoInternet.retryOnClick(View.OnClickListener {
-                            getPersonData()
+                            showLoading()
+                            personViewModel.getPersonData()
                         })
                     }
                 }

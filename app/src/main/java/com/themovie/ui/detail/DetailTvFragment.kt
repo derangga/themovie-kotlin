@@ -100,7 +100,8 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailTvViewModel.getDetailTvRequest().observe(
+        detailTvViewModel.getDetailTvRequest()
+        detailTvViewModel.setDetailTv().observe(
             this, Observer<FetchDetailTvData> {
                 binding.tv = it.detailTvResponse
                 seasonAdapter.submitList(it.detailTvResponse?.seasons)
@@ -125,7 +126,7 @@ class DetailTvFragment : BaseFragment() {
     }
 
     private fun observeLoadData(){
-        detailTvViewModel.getLoadDataStatus().observe( this,
+        detailTvViewModel.getLoadStatus().observe( this,
             Observer<LoadDataState> {
                 when (it) {
                     LoadDataState.LOADING -> showLoading()
@@ -133,7 +134,8 @@ class DetailTvFragment : BaseFragment() {
                     else -> {
                         showErrorConnection()
                         binding.dtNoInternet.retryOnClick(View.OnClickListener {
-                            getAllDetailData()
+                            showLoading()
+                            detailTvViewModel.getDetailTvRequest()
                         })
                     }
                 }
