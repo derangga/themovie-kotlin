@@ -67,7 +67,6 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         (activity?.application as MyApplication).getAppComponent().inject(this)
 
         homeViewModel = ViewModelProvider(this, homeViewFactory).get(HomeViewModel::class.java)
-        homeViewModel.getLocalData()
         binding.apply {
             vm = homeViewModel
             lifecycleOwner = this@HomeFragment
@@ -287,7 +286,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun fetchData(){
         lifecycleScope.launchWhenStarted {
-            isFirstLoad = homeViewModel.isFirstLoad
+            isFirstLoad = homeViewModel.isFirstLoad()
             homeViewModel.getDataRequest()
         }
     }

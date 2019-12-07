@@ -5,19 +5,10 @@ import androidx.room.*
 import com.themovie.model.db.Trending
 
 @Dao
-interface TrendingDao {
+interface TrendingDao: BaseDao<Trending> {
     @Query("select * from tbl_trending limit 6")
     fun getAllTrendingTv(): LiveData<List<Trending>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrending(trending: Trending)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrending(vararg trending: Trending)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateTrendingData(trending: Trending)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateTrendingData(vararg trending: Trending)
+    @Query("select count(*) from tbl_trending")
+    suspend fun getSizeOfRows(): Int
 }

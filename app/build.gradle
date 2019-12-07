@@ -137,4 +137,8 @@ dependencies {
 
     // Analytics Google
     implementation 'com.google.firebase:firebase-analytics:17.2.1'
+
+    // kotlin coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.2'
 }

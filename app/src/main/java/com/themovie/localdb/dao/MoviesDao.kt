@@ -5,19 +5,10 @@ import androidx.room.*
 import com.themovie.model.db.Movies
 
 @Dao
-interface MoviesDao {
+interface MoviesDao: BaseDao<Movies> {
     @Query("select * from tbl_movies")
     fun getAllDiscoverMovies(): LiveData<List<Movies>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDiscoverMovies(movies: Movies)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDiscoverMovies(vararg movies: Movies)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateDiscoverMovies(movies: Movies)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateDiscoverMovies(vararg movies: Movies)
+    @Query("select count(*) from tbl_movies")
+    suspend fun getSizeOfRows(): Int
 }
