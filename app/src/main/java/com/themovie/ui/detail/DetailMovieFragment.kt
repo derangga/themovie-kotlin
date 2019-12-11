@@ -41,33 +41,30 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  *
  */
-class DetailMovieFragment : BaseFragment() {
+class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     private lateinit var detailMvViewModel: DetailMvViewModel
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var videoAdapter: VideoAdapter
-    private lateinit var binding: FragmentDetailMovieBinding
 
     @Inject lateinit var viewModelFactory: DetailMovieViewModelFactory
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_detail_movie, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_detail_movie
+    }
 
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         arguments?.let {
             val filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
             DetailMvViewModel.setFilmId(filmId)
         }
-
         detailMvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMvViewModel::class.java)
         binding.apply {
             lifecycleOwner = this@DetailMovieFragment
         }
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

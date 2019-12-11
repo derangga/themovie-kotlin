@@ -3,10 +3,7 @@ package com.themovie.ui.person
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,19 +23,17 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class PersonFragment : BaseFragment() {
+class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     @Inject lateinit var viewModelFactory: PersonViewModelFactory
     private lateinit var personFilmAdapter: PersonFilmAdapter
     private lateinit var personViewModel: PersonViewModel
-    private lateinit var binding: FragmentPersonBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_person, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_person
+    }
+
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         arguments?.let {
             val personId = PersonFragmentArgs.fromBundle(it).personId
@@ -48,7 +43,6 @@ class PersonFragment : BaseFragment() {
         binding.apply {
             lifecycleOwner = this@PersonFragment
         }
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

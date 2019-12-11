@@ -1,25 +1,21 @@
 package com.themovie.ui.search
 
-import android.annotation.TargetApi
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.databinding.DataBindingUtil
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
 import com.themovie.helper.ViewPagerFragment
 
-class SearchActivity : BaseActivity() {
+class SearchActivity : BaseActivity<ActivitySearchBinding>() {
 
-    private lateinit var binding: ActivitySearchBinding
     private var query: String? = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
+    override fun getLayout(): Int {
+        return R.layout.activity_search
+    }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
         query = getBundle()?.getString("query")
         initTab()
 
@@ -27,7 +23,6 @@ class SearchActivity : BaseActivity() {
             hSearch.setOnClickListener { changeActivity(SuggestActivity::class.java) }
             hBack.setOnClickListener { onBackPressed() }
         }
-
     }
 
     private fun initTab(){

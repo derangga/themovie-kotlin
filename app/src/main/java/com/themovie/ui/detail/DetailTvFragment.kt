@@ -40,7 +40,7 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  *
  */
-class DetailTvFragment : BaseFragment() {
+class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
     @Inject lateinit var viewModelFactory: DetailTvViewModelFactory
     private lateinit var detailTvViewModel: DetailTvViewModel
@@ -49,12 +49,12 @@ class DetailTvFragment : BaseFragment() {
     private lateinit var recommendedTvAdapter: RecommendedTvAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var videoAdapter: VideoAdapter
-    private lateinit var binding: FragmentDetailTvBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_detail_tv, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_detail_tv
+    }
 
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         arguments?.let {
             val filmId = DetailTvFragmentArgs.fromBundle(it).filmId
@@ -65,8 +65,6 @@ class DetailTvFragment : BaseFragment() {
         binding.apply {
             lifecycleOwner = this@DetailTvFragment
         }
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

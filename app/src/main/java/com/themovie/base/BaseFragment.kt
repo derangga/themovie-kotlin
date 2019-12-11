@@ -7,18 +7,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
+
+    protected lateinit var binding: B
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
+        Fabric.with(context, Crashlytics())
+        onCreateViewSetup(savedInstanceState)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Fabric.with(context, Crashlytics())
         onMain(savedInstanceState)
     }
 
+    abstract fun getLayout(): Int
+    abstract fun onCreateViewSetup(savedInstanceState: Bundle?)
     abstract fun onMain(savedInstanceState: Bundle?)
 
     fun changeActivity(activityTarget: Class<*>){

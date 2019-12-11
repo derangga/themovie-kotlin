@@ -42,9 +42,10 @@
                                 style="@style/Widget.AppCompat.ActionButton"/>
 
                         <LinearLayout
-                                android:layout_width="240dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="32dp"
                                 android:layout_marginStart="@dimen/medium_space"
+                                android:layout_marginEnd="40dp"
                                 android:layout_gravity="center_vertical"
                                 android:paddingStart="@dimen/medium_space"
                                 android:paddingEnd="@dimen/medium_space"

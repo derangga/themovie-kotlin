@@ -3,11 +3,15 @@ package com.themovie.ui.main
 import android.os.Bundle
 import com.themovie.R
 import com.themovie.base.BaseActivity
+import com.themovie.databinding.ActivityMainBinding
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun getLayout(): Int {
+        return R.layout.activity_main
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+
     }
 }

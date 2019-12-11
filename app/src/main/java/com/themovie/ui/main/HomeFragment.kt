@@ -3,13 +3,10 @@ package com.themovie.ui.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat.getColor
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +25,6 @@ import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.*
-import com.themovie.model.online.FetchMainData
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.main.adapter.*
 import java.util.*
@@ -37,7 +33,7 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     lateinit var homeViewFactory: HomeViewFactory
@@ -53,25 +49,21 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var discoverTvAdapter: DiscoverTvAdapter
     private lateinit var discoverMvAdapter: DiscoverMvAdapter
     private lateinit var snackbar: Snackbar
-    private lateinit var binding: FragmentHomeBinding
     private var currentPosition: Int = 0
     private var sizeOfHeader = 0
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        (activity?.application as MyApplication).getAppComponent().inject(this)
+    override fun getLayout(): Int {
+        return R.layout.fragment_home
+    }
 
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
+        (activity?.application as MyApplication).getAppComponent().inject(this)
         homeViewModel = ViewModelProvider(this, homeViewFactory).get(HomeViewModel::class.java)
         binding.apply {
             vm = homeViewModel
             lifecycleOwner = this@HomeFragment
         }
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

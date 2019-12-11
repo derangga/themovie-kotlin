@@ -3,11 +3,8 @@ package com.themovie.ui.genres
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -25,27 +22,23 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class GenresFragment : BaseFragment() {
+class GenresFragment : BaseFragment<FragmentGenresBinding>() {
 
     @Inject lateinit var genreModelFactory: GenreViewModelFactory
     private lateinit var genreAdapter: GenreAdapter
     private lateinit var viewModel: GenreViewModel
-    private lateinit var binding: FragmentGenresBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_genres, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_genres
+    }
+
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         viewModel = ViewModelProvider(this, genreModelFactory).get(GenreViewModel::class.java)
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@GenresFragment
         }
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

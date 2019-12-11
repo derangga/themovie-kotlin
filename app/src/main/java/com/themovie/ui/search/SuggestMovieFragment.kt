@@ -26,24 +26,20 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class SuggestMovieFragment : BaseFragment(), SuggestActivity.MoviesSearchFragmentListener {
+class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.MoviesSearchFragmentListener {
 
     @Inject lateinit var viewModelFactory: SuggestMoviesFactory
-    private lateinit var binding: FragmentSuggestBinding
     private lateinit var viewModel: SuggestMoviesViewModel
     private lateinit var mAdapter: SuggestMoviesAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_suggest, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_suggest
+    }
+
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(SuggestMoviesViewModel::class.java)
         binding.lifecycleOwner = this
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
