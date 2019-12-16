@@ -1,6 +1,5 @@
 package com.themovie.restapi
 
-import com.themovie.helper.Constant
 import com.themovie.model.online.PopularResponse
 import com.themovie.model.online.detail.CastResponse
 import com.themovie.model.online.detail.ReviewResponse
@@ -11,10 +10,9 @@ import com.themovie.model.online.upcoming.UpcomingResponse
 import com.themovie.model.online.discovermv.MoviesResponse
 import com.themovie.model.online.genre.GenreResponse
 import com.themovie.model.online.person.PersonFilmResponse
+import com.themovie.model.online.person.PersonImageResponse
 import com.themovie.model.online.person.PersonResponse
 import com.themovie.model.online.video.VideoResponse
-import io.reactivex.Observable
-import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -133,19 +131,25 @@ interface ApiInterface {
 
     @GET(ApiUrl.PERSON_FILM)
     suspend fun getFilmography(
-        @Path("person_id") person_id: Int,
+        @Path("person_id") personId: Int,
         @Query("api_key") api_key: String
     ) : Response<PersonFilmResponse>
 
     @GET(ApiUrl.BIOGRAPHY)
     suspend fun getPerson(
-        @Path("person_id") person_id: Int,
+        @Path("person_id") personId: Int,
         @Query("api_key") api_key: String
     ) : Response<PersonResponse>
 
+    @GET(ApiUrl.PERSON_IMG)
+    suspend fun getPersonImages(
+        @Path("person_id") personId: Int,
+        @Query("api_key") api_key: String
+    ) : Response<PersonImageResponse>
+
     @GET(ApiUrl.SEARCH_MOVIE)
     suspend fun getSearchMovie(
-        @Query("api_key") token: String,
+        @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("query") query: String,
         @Query("page") page: Int
@@ -153,7 +157,7 @@ interface ApiInterface {
 
     @GET(ApiUrl.SEARCH_TV)
     suspend fun getSearchTv(
-        @Query("api_key") token: String,
+        @Query("api_key") api_key: String,
         @Query("language") language: String,
         @Query("query") query: String,
         @Query("page") page: Int

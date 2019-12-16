@@ -25,6 +25,7 @@ class ApiUrl {
         const val VIDEO_TV = "tv/{tv_id}/videos"
         const val THUMBNAIL = "https://img.youtube.com/vi/key/0.jpg"
         const val PERSON_FILM = "person/{person_id}/movie_credits"
+        const val PERSON_IMG = "person/{person_id}/images"
         const val BIOGRAPHY = "person/{person_id}"
         const val SEARCH_MOVIE = "search/movie"
         const val SEARCH_TV = "search/tv"

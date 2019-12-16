@@ -182,8 +182,11 @@ class ApiRepository
             coroutineScope {
                 val detail = async(IO) {  apiInterface.getPerson(personId, ApiUrl.TOKEN) }
                 val person = async(IO) {  apiInterface.getFilmography(personId, ApiUrl.TOKEN) }
-                if(detail.await().isSuccessful && person.await().isSuccessful){
-                    data = FetchPersonData(detail.await().body(), person.await().body())
+                val personPhoto = async(IO) { apiInterface.getPersonImages(personId, ApiUrl.TOKEN) }
+                if(detail.await().isSuccessful &&
+                    person.await().isSuccessful &&
+                        personPhoto.await().isSuccessful){
+                    data = FetchPersonData(detail.await().body(), person.await().body(), personPhoto.await().body())
                     callback.onSuccessRequest(data)
                 } else callback.onErrorRequest(detail.await().errorBody())
             }

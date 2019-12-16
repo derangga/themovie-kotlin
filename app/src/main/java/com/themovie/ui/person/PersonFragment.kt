@@ -27,6 +27,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     @Inject lateinit var viewModelFactory: PersonViewModelFactory
     private lateinit var personFilmAdapter: PersonFilmAdapter
+    private lateinit var personImageAdapter: PersonImageAdapter
     private lateinit var personViewModel: PersonViewModel
 
     override fun getLayout(): Int {
@@ -54,10 +55,18 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     private fun setupRecycler(){
         personFilmAdapter = PersonFilmAdapter()
+        personImageAdapter = PersonImageAdapter()
 
-        binding.castRecycler.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = personFilmAdapter
+        binding.apply{
+            castFilm.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = personFilmAdapter
+            }
+
+            castPhotos.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = personImageAdapter
+            }
         }
 
         personFilmAdapter.setOnItemCLickListener(object: OnAdapterListener<Filmography>{
@@ -77,6 +86,12 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
             this, Observer<FetchPersonData> {
                 binding.cast = it.personResponse
                 personFilmAdapter.submitList(it.personFilmResponse?.filmographies)
+                personImageAdapter.setImageList(it.personImageResponse?.imageList)
+                if(it.personImageResponse?.imageList?.size == 0){
+                    binding.castImgEmpty.visibility = View.VISIBLE
+                    binding.castPhotos.visibility = View.GONE
+                }
+
             }
         )
     }
