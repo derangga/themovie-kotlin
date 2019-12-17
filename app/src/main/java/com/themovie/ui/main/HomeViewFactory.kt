@@ -12,10 +12,10 @@ class HomeViewFactory
     private val localRepository: LocalRepository
 ): ViewModelProvider.Factory {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return modelClass.getConstructor(
-            ApiRepository::class.java,
-            LocalRepository::class.java
+            ApiRepository::class.java, LocalRepository::class.java
         ).newInstance(apiRepository, localRepository)
     }
 }

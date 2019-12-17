@@ -9,6 +9,7 @@ class GenreViewModelFactory
     @Inject constructor(private val localRepository: LocalRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(LocalRepository::class.java).newInstance(localRepository)
+        return modelClass.getConstructor(LocalRepository::class.java)
+            .newInstance(localRepository)
     }
 }

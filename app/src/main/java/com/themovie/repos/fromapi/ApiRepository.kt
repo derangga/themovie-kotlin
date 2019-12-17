@@ -121,11 +121,11 @@ class ApiRepository
         var data: FetchDetailMovieData?
         try {
             coroutineScope {
-                val detail = async(IO) {  apiInterface.getMovieDetail(movieId, ApiUrl.TOKEN) }
-                val cast = async(IO) {  apiInterface.getCredits(movieId, ApiUrl.TOKEN) }
-                val recommendation = async(IO) {  apiInterface.getRecomendedMovies(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
-                val reviews = async(IO) {  apiInterface.getReviews(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
-                val videos = async(IO) {  apiInterface.getVideosMovie(movieId, ApiUrl.TOKEN, "") }
+                val detail = async(IO) { apiInterface.getMovieDetail(movieId, ApiUrl.TOKEN) }
+                val cast = async(IO) { apiInterface.getCredits(movieId, ApiUrl.TOKEN) }
+                val recommendation = async(IO) { apiInterface.getRecomendedMovies(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val reviews = async(IO) { apiInterface.getReviews(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val videos = async(IO) { apiInterface.getVideosMovie(movieId, ApiUrl.TOKEN, "") }
 
                 if(detail.await().isSuccessful && cast.await().isSuccessful &&
                     videos.await().isSuccessful && recommendation.await().isSuccessful &&
@@ -151,11 +151,11 @@ class ApiRepository
         var data: FetchDetailTvData?
         try {
             coroutineScope {
-                val detail = async(IO) {  apiInterface.getTvDetail(tvId, ApiUrl.TOKEN) }
-                val cast = async(IO) {  apiInterface.getCreditsTv(tvId, ApiUrl.TOKEN) }
-                val recommendation = async(IO) {  apiInterface.getRecomendedTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
-                val reviews = async(IO) {  apiInterface.getReviewsTV(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
-                val videos = async(IO) {  apiInterface.getVideosTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE) }
+                val detail = async(IO) { apiInterface.getTvDetail(tvId, ApiUrl.TOKEN) }
+                val cast = async(IO) { apiInterface.getCreditsTv(tvId, ApiUrl.TOKEN) }
+                val recommendation = async(IO) { apiInterface.getRecomendedTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val reviews = async(IO) { apiInterface.getReviewsTV(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+                val videos = async(IO) { apiInterface.getVideosTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE) }
 
                 if(detail.await().isSuccessful && cast.await().isSuccessful &&
                     videos.await().isSuccessful && recommendation.await().isSuccessful &&
@@ -180,8 +180,8 @@ class ApiRepository
         var data: FetchPersonData?
         try {
             coroutineScope {
-                val detail = async(IO) {  apiInterface.getPerson(personId, ApiUrl.TOKEN) }
-                val person = async(IO) {  apiInterface.getFilmography(personId, ApiUrl.TOKEN) }
+                val detail = async(IO) { apiInterface.getPerson(personId, ApiUrl.TOKEN) }
+                val person = async(IO) { apiInterface.getFilmography(personId, ApiUrl.TOKEN) }
                 val personPhoto = async(IO) { apiInterface.getPersonImages(personId, ApiUrl.TOKEN) }
                 if(detail.await().isSuccessful &&
                     person.await().isSuccessful &&
@@ -199,7 +199,7 @@ class ApiRepository
         try {
             coroutineScope {
                 val response = async(IO){
-                     apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
+                    return@async apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
                 }
                 if(response.await().isSuccessful) callback.onSuccessRequest(response.await().body())
                 else callback.onErrorRequest(response.await().errorBody())
@@ -213,7 +213,7 @@ class ApiRepository
         try {
             coroutineScope{
                 val response = async(IO) {
-                     apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
+                    return@async apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
                 }
                 if(response.await().isSuccessful) callback.onSuccessRequest(response.await().body())
                 else callback.onErrorRequest(response.await().errorBody())

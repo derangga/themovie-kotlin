@@ -11,6 +11,7 @@ class SearchTvFactory
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(ApiInterface::class.java).newInstance(apiInterface)
+        return modelClass.getConstructor(ApiInterface::class.java)
+            .newInstance(apiInterface)
     }
 }
