@@ -1,5 +1,6 @@
 package com.themovie.di
 
+import com.themovie.BuildConfig
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import dagger.Module
@@ -18,7 +19,7 @@ class NetworkModule {
     @Singleton
     fun provideRequestHeader(): OkHttpClient{
         val httpLoginInterceptor = HttpLoggingInterceptor()
-        httpLoginInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        httpLoginInterceptor.level = if(BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
 
         return OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)

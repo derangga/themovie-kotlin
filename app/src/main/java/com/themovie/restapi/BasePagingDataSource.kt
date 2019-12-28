@@ -5,7 +5,7 @@ import androidx.paging.PageKeyedDataSource
 import com.themovie.helper.LoadDataState
 import kotlinx.coroutines.CoroutineExceptionHandler
 
-abstract class PagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
+abstract class BasePagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
 
     val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
     protected var pageSize: Int = 0

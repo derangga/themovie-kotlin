@@ -11,7 +11,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.crashlytics.android.Crashlytics
+import com.themovie.BuildConfig
 import io.fabric.sdk.android.Fabric
+import timber.log.Timber
 
 abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
 
@@ -46,11 +48,11 @@ abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
         startActivity(intent)
     }
 
-    fun setLog(tag: String, message: String){
-        Log.e(tag, message)
+    fun setLog(message: String){
+        Timber.e(message)
     }
 
-    fun showToastMessage(message: String){
+    fun toastMessage(message: String){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 

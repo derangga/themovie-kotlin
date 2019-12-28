@@ -5,7 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
-import com.themovie.repos.fromapi.discover.TvDataSource
+import com.themovie.repos.fromapi.discover.TvDataSourceBase
 import com.themovie.repos.fromapi.discover.TvDataSourceFactory
 import com.themovie.restapi.ApiInterface
 
@@ -37,7 +37,7 @@ class TvViewModel(apiInterface: ApiInterface): ViewModel() {
 
 
     fun getLoadState(): LiveData<LoadDataState> {
-        return Transformations.switchMap<TvDataSource, LoadDataState>(tvSourceFactory.getTvDataSource(), TvDataSource::loadState)
+        return Transformations.switchMap<TvDataSourceBase, LoadDataState>(tvSourceFactory.getTvDataSource(), TvDataSourceBase::loadState)
     }
 
     fun retry(){

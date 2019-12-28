@@ -12,13 +12,13 @@ class SearchTvSourceFactory(
     private val query: String? = ""
 ): DataSource.Factory<Int, Tv>() {
 
-    private val searchDataSource = MutableLiveData<SearchTvDataSource>()
+    private val searchDataSource = MutableLiveData<SearchTvDataSourceBase>()
 
     override fun create(): DataSource<Int, Tv> {
-        val dataSource = SearchTvDataSource(scope, apiInterface, query)
+        val dataSource = SearchTvDataSourceBase(scope, apiInterface, query)
         searchDataSource.postValue(dataSource)
         return dataSource
     }
 
-    fun getResultSearch(): MutableLiveData<SearchTvDataSource> = searchDataSource
+    fun getResultSearch(): MutableLiveData<SearchTvDataSourceBase> = searchDataSource
 }

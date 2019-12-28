@@ -80,7 +80,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // Room components
-    def roomVersion = '2.2.2'
+    def roomVersion = '2.2.3'
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     implementation "androidx.room:room-rxjava2:$roomVersion"
@@ -103,7 +103,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // Paging
-    def pagingVersion = '2.1.0'
+    def pagingVersion = '2.1.1'
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
     implementation "androidx.paging:paging-rxjava2:$pagingVersion"
 
@@ -148,4 +148,6 @@ dependencies {
     // kotlin coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.2'
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }

@@ -103,4 +103,53 @@ class LocalRepository
 
     suspend fun getMoviesRows(): Int = moviesDao.getSizeOfRows()
     fun getAllDiscoverMovie(): LiveData<List<Movies>> = moviesDao.getAllDiscoverMovies()
+
+    /**
+     * Update local database
+     */
+
+    suspend fun updateLocalData(trendingList: List<Trending>, upcomingList: List<Upcoming>,
+                                        genreList: List<Genre>, tvList: List<Tv>, movieList: List<Movies>)
+    {
+        trendingList.forEachIndexed { index, trending ->
+            val data = Trending(
+                index + 1, trending.id, trending.title,
+                trending.posterPath, trending.backdropPath,
+                trending.overview, trending.voteAverage, trending.releaseDate
+            )
+            update(data)
+        }
+
+        upcomingList.forEachIndexed { index, upcoming ->
+            val data = Upcoming(
+                index + 1, upcoming.id, upcoming.title,
+                upcoming.posterPath, upcoming.backdropPath,
+                upcoming.overview, upcoming.voteAverage, upcoming.releaseDate
+            )
+            update(data)
+        }
+
+        genreList.forEachIndexed { index, genre ->
+            val data = Genre(index + 1, genre.id, genre.name)
+            update(data)
+        }
+
+        tvList.forEachIndexed { index, tv ->
+            val data = Tv(
+                index + 1, tv.id, tv.name,
+                tv.voteAverage, tv.voteCount,
+                tv.posterPath, tv.backdropPath, tv.overview
+            )
+            update(data)
+        }
+
+        movieList.forEachIndexed { index, movies ->
+            val data = Movies(
+                index + 1, movies.id,
+                movies.title, movies.posterPath, movies.backdropPath,
+                movies.overview, movies.voteAverage, movies.releaseDate
+            )
+            update(data)
+        }
+    }
 }

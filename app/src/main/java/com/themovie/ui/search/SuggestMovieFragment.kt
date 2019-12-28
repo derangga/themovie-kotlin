@@ -19,6 +19,8 @@ import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
+import com.themovie.model.online.discovermv.MoviesResponse
+import com.themovie.restapi.Result
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.search.adapter.SuggestMoviesAdapter
 import javax.inject.Inject
@@ -46,7 +48,6 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
         SuggestActivity.setTextListener(this)
         setupRecyclerView()
         observeSuggestData()
-        getLoadStatus()
     }
 
     private fun setupRecyclerView(){
@@ -69,16 +70,17 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
 
     private fun observeSuggestData(){
         viewModel.getSuggestMovies().observe(this,
-            Observer {
-                mAdapter.submitList(it)
+            Observer<Result<MoviesResponse>>{
+                when(it.status){
+                    Result.Status.LOADING -> {}
+                    Result.Status.SUCCESS -> {
+                        if(binding.recyclerView.visibility == View.GONE)
+                            binding.recyclerView.visibility = View.VISIBLE
+                        mAdapter.submitList(it.data?.movies)
+                    }
+                    Result.Status.ERROR -> { binding.recyclerView.visibility = View.GONE}
+                }
             })
-    }
-
-    private fun getLoadStatus(){
-        viewModel.getLoadStatus().observe(this, Observer {
-            if(it == LoadDataState.LOADED) binding.recyclerView.visibility = View.VISIBLE
-            else binding.recyclerView.visibility = View.GONE
-        })
     }
 
     override fun textChange(text: String) {

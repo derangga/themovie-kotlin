@@ -6,6 +6,7 @@ import com.themovie.di.AppComponent
 import com.themovie.di.AppModule
 import com.themovie.di.NetworkModule
 import com.themovie.di.RoomModule
+import timber.log.Timber
 
 class MyApplication : Application() {
 
@@ -17,6 +18,8 @@ class MyApplication : Application() {
             .appModule(AppModule(this, this))
             .networkModule(NetworkModule())
             .roomModule(RoomModule()).build()
+
+        if(BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 
     fun getAppComponent(): AppComponent {

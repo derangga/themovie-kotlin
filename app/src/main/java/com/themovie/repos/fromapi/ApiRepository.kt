@@ -1,18 +1,15 @@
 package com.themovie.repos.fromapi
 
-import android.util.Log
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.db.*
 import com.themovie.model.online.FetchDetailMovieData
 import com.themovie.model.online.FetchDetailTvData
 import com.themovie.model.online.FetchPersonData
-import com.themovie.model.online.discovermv.MoviesResponse
-import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.repos.local.LocalRepository
 import com.themovie.restapi.ApiCallback
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
+import com.themovie.restapi.BaseRemoteDataSource
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -23,7 +20,7 @@ class ApiRepository
 @Inject constructor(
     private val apiInterface: ApiInterface,
     private val localRepos: LocalRepository
-){
+) : BaseRemoteDataSource() {
 
     suspend fun getMainData(callback: ApiCallback<LoadDataState>){
         try {
@@ -50,16 +47,17 @@ class ApiRepository
                         if(trendingRows.await() == 0 && upcomingRows.await() == 0 &&
                             genreRows.await() == 0 && tvRows.await() == 0 &&
                             movieRows.await() == 0){
-                            localRepos.insertAllTrend(popular.await().body()?.results!!)
-                            localRepos.insertAllUpcoming(upcoming.await().body()?.results!!)
-                            localRepos.insertAllGenre(genre.await().body()?.genres!!)
-                            localRepos.insertAllTv(discoverTv.await().body()?.results!!)
-                            localRepos.insertAllMovie(discoverMv.await().body()?.movies!!)
-
+                            localRepos.apply {
+                                insertAllTrend(popular.await().body()?.results!!)
+                                insertAllUpcoming(upcoming.await().body()?.results!!)
+                                insertAllGenre(genre.await().body()?.genres!!)
+                                insertAllTv(discoverTv.await().body()?.results!!)
+                                insertAllMovie(discoverMv.await().body()?.movies!!)
+                            }
                         }
 
                         else {
-                            updateLocalData(popular.await().body()?.results!!, upcoming.await().body()?.results!!,
+                            localRepos.updateLocalData(popular.await().body()?.results!!, upcoming.await().body()?.results!!,
                                 genre.await().body()?.genres!!, discoverTv.await().body()?.results!!,
                                 discoverMv.await().body()?.movies!!)
                         }
@@ -69,51 +67,6 @@ class ApiRepository
             }
         } catch (e: Exception){
             callback.onFailure(e)
-        }
-    }
-
-    private suspend fun updateLocalData(trendingList: List<Trending>, upcomingList: List<Upcoming>,
-                                genreList: List<Genre>, tvList: List<Tv>, movieList: List<Movies>)
-    {
-        trendingList.forEachIndexed { index, trending ->
-            val data = Trending(
-                index + 1, trending.id, trending.title,
-                trending.posterPath, trending.backdropPath,
-                trending.overview, trending.voteAverage, trending.releaseDate
-            )
-            localRepos.update(data)
-        }
-
-        upcomingList.forEachIndexed { index, upcoming ->
-            val data = Upcoming(
-                index + 1, upcoming.id, upcoming.title,
-                upcoming.posterPath, upcoming.backdropPath,
-                upcoming.overview, upcoming.voteAverage, upcoming.releaseDate
-            )
-            localRepos.update(data)
-        }
-
-        genreList.forEachIndexed { index, genre ->
-            val data = Genre(index + 1, genre.id, genre.name)
-            localRepos.update(data)
-        }
-
-        tvList.forEachIndexed { index, tv ->
-            val data = Tv(
-                index + 1, tv.id, tv.name,
-                tv.voteAverage, tv.voteCount,
-                tv.posterPath, tv.backdropPath, tv.overview
-            )
-            localRepos.update(data)
-        }
-
-        movieList.forEachIndexed { index, movies ->
-            val data = Movies(
-                index + 1, movies.id,
-                movies.title, movies.posterPath, movies.backdropPath,
-                movies.overview, movies.voteAverage, movies.releaseDate
-            )
-            localRepos.update(data)
         }
     }
 
@@ -195,31 +148,11 @@ class ApiRepository
         }
     }
 
-    suspend fun getSuggestionMoviesSearch(query: String, callback: ApiCallback<MoviesResponse>){
-        try {
-            coroutineScope {
-                val response = async(IO){
-                    return@async apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
-                }
-                if(response.await().isSuccessful) callback.onSuccessRequest(response.await().body())
-                else callback.onErrorRequest(response.await().errorBody())
-            }
-        } catch (e: Exception){
-            callback.onFailure(e)
-        }
+    suspend fun getSuggestionMoviesSearch(query: String) = getResult {
+        apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
     }
 
-    suspend fun getSuggestionTvSearch(query: String, callback: ApiCallback<TvResponse>){
-        try {
-            coroutineScope{
-                val response = async(IO) {
-                    return@async apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
-                }
-                if(response.await().isSuccessful) callback.onSuccessRequest(response.await().body())
-                else callback.onErrorRequest(response.await().errorBody())
-            }
-        } catch (e: Exception){
-            callback.onFailure(e)
-        }
+    suspend fun getSuggestionTvSearch(query: String) = getResult {
+        apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1)
     }
 }

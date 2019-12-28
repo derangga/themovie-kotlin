@@ -5,7 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Movies
-import com.themovie.repos.fromapi.discover.MovieDataSource
+import com.themovie.repos.fromapi.discover.MovieDataSourceBase
 import com.themovie.repos.fromapi.discover.MovieDataSourceFactory
 import com.themovie.restapi.ApiInterface
 
@@ -41,9 +41,9 @@ class MovieViewModel(apiInterface: ApiInterface) : ViewModel() {
 
 
     fun getLoadState(): LiveData<LoadDataState> {
-        return Transformations.switchMap<MovieDataSource, LoadDataState>(
+        return Transformations.switchMap<MovieDataSourceBase, LoadDataState>(
             moviesSourceFactory.getMovieDataSource(),
-            MovieDataSource::loadState
+            MovieDataSourceBase::loadState
         )
     }
 

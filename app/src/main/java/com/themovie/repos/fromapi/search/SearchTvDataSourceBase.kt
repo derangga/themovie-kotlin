@@ -1,22 +1,22 @@
-package com.themovie.repos.fromapi.discover
+package com.themovie.repos.fromapi.search
 
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Movies
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
-import com.themovie.restapi.PagingDataSource
+import com.themovie.restapi.BasePagingDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class MovieDataSource(
+class SearchTvDataSourceBase(
     private val scope: CoroutineScope,
     private val apiInterface: ApiInterface,
-    private val genre: String
-): PagingDataSource<Int, Movies>() {
+    private val query: String? = ""
+): BasePagingDataSource<Int, Tv>() {
 
-    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
+    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(LoadDataState.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
@@ -24,10 +24,10 @@ class MovieDataSource(
         }
     }
 
-    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
+    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Tv>) {
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
-            retry = {loadAfter(params, callback)}
+            retry = { loadAfter(params, callback) }
             fetchData(params.key){
                 key = params.key + 1
                 callback.onResult(it!!.toMutableList(), key)
@@ -35,14 +35,14 @@ class MovieDataSource(
         }
     }
 
-    override fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
+    override fun fetchData(page: Int, callback: (List<Tv>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
-                Constant.SORTING, page, "2019", genre)
-            if(discover.isSuccessful){
+            val response = apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE,
+                query.orEmpty(), page)
+            if(response.isSuccessful){
                 updateState(LoadDataState.LOADED)
-                pageSize = discover.body()?.totalPages ?: 0
-                callback(discover.body()?.movies)
+                pageSize = response.body()?.totalPages ?: 0
+                callback(response.body()?.results)
             } else updateState(LoadDataState.ERROR)
         }
     }

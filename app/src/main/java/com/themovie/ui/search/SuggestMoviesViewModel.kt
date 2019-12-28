@@ -6,37 +6,23 @@ import com.themovie.model.db.Movies
 import com.themovie.model.online.discovermv.MoviesResponse
 import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.restapi.ApiCallback
+import com.themovie.restapi.Result
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import kotlin.Exception
 
 class SuggestMoviesViewModel(private val apiRepository: ApiRepository): ViewModel() {
 
-    private val suggestLiveData = MutableLiveData<List<Movies>?>()
-    private val loadDataStatus = MutableLiveData<LoadDataState>()
+    private val movieSearch: MutableLiveData<Result<MoviesResponse>> by lazy { MutableLiveData<Result<MoviesResponse>>() }
 
     fun fetchSuggestMovie(query: String){
         viewModelScope.launch {
-            apiRepository.getSuggestionMoviesSearch(query, object: ApiCallback<MoviesResponse>{
-                override fun onSuccessRequest(response: MoviesResponse?) {
-                    loadDataStatus.value = LoadDataState.LOADED
-                    suggestLiveData.value = response?.movies
-                }
-
-                override fun onErrorRequest(errorBody: ResponseBody?) {
-                    loadDataStatus.value = LoadDataState.ERROR
-                }
-
-                override fun onFailure(e: Exception) {
-                    loadDataStatus.value = LoadDataState.ERROR
-                }
-            })
+            val response = apiRepository.getSuggestionMoviesSearch(query)
+            movieSearch.value = response
         }
     }
 
-    fun getSuggestMovies(): MutableLiveData<List<Movies>?> {
-        return suggestLiveData
+    fun getSuggestMovies(): MutableLiveData<Result<MoviesResponse>> {
+        return movieSearch
     }
-
-    fun getLoadStatus(): LiveData<LoadDataState> = loadDataStatus
 }
