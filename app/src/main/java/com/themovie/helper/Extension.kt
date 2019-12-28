@@ -6,6 +6,11 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.themovie.R
 import com.themovie.model.db.Genre
+import com.themovie.restapi.Result
+import okhttp3.ResponseBody
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
@@ -42,4 +47,13 @@ fun List<Genre>.concatListGenres(): String {
         } else genre.append(this[i].name)
     }
     return genre.toString()
+}
+
+fun ResponseBody.getErrorMessage(): String {
+    return try {
+        val jsonParser = JSONObject(this.string())
+        jsonParser.getString("errors")
+    }catch (e: JSONException){
+        e.message.orEmpty()
+    }
 }

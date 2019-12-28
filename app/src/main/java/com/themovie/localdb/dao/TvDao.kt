@@ -5,19 +5,10 @@ import androidx.room.*
 import com.themovie.model.db.Tv
 
 @Dao
-interface TvDao {
+interface TvDao: BaseDao<Tv> {
     @Query("select * from tbl_tv")
     fun getAllDiscoverTv(): LiveData<List<Tv>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDiscoverTv(tv: Tv)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDiscoverTv(vararg tv: Tv)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateDiscoverTv(tv: Tv)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateDiscoverTv(vararg tv: Tv)
+    @Query("select count(*) from tbl_tv")
+    suspend fun getSizeOfRows(): Int
 }

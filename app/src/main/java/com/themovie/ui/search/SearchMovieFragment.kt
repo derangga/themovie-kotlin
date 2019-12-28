@@ -27,27 +27,23 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class SearchMovieFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
+class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
     @Inject lateinit var viewModelFactory: SearchMovieFactory
     private var query: String? = ""
-    private lateinit var binding: FragmentSearchResultBinding
     private lateinit var viewModel: SearchMoviesViewModel
     private lateinit var mAdapter: MovieAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_result, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_search_result
+    }
+
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
         query = getBundle()?.getString("query")
         (activity?.application as MyApplication).getAppComponent().inject(this)
         SearchMoviesViewModel.query = query.orEmpty()
         viewModel = ViewModelProvider(this, viewModelFactory).get(SearchMoviesViewModel::class.java)
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

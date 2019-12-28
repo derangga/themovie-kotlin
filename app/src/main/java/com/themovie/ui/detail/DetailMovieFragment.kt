@@ -4,10 +4,7 @@ package com.themovie.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -31,7 +28,7 @@ import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
 import com.themovie.ui.detail.adapter.VideoAdapter
 import com.themovie.ui.detail.viewmodel.DetailMovieViewModelFactory
-import com.themovie.ui.detail.viewmodel.DetailMvViewModel
+import com.themovie.ui.detail.viewmodel.DetailMovieViewModel
 import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
 
@@ -41,33 +38,30 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  *
  */
-class DetailMovieFragment : BaseFragment() {
+class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
-    private lateinit var detailMvViewModel: DetailMvViewModel
+    private lateinit var detailMovieViewModel: DetailMovieViewModel
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var videoAdapter: VideoAdapter
-    private lateinit var binding: FragmentDetailMovieBinding
 
     @Inject lateinit var viewModelFactory: DetailMovieViewModelFactory
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_detail_movie, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_detail_movie
+    }
 
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         arguments?.let {
             val filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
-            DetailMvViewModel.setFilmId(filmId)
+            DetailMovieViewModel.setFilmId(filmId)
         }
-
-        detailMvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMvViewModel::class.java)
+        detailMovieViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMovieViewModel::class.java)
         binding.apply {
             lifecycleOwner = this@DetailMovieFragment
         }
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -78,8 +72,8 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun getAllDetailData(){
-        detailMvViewModel.getDetailMovieRequest()
-        detailMvViewModel.setDetailMovie().observe (
+        detailMovieViewModel.getDetailMovieRequest()
+        detailMovieViewModel.setDetailMovie().observe (
             this, Observer<FetchDetailMovieData>{
                 binding.movies = it.detailMovieResponse
                 creditsAdapter.submitList(it.castResponse?.credits)
@@ -103,14 +97,14 @@ class DetailMovieFragment : BaseFragment() {
     }
 
     private fun observeNetworkLoad(){
-        detailMvViewModel.getLoadStatus().observe(this, Observer<LoadDataState>{
+        detailMovieViewModel.getLoadStatus().observe(this, Observer<LoadDataState>{
             when (it) {
                 LoadDataState.LOADED -> hideLoading()
                 else -> {
                     showErrorConnection()
                     binding.dtNoInternet.retryOnClick(View.OnClickListener {
                         showLoading()
-                        detailMvViewModel.getDetailMovieRequest()
+                        detailMovieViewModel.getDetailMovieRequest()
                     })
                 }
             }

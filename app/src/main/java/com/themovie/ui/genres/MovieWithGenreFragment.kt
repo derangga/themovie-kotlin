@@ -30,21 +30,19 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class MovieWithGenreFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
+class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
     @Inject lateinit var movieFactory: MovieViewModelFactory
     private lateinit var viewModel: MovieViewModel
     private lateinit var mAdapter: MovieAdapter
-    private lateinit var binding: FragmentMoviesBinding
     private var destinationBackPress = ""
     private var title = ""
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun getLayout(): Int {
+        return R.layout.fragment_movies
+    }
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies, container, false)
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         arguments?.let {
             MovieViewModel.genre = MovieWithGenreFragmentArgs.fromBundle(it).genreId.toString()
@@ -56,8 +54,6 @@ class MovieWithGenreFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListe
             vm = viewModel
             lifecycleOwner = this@MovieWithGenreFragment
         }
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

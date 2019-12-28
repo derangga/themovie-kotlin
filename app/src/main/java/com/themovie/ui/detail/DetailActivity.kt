@@ -4,13 +4,16 @@ import android.os.Bundle
 import androidx.navigation.findNavController
 import com.themovie.R
 import com.themovie.base.BaseActivity
+import com.themovie.databinding.ActivityDetailBinding
 import com.themovie.helper.Constant
 
-class DetailActivity : BaseActivity() {
+class DetailActivity : BaseActivity<ActivityDetailBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+    override fun getLayout(): Int {
+        return R.layout.activity_detail
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
         val filmId = getBundle()?.getInt("filmId")
         val type = getBundle()?.getString("type")
         if(type == Constant.MOVIE){

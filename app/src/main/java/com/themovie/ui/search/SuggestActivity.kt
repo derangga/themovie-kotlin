@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
@@ -19,15 +20,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SuggestActivity : BaseActivity() {
+class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
     private lateinit var imm: InputMethodManager
-    private lateinit var binding: ActivitySearchBinding
-    private lateinit var job: Job
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
+    override fun getLayout(): Int {
+        return R.layout.activity_search
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         initTab()
         binding.hSearch.requestFocus()
@@ -38,13 +39,6 @@ class SuggestActivity : BaseActivity() {
 
         searchSoftKeyboardAction()
         textStream()
-    }
-
-    override fun onPause() {
-        if(::job.isInitialized){
-            job.cancel()
-        }
-        super.onPause()
     }
 
     private fun initTab(){
@@ -105,10 +99,10 @@ class SuggestActivity : BaseActivity() {
 
                 searchFor = searchText
 
-                job = CoroutineScope(Main).launch {
+                lifecycleScope.launchWhenStarted {
                     delay(500)
                     if(searchText != searchFor)
-                        return@launch
+                        return@launchWhenStarted
 
                     movieListener?.textChange(s.toString())
                     tvListener?.textChange(s.toString())

@@ -5,7 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
-import com.themovie.repos.fromapi.search.SearchTvDataSource
+import com.themovie.repos.fromapi.search.SearchTvDataSourceBase
 import com.themovie.repos.fromapi.search.SearchTvSourceFactory
 import com.themovie.restapi.ApiInterface
 
@@ -39,9 +39,9 @@ class SearchTvViewModel(private val apiInterface: ApiInterface): ViewModel() {
     }
 
     fun getLoadState(): LiveData<LoadDataState>{
-        return Transformations.switchMap<SearchTvDataSource, LoadDataState>(
+        return Transformations.switchMap<SearchTvDataSourceBase, LoadDataState>(
                 searchSourceFactory.getResultSearch(),
-                SearchTvDataSource::loadState
+                SearchTvDataSourceBase::loadState
             )
     }
 

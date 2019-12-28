@@ -19,6 +19,8 @@ import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Tv
+import com.themovie.model.online.discovertv.TvResponse
+import com.themovie.restapi.Result
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.search.adapter.SuggestTvAdapter
 import javax.inject.Inject
@@ -26,31 +28,26 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class SuggestTvFragment : BaseFragment(), SuggestActivity.TvSearchFragmentListener {
+class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.TvSearchFragmentListener {
 
     @Inject lateinit var viewModelFactory: SuggestTvFactory
-    private lateinit var binding: FragmentSuggestBinding
     private lateinit var viewModel: SuggestTvViewModel
     private lateinit var mAdapter: SuggestTvAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_suggest, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_suggest
+    }
+
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(SuggestTvViewModel::class.java)
         binding.lifecycleOwner = this
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
         SuggestActivity.setTextListener(this)
         setupRecyclerView()
         observeSuggestData()
-        getLoadStatus()
     }
 
     private fun setupRecyclerView(){
@@ -74,16 +71,19 @@ class SuggestTvFragment : BaseFragment(), SuggestActivity.TvSearchFragmentListen
 
     private fun observeSuggestData(){
         viewModel.getSuggestTv().observe(this,
-            Observer{
-                mAdapter.submitList(it)
+            Observer<Result<TvResponse>> {
+                when(it.status){
+                    Result.Status.LOADING -> {setLog("Loading")}
+                    Result.Status.SUCCESS -> {
+                        if(binding.recyclerView.visibility == View.GONE)
+                            binding.recyclerView.visibility = View.VISIBLE
+                        mAdapter.submitList(it.data?.results)
+                    }
+                    Result.Status.ERROR -> {
+                        binding.recyclerView.visibility = View.GONE
+                    }
+                }
             })
-    }
-
-    private fun getLoadStatus(){
-        viewModel.getLoadStatus().observe(this, Observer {
-            if(it == LoadDataState.LOADED) binding.recyclerView.visibility = View.VISIBLE
-            else binding.recyclerView.visibility = View.GONE
-        })
     }
 
     override fun textChange(text: String) {

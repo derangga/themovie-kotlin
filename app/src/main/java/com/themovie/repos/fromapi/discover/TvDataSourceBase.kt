@@ -5,15 +5,15 @@ import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
-import com.themovie.restapi.PagingDataSource
+import com.themovie.restapi.BasePagingDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class TvDataSource(
+class TvDataSourceBase(
     private val scope: CoroutineScope,
     private val apiInterface: ApiInterface
-) : PagingDataSource<Int, Tv>() {
+) : BasePagingDataSource<Int, Tv>() {
 
     override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(LoadDataState.LOADING)

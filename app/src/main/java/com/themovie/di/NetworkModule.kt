@@ -1,15 +1,13 @@
 package com.themovie.di
 
+import com.themovie.BuildConfig
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -21,7 +19,7 @@ class NetworkModule {
     @Singleton
     fun provideRequestHeader(): OkHttpClient{
         val httpLoginInterceptor = HttpLoggingInterceptor()
-        httpLoginInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        httpLoginInterceptor.level = if(BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
 
         return OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
@@ -37,7 +35,6 @@ class NetworkModule {
         return Retrofit.Builder()
             .baseUrl(ApiUrl.BASE_URL)
             .client(okHttpClient)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

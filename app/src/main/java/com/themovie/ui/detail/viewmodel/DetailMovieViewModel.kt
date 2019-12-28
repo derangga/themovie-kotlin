@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import kotlin.Exception
 
-class DetailMvViewModel(private val apiRepository: ApiRepository) : ViewModel() {
+class DetailMovieViewModel(private val apiRepository: ApiRepository) : ViewModel() {
 
     private val detailLiveMovieData by lazy { MutableLiveData<FetchDetailMovieData>() }
     private val loadDataStatus by lazy { MutableLiveData<LoadDataState>() }

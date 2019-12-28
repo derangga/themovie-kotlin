@@ -30,15 +30,14 @@
                     android:id="@+id/person_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
                     android:orientation="vertical"
+                    android:visibility="invisible"
                     android:layout_below="@id/header">
 
                 <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/small_space"
-                        android:layout_marginBottom="@dimen/small_space"
                         app:cardBackgroundColor="@color/colorPrimary">
 
                     <LinearLayout
@@ -107,70 +106,103 @@
                 <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/small_space"
                         app:cardBackgroundColor="@color/colorPrimary">
 
-                    <RelativeLayout
+                    <LinearLayout
+                            android:id="@+id/per_film_img"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                        <LinearLayout
-                                android:id="@+id/per_film_l"
+                        <TextView
+                                android:text="@string/person_title_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorAccent"
+                                android:layout_marginStart="@dimen/small_space"
+                                android:layout_marginEnd="@dimen/small_space"
+                                android:layout_marginTop="@dimen/small_space"/>
+
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="@dimen/small_space"
+                                android:background="@color/colorBlue"/>
+
+                        <TextView
+                                android:id="@+id/cast_img_empty"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:text="@string/person_title_5"
+                                android:textSize="20sp"
+                                android:textAlignment="center"
+                                android:visibility="gone"
+                                android:layout_marginBottom="20dp"
+                                android:textColor="@color/colorWhite"/>
 
-                            <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:padding="@dimen/small_space">
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/cast_photos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/extra_small_space">
 
-                                <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="vertical">
+                        </androidx.recyclerview.widget.RecyclerView>
 
-                                    <TextView
-                                            android:text="@string/person_title_2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textStyle="bold"
-                                            android:textSize="16sp"
-                                            android:textColor="@color/colorAccent"/>
+                    </LinearLayout>
 
-                                    <View
-                                            android:layout_width="match_parent"
-                                            android:layout_height="1dp"
-                                            android:layout_marginTop="@dimen/small_space"
-                                            android:layout_marginBottom="@dimen/extra_small_space"
-                                            android:background="@color/colorBlue"/>
+                </androidx.cardview.widget.CardView>
 
-                                </LinearLayout>
+                <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/small_space"
+                        app:cardBackgroundColor="@color/colorPrimary">
 
-                            </LinearLayout>
+                    <LinearLayout
+                            android:id="@+id/per_film_l"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                            <TextView
-                                    android:id="@+id/cast_empty"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/person_title_3"
-                                    android:textSize="20sp"
-                                    android:textAlignment="center"
-                                    android:visibility="gone"
-                                    android:layout_marginBottom="20dp"
-                                    android:textColor="@color/colorWhite"/>
+                        <TextView
+                                android:text="@string/person_title_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorAccent"
+                                android:layout_marginTop="@dimen/small_space"
+                                android:layout_marginStart="@dimen/small_space"/>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/cast_recycler"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/extra_small_space">
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="@dimen/small_space"
+                                android:background="@color/colorBlue"/>
 
-                            </androidx.recyclerview.widget.RecyclerView>
+                        <TextView
+                                android:id="@+id/cast_empty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/person_title_3"
+                                android:textSize="20sp"
+                                android:textAlignment="center"
+                                android:visibility="gone"
+                                android:layout_marginBottom="20dp"
+                                android:textColor="@color/colorWhite"/>
 
-                        </LinearLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/cast_film"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/extra_small_space">
 
-                    </RelativeLayout>
+                        </androidx.recyclerview.widget.RecyclerView>
+
+                    </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
@@ -181,7 +213,7 @@
                     layout="@layout/shimmer_person"
                     android:layout_below="@id/header"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent" />
+                    android:layout_width="match_parent"/>
 
             <com.themovie.helper.customview.NoInternetView
                     android:id="@+id/pr_no_internet"

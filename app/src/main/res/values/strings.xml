@@ -56,6 +56,8 @@
     <string name="person_title_1">Born :</string>
     <string name="person_title_2">Filmography</string>
     <string name="person_title_3">No Filmography</string>
+    <string name="person_title_4">Photos</string>
+    <string name="person_title_5">No Person Photo</string>
 
     <!-- Discover Movie -->
     <string name="movie_title_1">Release date :</string>

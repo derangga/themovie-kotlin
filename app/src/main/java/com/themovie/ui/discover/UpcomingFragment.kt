@@ -3,11 +3,8 @@ package com.themovie.ui.discover
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -30,27 +27,23 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class UpcomingFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
+class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
     @Inject lateinit var upcomingViewFactory: UpcomingViewModelFactory
     private lateinit var viewModel: UpComingViewModel
     private lateinit var mAdapter: UpcomingAdapter
-    private lateinit var binding: FragmentUpcomingBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_upcoming, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_upcoming
+    }
+
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
-
         viewModel = ViewModelProvider(this, upcomingViewFactory).get(UpComingViewModel::class.java)
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@UpcomingFragment
         }
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

@@ -1,22 +1,20 @@
-package com.themovie.repos.fromapi.search
+package com.themovie.repos.fromapi.discover
 
-import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Tv
+import com.themovie.model.db.Upcoming
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
-import com.themovie.restapi.PagingDataSource
+import com.themovie.restapi.BasePagingDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class SearchTvDataSource(
+class UpcomingDataSourceBase(
     private val scope: CoroutineScope,
-    private val apiInterface: ApiInterface,
-    private val query: String? = ""
-): PagingDataSource<Int, Tv>() {
+    private val apiInterface: ApiInterface
+): BasePagingDataSource<Int, Upcoming>() {
 
-    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
+    override fun loadFirstPage(params: LoadInitialParams<Int>,callback: LoadInitialCallback<Int, Upcoming>) {
         updateState(LoadDataState.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
@@ -24,7 +22,7 @@ class SearchTvDataSource(
         }
     }
 
-    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Tv>) {
+    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Upcoming>) {
         if(params.key <= pageSize){
             updateState(LoadDataState.LOADING)
             retry = { loadAfter(params, callback) }
@@ -35,14 +33,13 @@ class SearchTvDataSource(
         }
     }
 
-    override fun fetchData(page: Int, callback: (List<Tv>?) -> Unit) {
+    override fun fetchData(page: Int, callback: (List<Upcoming>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val response = apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE,
-                query.orEmpty(), page)
-            if(response.isSuccessful){
+            val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, page)
+            if(upcoming.isSuccessful){
                 updateState(LoadDataState.LOADED)
-                pageSize = response.body()?.totalPages ?: 0
-                callback(response.body()?.results)
+                pageSize = upcoming.body()?.totalPages ?: 0
+                callback(upcoming.body()?.results)
             } else updateState(LoadDataState.ERROR)
         }
     }

@@ -9,6 +9,7 @@ class DetailMovieViewModelFactory
 @Inject constructor(private val apiRepository: ApiRepository): ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(ApiRepository::class.java).newInstance(apiRepository)
+        return modelClass.getConstructor(ApiRepository::class.java)
+            .newInstance(apiRepository)
     }
 }

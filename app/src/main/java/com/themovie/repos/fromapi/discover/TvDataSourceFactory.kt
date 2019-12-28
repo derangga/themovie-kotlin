@@ -13,15 +13,15 @@ class TvDataSourceFactory(
     private val apiInterface: ApiInterface
 ) : DataSource.Factory<Int, Tv>() {
 
-    private val tvSourceLiveData = MutableLiveData<TvDataSource>()
+    private val tvSourceLiveData = MutableLiveData<TvDataSourceBase>()
 
     override fun create(): DataSource<Int, Tv> {
-        val tvDataSource = TvDataSource(scope, apiInterface)
+        val tvDataSource = TvDataSourceBase(scope, apiInterface)
         tvSourceLiveData.postValue(tvDataSource)
         return tvDataSource
     }
 
-    fun getTvDataSource(): MutableLiveData<TvDataSource> {
+    fun getTvDataSource(): MutableLiveData<TvDataSourceBase> {
         return tvSourceLiveData
     }
 }

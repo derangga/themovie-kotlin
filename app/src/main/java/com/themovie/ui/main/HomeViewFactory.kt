@@ -7,19 +7,15 @@ import com.themovie.repos.local.*
 import javax.inject.Inject
 
 class HomeViewFactory
-@Inject constructor(private val apiRepository: ApiRepository, private val trendingLocalRepos: TrendingLocalRepos,
-                    private val genreLocalRepos: GenreLocalRepos,
-                    private val upcomingLocalRepos: UpcomingLocalRepos, private val discoverTvLocalRepos: DiscoverTvLocalRepos,
-                    private val discoverMvLocalRepos: DiscoverMvLocalRepos): ViewModelProvider.Factory {
+@Inject constructor(
+    private val apiRepository: ApiRepository,
+    private val localRepository: LocalRepository
+): ViewModelProvider.Factory {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return modelClass.getConstructor(
-            ApiRepository::class.java, TrendingLocalRepos::class.java,
-            GenreLocalRepos::class.java,
-            UpcomingLocalRepos::class.java, DiscoverTvLocalRepos::class.java,
-            DiscoverMvLocalRepos::class.java
-        ).newInstance(
-            apiRepository, trendingLocalRepos, genreLocalRepos, upcomingLocalRepos, discoverTvLocalRepos, discoverMvLocalRepos
-        )
+            ApiRepository::class.java, LocalRepository::class.java
+        ).newInstance(apiRepository, localRepository)
     }
 }

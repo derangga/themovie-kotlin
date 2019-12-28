@@ -14,15 +14,15 @@ class MovieDataSourceFactory(
     private val genre: String = ""
 ): DataSource.Factory<Int, Movies>() {
 
-    private val movieDataSourceLiveData = MutableLiveData<MovieDataSource>()
+    private val movieDataSourceLiveData = MutableLiveData<MovieDataSourceBase>()
 
     override fun create(): DataSource<Int, Movies> {
-        val dataSource = MovieDataSource(scope, apiInterface, genre)
+        val dataSource = MovieDataSourceBase(scope, apiInterface, genre)
         movieDataSourceLiveData.postValue(dataSource)
         return dataSource
     }
 
-    fun getMovieDataSource(): MutableLiveData<MovieDataSource> {
+    fun getMovieDataSource(): MutableLiveData<MovieDataSourceBase> {
         return movieDataSourceLiveData
     }
 }

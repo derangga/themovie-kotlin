@@ -19,6 +19,8 @@ import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
+import com.themovie.model.online.discovermv.MoviesResponse
+import com.themovie.restapi.Result
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.search.adapter.SuggestMoviesAdapter
 import javax.inject.Inject
@@ -26,31 +28,26 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class SuggestMovieFragment : BaseFragment(), SuggestActivity.MoviesSearchFragmentListener {
+class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.MoviesSearchFragmentListener {
 
     @Inject lateinit var viewModelFactory: SuggestMoviesFactory
-    private lateinit var binding: FragmentSuggestBinding
     private lateinit var viewModel: SuggestMoviesViewModel
     private lateinit var mAdapter: SuggestMoviesAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_suggest, container, false)
+    override fun getLayout(): Int {
+        return R.layout.fragment_suggest
+    }
+
+    override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity?.application as MyApplication).getAppComponent().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(SuggestMoviesViewModel::class.java)
         binding.lifecycleOwner = this
-
-        return binding.root
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
         SuggestActivity.setTextListener(this)
         setupRecyclerView()
         observeSuggestData()
-        getLoadStatus()
     }
 
     private fun setupRecyclerView(){
@@ -73,16 +70,17 @@ class SuggestMovieFragment : BaseFragment(), SuggestActivity.MoviesSearchFragmen
 
     private fun observeSuggestData(){
         viewModel.getSuggestMovies().observe(this,
-            Observer {
-                mAdapter.submitList(it)
+            Observer<Result<MoviesResponse>>{
+                when(it.status){
+                    Result.Status.LOADING -> {}
+                    Result.Status.SUCCESS -> {
+                        if(binding.recyclerView.visibility == View.GONE)
+                            binding.recyclerView.visibility = View.VISIBLE
+                        mAdapter.submitList(it.data?.movies)
+                    }
+                    Result.Status.ERROR -> { binding.recyclerView.visibility = View.GONE}
+                }
             })
-    }
-
-    private fun getLoadStatus(){
-        viewModel.getLoadStatus().observe(this, Observer {
-            if(it == LoadDataState.LOADED) binding.recyclerView.visibility = View.VISIBLE
-            else binding.recyclerView.visibility = View.GONE
-        })
     }
 
     override fun textChange(text: String) {

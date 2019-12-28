@@ -12,15 +12,15 @@ class UpcomingDataSourceFactory
    (private val scope: CoroutineScope,
     private val apiInterface: ApiInterface): DataSource.Factory<Int, Upcoming>() {
 
-    private val upcomingLiveDataSource = MutableLiveData<UpcomingDataSource>()
+    private val upcomingLiveDataSource = MutableLiveData<UpcomingDataSourceBase>()
 
     override fun create(): DataSource<Int, Upcoming> {
-        val dataSource = UpcomingDataSource(scope, apiInterface)
+        val dataSource = UpcomingDataSourceBase(scope, apiInterface)
         upcomingLiveDataSource.postValue(dataSource)
         return dataSource
     }
 
-    fun getUpcomingDataSource(): MutableLiveData<UpcomingDataSource> {
+    fun getUpcomingDataSource(): MutableLiveData<UpcomingDataSourceBase> {
         return upcomingLiveDataSource
     }
 }
