@@ -8,8 +8,8 @@
             <flag name="season" value="2"/>
             <flag name="upcoming" value="3"/>
         </attr>
-        <attr name="poster_title"/>
-        <attr name="poster_subtitle"/>
-        <attr name="poster_image"/>
+        <attr name="poster_title" format="string"/>
+        <attr name="poster_subtitle" format="string"/>
+        <attr name="poster_image" format="string"/>
     </declare-styleable>
 </resources>
