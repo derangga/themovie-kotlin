@@ -27,7 +27,6 @@ import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
 import com.themovie.ui.detail.adapter.VideoAdapter
-import com.themovie.ui.detail.viewmodel.DetailMovieViewModelFactory
 import com.themovie.ui.detail.viewmodel.DetailMovieViewModel
 import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
@@ -46,19 +45,19 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var videoAdapter: VideoAdapter
 
-    @Inject lateinit var viewModelFactory: DetailMovieViewModelFactory
+
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_movie
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
+
         arguments?.let {
             val filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
             DetailMovieViewModel.setFilmId(filmId)
         }
-        detailMovieViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMovieViewModel::class.java)
+
         binding.apply {
             lifecycleOwner = this@DetailMovieFragment
         }

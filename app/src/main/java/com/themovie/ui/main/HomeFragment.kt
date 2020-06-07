@@ -7,8 +7,8 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat.getColor
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentHomeBinding
+import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.helper.OnAdapterListener
@@ -35,11 +35,9 @@ import javax.inject.Inject
  */
 class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject
-    lateinit var homeViewFactory: HomeViewFactory
-
+    @Inject lateinit var factory: MainViewModelFactory
     private var timer: Timer? = null
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel by viewModels<HomeViewModel> { factory }
     private var isFirstLoad = false
     private var isSliding: Boolean = false
     private var isFirstTouch: Boolean = true
@@ -58,8 +56,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        homeViewModel = ViewModelProvider(this, homeViewFactory).get(HomeViewModel::class.java)
+        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = homeViewModel
             lifecycleOwner = this@HomeFragment
@@ -239,7 +236,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
     private fun showData(){
         homeViewModel.apply {
             getTrendingLocalData().observe(this@HomeFragment,
-                Observer<List<Trending>>{ t ->
+                Observer { t ->
                     if(t.isNotEmpty()){
                         hideLoading()
                         sizeOfHeader = t.size
@@ -248,27 +245,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
                 })
 
             getUpcomingLocalData().observe(this@HomeFragment,
-                Observer<List<Upcoming>> { t ->
+                Observer { t ->
                     if(t.isNotEmpty())
                         upcomingAdapter.submitList(t)
                 })
 
             getGenreLocalData().observe( this@HomeFragment,
-                Observer<List<Genre>> { t ->
+                Observer { t ->
                     if(t.isNotEmpty())
                         genreAdapter.submitList(t)
                 }
             )
 
             getDiscoverTvLocalData().observe(this@HomeFragment,
-                Observer<List<Tv>> { t ->
+                Observer { t ->
                     if(t.isNotEmpty()){
                         discoverTvAdapter.submitList(t)
                     }
                 })
 
             getDiscoverMvLocalData().observe(this@HomeFragment,
-                Observer<List<Movies>> { t ->
+                Observer { t ->
                     if(t.isNotEmpty()){
                         discoverMvAdapter.submitList(t)
                     }
@@ -285,7 +282,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
 
     private fun observeNetworkLoad(){
         homeViewModel.getLoadDataStatus().observe(this,
-            Observer<LoadDataState>{
+            Observer {
                 when(it){
                     LoadDataState.LOADING -> {
                         if(isFirstLoad) showLoading()

@@ -25,7 +25,7 @@ import javax.inject.Inject
  */
 class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
-    @Inject lateinit var viewModelFactory: PersonViewModelFactory
+
     private lateinit var personFilmAdapter: PersonFilmAdapter
     private lateinit var personImageAdapter: PersonImageAdapter
     private lateinit var personViewModel: PersonViewModel
@@ -35,12 +35,12 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
+
         arguments?.let {
             val personId = PersonFragmentArgs.fromBundle(it).personId
             PersonViewModel.setPersonId(personId)
         }
-        personViewModel = ViewModelProvider(this, viewModelFactory).get(PersonViewModel::class.java)
+
         binding.apply {
             lifecycleOwner = this@PersonFragment
         }

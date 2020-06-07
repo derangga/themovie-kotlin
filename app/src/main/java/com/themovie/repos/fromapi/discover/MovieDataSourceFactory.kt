@@ -5,9 +5,7 @@ import androidx.paging.DataSource
 import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiInterface
 import kotlinx.coroutines.CoroutineScope
-import javax.inject.Singleton
 
-@Singleton
 class MovieDataSourceFactory(
     private val scope: CoroutineScope,
     private val apiInterface: ApiInterface,

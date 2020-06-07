@@ -30,7 +30,6 @@ import javax.inject.Inject
  */
 class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.MoviesSearchFragmentListener {
 
-    @Inject lateinit var viewModelFactory: SuggestMoviesFactory
     private lateinit var viewModel: SuggestMoviesViewModel
     private lateinit var mAdapter: SuggestMoviesAdapter
 
@@ -39,8 +38,7 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SuggestMoviesViewModel::class.java)
+
         binding.lifecycleOwner = this
     }
 

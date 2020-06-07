@@ -28,7 +28,6 @@ import com.themovie.model.db.Tv
 import com.themovie.model.online.video.Videos
 import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel
-import com.themovie.ui.detail.viewmodel.DetailTvViewModelFactory
 import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
 
@@ -42,7 +41,7 @@ import javax.inject.Inject
  */
 class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
-    @Inject lateinit var viewModelFactory: DetailTvViewModelFactory
+
     private lateinit var detailTvViewModel: DetailTvViewModel
     private lateinit var seasonAdapter: SeasonAdapter
     private lateinit var creditsAdapter: CreditsAdapter
@@ -55,13 +54,13 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
+
         arguments?.let {
             val filmId = DetailTvFragmentArgs.fromBundle(it).filmId
             DetailTvViewModel.setFilmId(filmId)
         }
 
-        detailTvViewModel = ViewModelProvider(this, viewModelFactory).get(DetailTvViewModel::class.java)
+
         binding.apply {
             lifecycleOwner = this@DetailTvFragment
         }

@@ -3,28 +3,25 @@ package com.themovie.ui.genres
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.themovie.MyApplication
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentMoviesBinding
+import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.MovieViewModel
-import com.themovie.ui.discover.MovieViewModelFactory
 import com.themovie.ui.discover.adapter.MovieAdapter
+import com.themovie.ui.main.MainActivity
 import javax.inject.Inject
 
 /**
@@ -32,8 +29,8 @@ import javax.inject.Inject
  */
 class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var movieFactory: MovieViewModelFactory
-    private lateinit var viewModel: MovieViewModel
+    @Inject lateinit var factory: MainViewModelFactory
+    private val viewModel by viewModels<MovieViewModel> { factory }
     private lateinit var mAdapter: MovieAdapter
     private var destinationBackPress = ""
     private var title = ""
@@ -43,13 +40,13 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefre
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
+        (activity as MainActivity).getMainComponent()?.inject(this)
         arguments?.let {
             MovieViewModel.genre = MovieWithGenreFragmentArgs.fromBundle(it).genreId.toString()
             destinationBackPress = MovieWithGenreFragmentArgs.fromBundle(it).from
             title = MovieWithGenreFragmentArgs.fromBundle(it).genreName
         }
-        viewModel = ViewModelProvider(this, movieFactory).get(MovieViewModel::class.java)
+
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@MovieWithGenreFragment

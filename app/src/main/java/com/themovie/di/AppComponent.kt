@@ -1,35 +1,29 @@
 package com.themovie.di
 
-import com.themovie.ui.detail.DetailMovieFragment
-import com.themovie.ui.detail.DetailTvFragment
-import com.themovie.ui.discover.*
-import com.themovie.ui.genres.GenresFragment
-import com.themovie.ui.genres.MovieWithGenreFragment
-import com.themovie.ui.main.HomeFragment
-import com.themovie.ui.main.MainActivity
-import com.themovie.ui.person.PersonFragment
-import com.themovie.ui.search.SearchMovieFragment
-import com.themovie.ui.search.SearchTvFragment
-import com.themovie.ui.search.SuggestMovieFragment
-import com.themovie.ui.search.SuggestTvFragment
+import android.app.Application
+import com.themovie.di.detailmovie.DetailMovieComponent
+import com.themovie.di.detailtv.DetailTvComponent
+import com.themovie.di.main.MainComponent
+import com.themovie.di.search.SearchComponent
+import com.themovie.di.suggest.SuggestComponent
+import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
-@Component (modules = [AppModule::class, NetworkModule::class, RoomModule::class])
+@Component (modules = [AppModule::class, NetworkModule::class, RoomModule::class, SubComponentModule::class])
 @Singleton
 interface AppComponent {
-    fun inject(mainActivity: MainActivity)
-    fun inject(homeFragment: HomeFragment)
-    fun inject(detailMovieFragment: DetailMovieFragment)
-    fun inject(detailTvFragment: DetailTvFragment)
-    fun inject(upcomingFragment: UpcomingFragment)
-    fun inject(moviesFragment: MoviesFragment)
-    fun inject(tvFragment: TvFragment)
-    fun inject(personFragment: PersonFragment)
-    fun inject(genresFragment: GenresFragment)
-    fun inject(movieWithGenreFragment: MovieWithGenreFragment)
-    fun inject(suggestMovieFragment: SuggestMovieFragment)
-    fun inject(suggestTvFragment: SuggestTvFragment)
-    fun inject(searchMovieFragment: SearchMovieFragment)
-    fun inject(searchTvFragment: SearchTvFragment)
+
+    @Component.Builder
+    interface Builder{
+        @BindsInstance
+        fun application(application: Application): Builder
+        fun build(): AppComponent
+    }
+
+    fun mainComponent(): MainComponent.Factory
+    fun detailMovieComponent(): DetailMovieComponent.Factory
+    fun detailTvComponent(): DetailTvComponent.Factory
+    fun suggestComponent(): SuggestComponent.Factory
+    fun searchComponent(): SearchComponent.Factory
 }

@@ -29,7 +29,7 @@ import javax.inject.Inject
  */
 class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var viewModelFactory: SearchMovieFactory
+
     private var query: String? = ""
     private lateinit var viewModel: SearchMoviesViewModel
     private lateinit var mAdapter: MovieAdapter
@@ -41,9 +41,9 @@ class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRe
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
         query = getBundle()?.getString("query")
-        (activity?.application as MyApplication).getAppComponent().inject(this)
+
         SearchMoviesViewModel.query = query.orEmpty()
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SearchMoviesViewModel::class.java)
+
     }
 
     override fun onMain(savedInstanceState: Bundle?) {

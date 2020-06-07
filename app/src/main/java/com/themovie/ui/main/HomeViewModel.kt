@@ -9,8 +9,9 @@ import com.themovie.repos.local.*
 import com.themovie.restapi.ApiCallback
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
+import javax.inject.Inject
 
-class HomeViewModel(
+class HomeViewModel @Inject constructor (
     private val apiRepository: ApiRepository,
     private val localRepos: LocalRepository
 ) : ViewModel() {

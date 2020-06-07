@@ -30,7 +30,7 @@ import javax.inject.Inject
  */
 class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.TvSearchFragmentListener {
 
-    @Inject lateinit var viewModelFactory: SuggestTvFactory
+
     private lateinit var viewModel: SuggestTvViewModel
     private lateinit var mAdapter: SuggestTvAdapter
 
@@ -39,8 +39,7 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SuggestTvViewModel::class.java)
+
         binding.lifecycleOwner = this
     }
 
