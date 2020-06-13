@@ -1,4 +1,4 @@
-package com.themovie.di.detailtv
+package com.themovie.di.detail
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
@@ -11,4 +11,4 @@ import kotlin.reflect.KClass
     AnnotationTarget.PROPERTY_GETTER
 )
 @MapKey
-annotation class DetailTvViewModelKey(val value: KClass<out ViewModel>)
+annotation class DetailViewModelKey(val value: KClass<out ViewModel>)

@@ -5,23 +5,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailTvBinding
-import com.themovie.helper.Constant
-import com.themovie.helper.LoadDataState
-import com.themovie.helper.OnAdapterListener
-import com.themovie.model.online.FetchDetailTvData
+import com.themovie.di.detail.DetailViewModelFactory
+import com.themovie.helper.*
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.db.Tv
@@ -31,9 +25,6 @@ import com.themovie.ui.detail.viewmodel.DetailTvViewModel
 import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
 
 /**
  * A simple [Fragment] subclass.
@@ -41,23 +32,23 @@ import javax.inject.Inject
  */
 class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
-
-    private lateinit var detailTvViewModel: DetailTvViewModel
+    @Inject lateinit var factory: DetailViewModelFactory
+    private val viewModel by viewModels<DetailTvViewModel> { factory }
     private lateinit var seasonAdapter: SeasonAdapter
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedTvAdapter: RecommendedTvAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var videoAdapter: VideoAdapter
+    private var filmId = 0
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_tv
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-
+        (activity as DetailActivity).getDetailComponent()?.inject(this)
         arguments?.let {
-            val filmId = DetailTvFragmentArgs.fromBundle(it).filmId
-            DetailTvViewModel.setFilmId(filmId)
+            filmId = DetailTvFragmentArgs.fromBundle(it).filmId
         }
 
 
@@ -97,9 +88,9 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
     }
 
     private fun getAllDetailData(){
-        detailTvViewModel.getDetailTvRequest()
-        detailTvViewModel.setDetailTv().observe(
-            this, Observer<FetchDetailTvData> {
+        viewModel.getDetailTvRequest(filmId)
+        viewModel.setDetailTv().observe(
+            viewLifecycleOwner, Observer {
                 binding.tv = it.detailTvResponse
                 seasonAdapter.submitList(it.detailTvResponse?.seasons)
                 creditsAdapter.submitList(it.castResponse?.credits)
@@ -107,24 +98,24 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                 reviewsAdapter.submitList(it.reviews?.reviewList)
                 videoAdapter.submitList(it.videoResponse?.videos)
 
-                if(it.tvResponse?.results.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
-                else binding.dtRecomEmpty.visibility = View.GONE
+                if(it.tvResponse?.results.isNullOrEmpty()) binding.dtRecomEmpty.visible()
+                else binding.dtRecomEmpty.gone()
 
-                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visibility = View.VISIBLE
-                else binding.dtCastEmpty.visibility = View.GONE
+                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visible()
+                else binding.dtCastEmpty.gone()
 
-                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visibility = View.VISIBLE
-                else binding.videoEmpty.visibility = View.GONE
+                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visible()
+                else binding.videoEmpty.gone()
 
-                if(it.reviews?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
-                else binding.dtReviewEmpty.visibility = View.GONE
+                if(it.reviews?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visible()
+                else binding.dtReviewEmpty.gone()
             }
         )
     }
 
     private fun observeLoadData(){
-        detailTvViewModel.getLoadStatus().observe( this,
-            Observer<LoadDataState> {
+        viewModel.getLoadStatus().observe( viewLifecycleOwner,
+            Observer {
                 when (it) {
                     LoadDataState.LOADING -> showLoading()
                     LoadDataState.LOADED -> hideLoading()
@@ -132,7 +123,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                         showErrorConnection()
                         binding.dtNoInternet.retryOnClick(View.OnClickListener {
                             showLoading()
-                            detailTvViewModel.getDetailTvRequest()
+                            viewModel.getDetailTvRequest(filmId)
                         })
                     }
                 }
@@ -178,25 +169,25 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
     private fun showLoading(){
         binding.apply {
-            dtShimmer.visibility = View.VISIBLE
-            dtLayout.visibility = View.GONE
-            dtNoInternet.visibility = View.GONE
+            dtShimmer.visible()
+            dtLayout.gone()
+            dtNoInternet.gone()
         }
     }
 
     private fun hideLoading(){
         binding.apply {
-            dtShimmer.visibility = View.GONE
-            dtLayout.visibility = View.VISIBLE
-            dtNoInternet.visibility = View.GONE
+            dtShimmer.gone()
+            dtLayout.visible()
+            dtNoInternet.gone()
         }
     }
 
     private fun showErrorConnection(){
         binding.apply {
-            dtShimmer.visibility = View.INVISIBLE
-            dtLayout.visibility = View.GONE
-            dtNoInternet.visibility = View.VISIBLE
+            dtShimmer.invisible()
+            dtLayout.gone()
+            dtNoInternet.visible()
         }
     }
 

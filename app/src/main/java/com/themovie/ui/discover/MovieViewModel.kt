@@ -14,11 +14,7 @@ class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewMode
 
     private var movieLiveData: LiveData<PagedList<Movies>>
     private val uiList = MediatorLiveData<PagedList<Movies>>()
-    private val moviesSourceFactory by lazy { MovieDataSourceFactory(viewModelScope, apiInterface, genre) }
-
-    companion object {
-        var genre: String = ""
-    }
+    private val moviesSourceFactory by lazy { MovieDataSourceFactory(viewModelScope, apiInterface) }
 
     init {
         val pageConfig = PagedList.Config.Builder()
@@ -54,6 +50,11 @@ class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewMode
     }
 
     fun refresh(){
+        moviesSourceFactory.getMovieDataSource().value?.invalidate()
+    }
+
+    fun resetMovieWithGenre(genre: String){
+        moviesSourceFactory.genre = genre
         moviesSourceFactory.getMovieDataSource().value?.invalidate()
     }
 }

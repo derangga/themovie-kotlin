@@ -65,7 +65,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
 
     override fun onMain(savedInstanceState: Bundle?) {
         binding.homeSwipe.setOnRefreshListener(this)
-        snackbar = Snackbar.make(activity!!.findViewById(android.R.id.content),
+        snackbar = Snackbar.make(requireActivity().findViewById(android.R.id.content),
             getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
 
         binding.header.setSearchVisibility(View.GONE)
@@ -235,7 +235,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
 
     private fun showData(){
         homeViewModel.apply {
-            getTrendingLocalData().observe(this@HomeFragment,
+            getTrendingLocalData().observe(viewLifecycleOwner,
                 Observer { t ->
                     if(t.isNotEmpty()){
                         hideLoading()
@@ -244,27 +244,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
                     }
                 })
 
-            getUpcomingLocalData().observe(this@HomeFragment,
+            getUpcomingLocalData().observe(viewLifecycleOwner,
                 Observer { t ->
                     if(t.isNotEmpty())
                         upcomingAdapter.submitList(t)
                 })
 
-            getGenreLocalData().observe( this@HomeFragment,
+            getGenreLocalData().observe( viewLifecycleOwner,
                 Observer { t ->
                     if(t.isNotEmpty())
                         genreAdapter.submitList(t)
                 }
             )
 
-            getDiscoverTvLocalData().observe(this@HomeFragment,
+            getDiscoverTvLocalData().observe(viewLifecycleOwner,
                 Observer { t ->
                     if(t.isNotEmpty()){
                         discoverTvAdapter.submitList(t)
                     }
                 })
 
-            getDiscoverMvLocalData().observe(this@HomeFragment,
+            getDiscoverMvLocalData().observe(viewLifecycleOwner,
                 Observer { t ->
                     if(t.isNotEmpty()){
                         discoverMvAdapter.submitList(t)
@@ -281,7 +281,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
     }
 
     private fun observeNetworkLoad(){
-        homeViewModel.getLoadDataStatus().observe(this,
+        homeViewModel.getLoadDataStatus().observe(viewLifecycleOwner,
             Observer {
                 when(it){
                     LoadDataState.LOADING -> {
@@ -292,12 +292,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
                     else -> {
                         binding.homeSwipe.isRefreshing = false
                         val view = snackbar.view
-                        view.setBackgroundColor(getColor(context!!, R.color.colorBlackTransparent))
+                        view.setBackgroundColor(getColor(requireContext(), R.color.colorBlackTransparent))
                         if(!isFirstLoad){
-                            snackbar.setAction(getString(R.string.detail_title_12), View.OnClickListener {
+                            snackbar.setAction(getString(R.string.detail_title_12)) {
                                 fetchData()
                                 snackbar.dismiss()
-                            }).show()
+                            }.show()
                         } else networkError()
                     }
                 }

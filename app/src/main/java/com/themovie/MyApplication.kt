@@ -3,8 +3,7 @@ package com.themovie
 import android.app.Application
 import com.themovie.di.AppComponent
 import com.themovie.di.DaggerAppComponent
-import com.themovie.di.detailmovie.DetailMovieComponent
-import com.themovie.di.detailtv.DetailTvComponent
+import com.themovie.di.detail.DetailComponent
 import com.themovie.di.main.MainComponent
 import com.themovie.di.search.SearchComponent
 import com.themovie.di.suggest.SuggestComponent
@@ -14,8 +13,7 @@ class MyApplication : Application() {
 
     private lateinit var appComponent: AppComponent
     private var mainComponent: MainComponent? = null
-    private var detailMovieComponent: DetailMovieComponent? = null
-    private var detailTvComponent: DetailTvComponent? = null
+    private var detailComponent: DetailComponent? = null
     private var searchComponent: SearchComponent? = null
     private var suggestComponent: SuggestComponent? = null
 
@@ -41,5 +39,16 @@ class MyApplication : Application() {
 
     fun releaseMainComponent(){
         mainComponent = null
+    }
+
+    fun getDetailComponent(): DetailComponent? {
+        if(detailComponent == null){
+            detailComponent = appComponent.detailMovieComponent().create()
+        }
+        return detailComponent
+    }
+
+    fun releaseDetailComponent(){
+        detailComponent = null
     }
 }

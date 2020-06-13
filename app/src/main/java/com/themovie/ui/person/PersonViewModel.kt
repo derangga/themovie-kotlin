@@ -8,8 +8,11 @@ import com.themovie.repos.fromapi.ApiRepository
 import com.themovie.restapi.ApiCallback
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
+import javax.inject.Inject
 
-class PersonViewModel(private val apiRepository: ApiRepository) : ViewModel() {
+class PersonViewModel @Inject constructor(
+    private val apiRepository: ApiRepository
+) : ViewModel() {
 
     private val personAndFilmData by lazy { MutableLiveData<FetchPersonData>() }
     private val loadDataState by lazy { MutableLiveData<LoadDataState>() }

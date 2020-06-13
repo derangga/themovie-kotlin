@@ -1,21 +1,17 @@
 package com.themovie.ui.person
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentPersonBinding
-import com.themovie.helper.Constant
-import com.themovie.helper.LoadDataState
-import com.themovie.helper.OnAdapterListener
-import com.themovie.model.online.FetchPersonData
+import com.themovie.di.detail.DetailViewModelFactory
+import com.themovie.helper.*
 import com.themovie.model.online.person.Filmography
 import com.themovie.ui.detail.DetailActivity
 import javax.inject.Inject
@@ -25,17 +21,17 @@ import javax.inject.Inject
  */
 class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
-
+    @Inject lateinit var factory: DetailViewModelFactory
     private lateinit var personFilmAdapter: PersonFilmAdapter
     private lateinit var personImageAdapter: PersonImageAdapter
-    private lateinit var personViewModel: PersonViewModel
+    private val viewModel by viewModels<PersonViewModel> { factory }
 
     override fun getLayout(): Int {
         return R.layout.fragment_person
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-
+        (activity as DetailActivity).getDetailComponent()?.inject(this)
         arguments?.let {
             val personId = PersonFragmentArgs.fromBundle(it).personId
             PersonViewModel.setPersonId(personId)
@@ -81,9 +77,9 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     }
 
     private fun getPersonData(){
-        personViewModel.getPersonData()
-        personViewModel.setPersonData().observe(
-            this, Observer<FetchPersonData> {
+        viewModel.getPersonData()
+        viewModel.setPersonData().observe(
+            viewLifecycleOwner, Observer {
                 binding.cast = it.personResponse
                 personFilmAdapter.submitList(it.personFilmResponse?.filmographies)
                 personImageAdapter.setImageList(it.personImageResponse?.imageList)
@@ -97,8 +93,8 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     }
 
     private fun getLoadStatus(){
-        personViewModel.getLoadStatus().observe(
-            this, Observer<LoadDataState> {
+        viewModel.getLoadStatus().observe(
+            viewLifecycleOwner, Observer {
                 when (it) {
                     LoadDataState.LOADING -> showLoading()
                     LoadDataState.LOADED -> hideLoading()
@@ -106,7 +102,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
                         showNetworkError()
                         binding.prNoInternet.retryOnClick(View.OnClickListener {
                             showLoading()
-                            personViewModel.getPersonData()
+                            viewModel.getPersonData()
                         })
                     }
                 }
@@ -116,26 +112,26 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     private fun showLoading(){
         binding.apply {
-            shimmerPerson.visibility = View.VISIBLE
-            personLayout.visibility = View.INVISIBLE
-            prNoInternet.visibility = View.GONE
+            shimmerPerson.visible()
+            personLayout.invisible()
+            prNoInternet.gone()
         }
     }
 
     private fun hideLoading(){
         binding.apply {
-            shimmerPerson.visibility = View.GONE
-            personLayout.visibility = View.VISIBLE
-            prNoInternet.visibility = View.GONE
+            shimmerPerson.gone()
+            personLayout.visible()
+            prNoInternet.gone()
         }
 
     }
 
     private fun showNetworkError(){
         binding.apply {
-            shimmerPerson.visibility = View.GONE
-            personLayout.visibility = View.INVISIBLE
-            prNoInternet.visibility = View.VISIBLE
+            shimmerPerson.gone()
+            personLayout.invisible()
+            prNoInternet.visible()
         }
 
     }

@@ -1,12 +1,12 @@
-package com.themovie.di.detailmovie
+package com.themovie.di.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 
-@DetailMovieScope
-class DetailMovieViewModelFactory @Inject constructor(
+@DetailScope
+class DetailViewModelFactory @Inject constructor(
     private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
 

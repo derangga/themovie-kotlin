@@ -6,19 +6,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailMovieBinding
-import com.themovie.helper.Constant
-import com.themovie.helper.LoadDataState
-import com.themovie.helper.OnAdapterListener
-import com.themovie.model.online.FetchDetailMovieData
+import com.themovie.di.detail.DetailViewModelFactory
+import com.themovie.helper.*
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.db.Movies
@@ -38,29 +35,27 @@ import javax.inject.Inject
  *
  */
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
-
-    private lateinit var detailMovieViewModel: DetailMovieViewModel
+    
+    @Inject lateinit var factory: DetailViewModelFactory
+    private val viewModel by viewModels<DetailMovieViewModel> { factory }
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var videoAdapter: VideoAdapter
-
-
+    private var filmId = 0
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_movie
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-
+        (activity as DetailActivity).getDetailComponent()?.inject(this)
         arguments?.let {
-            val filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
-            DetailMovieViewModel.setFilmId(filmId)
+            filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
         }
 
-        binding.apply {
-            lifecycleOwner = this@DetailMovieFragment
-        }
+        binding.lifecycleOwner = this@DetailMovieFragment
+
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -71,39 +66,39 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     }
 
     private fun getAllDetailData(){
-        detailMovieViewModel.getDetailMovieRequest()
-        detailMovieViewModel.setDetailMovie().observe (
-            this, Observer<FetchDetailMovieData>{
+        viewModel.getDetailMovieRequest(filmId)
+        viewModel.setDetailMovie().observe (
+            viewLifecycleOwner, Observer {
                 binding.movies = it.detailMovieResponse
                 creditsAdapter.submitList(it.castResponse?.credits)
                 recommendedAdapter.submitList(it.moviesResponse?.movies)
                 reviewsAdapter.submitList(it.reviewResponse?.reviewList)
                 videoAdapter.submitList(it.videoResponse?.videos)
 
-                if(it.moviesResponse?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
-                else binding.dtRecomEmpty.visibility = View.GONE
+                if(it.moviesResponse?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visible()
+                else binding.dtRecomEmpty.gone()
 
-                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visibility = View.VISIBLE
-                else binding.dtCastEmpty.visibility = View.GONE
+                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visible()
+                else binding.dtCastEmpty.gone()
 
-                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visibility = View.VISIBLE
-                else binding.videoEmpty.visibility = View.GONE
+                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visible()
+                else binding.videoEmpty.gone()
 
-                if(it.reviewResponse?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
-                else binding.dtReviewEmpty.visibility = View.GONE
+                if(it.reviewResponse?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visible()
+                else binding.dtReviewEmpty.gone()
             }
         )
     }
 
     private fun observeNetworkLoad(){
-        detailMovieViewModel.getLoadStatus().observe(this, Observer<LoadDataState>{
+        viewModel.getLoadStatus().observe(viewLifecycleOwner, Observer {
             when (it) {
                 LoadDataState.LOADED -> hideLoading()
                 else -> {
                     showErrorConnection()
                     binding.dtNoInternet.retryOnClick(View.OnClickListener {
                         showLoading()
-                        detailMovieViewModel.getDetailMovieRequest()
+                        viewModel.getDetailMovieRequest(filmId)
                     })
                 }
             }
@@ -168,27 +163,27 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     private fun showLoading(){
         binding.apply {
-            dtShimmer.visibility = View.VISIBLE
-            dtLayout.visibility = View.GONE
-            dtNoInternet.visibility = View.GONE
+            dtShimmer.visible()
+            dtLayout.gone()
+            dtNoInternet.gone()
         }
 
     }
 
     private fun hideLoading(){
         binding.apply {
-            dtShimmer.visibility = View.GONE
-            dtLayout.visibility = View.VISIBLE
-            dtNoInternet.visibility = View.GONE
+            dtShimmer.gone()
+            dtLayout.visible()
+            dtNoInternet.gone()
         }
 
     }
 
     private fun showErrorConnection(){
         binding.apply {
-            dtShimmer.visibility = View.INVISIBLE
-            dtLayout.visibility = View.GONE
-            dtNoInternet.visibility = View.VISIBLE
+            dtShimmer.invisible()
+            dtLayout.gone()
+            dtNoInternet.visible()
         }
 
     }

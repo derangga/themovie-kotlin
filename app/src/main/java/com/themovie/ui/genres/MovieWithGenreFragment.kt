@@ -34,6 +34,7 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefre
     private lateinit var mAdapter: MovieAdapter
     private var destinationBackPress = ""
     private var title = ""
+    private var genreId = ""
 
     override fun getLayout(): Int {
         return R.layout.fragment_movies
@@ -42,7 +43,7 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefre
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity as MainActivity).getMainComponent()?.inject(this)
         arguments?.let {
-            MovieViewModel.genre = MovieWithGenreFragmentArgs.fromBundle(it).genreId.toString()
+            genreId = MovieWithGenreFragmentArgs.fromBundle(it).genreId.toString()
             destinationBackPress = MovieWithGenreFragmentArgs.fromBundle(it).from
             title = MovieWithGenreFragmentArgs.fromBundle(it).genreName
         }
@@ -68,6 +69,7 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefre
             })
         }
         binding.swipe.setOnRefreshListener(this)
+        viewModel.resetMovieWithGenre(genreId)
 
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() { Navigation.findNavController(view!!).navigate(action) }

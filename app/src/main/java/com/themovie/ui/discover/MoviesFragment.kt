@@ -47,6 +47,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
+        viewModel.resetMovieWithGenre("")
         setupUIComponent()
         recyclerViewSetup()
     }

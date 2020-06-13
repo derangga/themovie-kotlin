@@ -1,8 +1,7 @@
 package com.themovie.di
 
 import android.app.Application
-import com.themovie.di.detailmovie.DetailMovieComponent
-import com.themovie.di.detailtv.DetailTvComponent
+import com.themovie.di.detail.DetailComponent
 import com.themovie.di.main.MainComponent
 import com.themovie.di.search.SearchComponent
 import com.themovie.di.suggest.SuggestComponent
@@ -22,8 +21,7 @@ interface AppComponent {
     }
 
     fun mainComponent(): MainComponent.Factory
-    fun detailMovieComponent(): DetailMovieComponent.Factory
-    fun detailTvComponent(): DetailTvComponent.Factory
+    fun detailMovieComponent(): DetailComponent.Factory
     fun suggestComponent(): SuggestComponent.Factory
     fun searchComponent(): SearchComponent.Factory
 }
