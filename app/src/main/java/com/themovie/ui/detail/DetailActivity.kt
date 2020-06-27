@@ -5,6 +5,7 @@ import androidx.navigation.findNavController
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivityDetailBinding
+import com.themovie.di.detail.DetailComponent
 import com.themovie.helper.Constant
 
 class DetailActivity : BaseActivity<ActivityDetailBinding>() {
@@ -28,5 +29,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
     override fun onSupportNavigateUp(): Boolean {
         super.onBackPressed()
         return true
+    }
+
+    fun getDetailComponent(): DetailComponent {
+        return getApp().getAppComponent().detailMovieComponent().create()
     }
 }

@@ -1,5 +1,6 @@
 package com.themovie.base
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.crashlytics.android.Crashlytics
+import com.themovie.MyApplication
 import com.themovie.R
 import io.fabric.sdk.android.Fabric
 
@@ -57,4 +59,6 @@ abstract class BaseActivity<B: ViewDataBinding> : AppCompatActivity() {
     fun getBundle(): Bundle? {
         return intent.extras
     }
+
+    fun getApp(): MyApplication = (application as MyApplication)
 }

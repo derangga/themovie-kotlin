@@ -2,10 +2,12 @@ package com.themovie.ui.genres
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.themovie.localdb.LocalSource
 import com.themovie.model.db.Genre
-import com.themovie.repos.local.LocalRepository
+import javax.inject.Inject
 
-class GenreViewModel(private val localRepos: LocalRepository): ViewModel() {
+class GenreViewModel @Inject constructor (private val localRepos: LocalSource): ViewModel() {
 
-    fun getGenreList(): LiveData<List<Genre>> = localRepos.getAllGenre()
+    val genreMovies: LiveData<List<Genre>>
+        get() = localRepos.getAllGenre()
 }

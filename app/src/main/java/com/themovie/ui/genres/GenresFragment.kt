@@ -5,17 +5,18 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentGenresBinding
+import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Genre
+import com.themovie.ui.main.MainActivity
 import com.themovie.ui.main.adapter.GenreAdapter
 import javax.inject.Inject
 
@@ -24,17 +25,16 @@ import javax.inject.Inject
  */
 class GenresFragment : BaseFragment<FragmentGenresBinding>() {
 
-    @Inject lateinit var genreModelFactory: GenreViewModelFactory
+    @Inject lateinit var factory: MainViewModelFactory
     private lateinit var genreAdapter: GenreAdapter
-    private lateinit var viewModel: GenreViewModel
+    private val viewModel by viewModels<GenreViewModel> { factory }
 
     override fun getLayout(): Int {
         return R.layout.fragment_genres
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        viewModel = ViewModelProvider(this, genreModelFactory).get(GenreViewModel::class.java)
+        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@GenresFragment
@@ -79,7 +79,7 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
     }
 
     private fun getGenreList(){
-        viewModel.getGenreList().observe(this,
+        viewModel.genreMovies.observe(viewLifecycleOwner,
             Observer<List<Genre>>{
                 genreAdapter.submitList(it)
             })

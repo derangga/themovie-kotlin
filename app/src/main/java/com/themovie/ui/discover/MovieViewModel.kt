@@ -8,15 +8,13 @@ import com.themovie.model.db.Movies
 import com.themovie.repos.fromapi.discover.MovieDataSourceBase
 import com.themovie.repos.fromapi.discover.MovieDataSourceFactory
 import com.themovie.restapi.ApiInterface
+import javax.inject.Inject
 
-class MovieViewModel(apiInterface: ApiInterface) : ViewModel() {
+class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewModel() {
+
     private var movieLiveData: LiveData<PagedList<Movies>>
     private val uiList = MediatorLiveData<PagedList<Movies>>()
-    private val moviesSourceFactory = MovieDataSourceFactory(viewModelScope, apiInterface, genre)
-
-    companion object {
-        var genre: String = ""
-    }
+    private val moviesSourceFactory by lazy { MovieDataSourceFactory(viewModelScope, apiInterface) }
 
     init {
         val pageConfig = PagedList.Config.Builder()
@@ -52,6 +50,11 @@ class MovieViewModel(apiInterface: ApiInterface) : ViewModel() {
     }
 
     fun refresh(){
+        moviesSourceFactory.getMovieDataSource().value?.invalidate()
+    }
+
+    fun resetMovieWithGenre(genre: String){
+        moviesSourceFactory.genre = genre
         moviesSourceFactory.getMovieDataSource().value?.invalidate()
     }
 }

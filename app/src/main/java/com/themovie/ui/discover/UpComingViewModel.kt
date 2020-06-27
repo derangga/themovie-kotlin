@@ -8,11 +8,12 @@ import com.themovie.model.db.Upcoming
 import com.themovie.repos.fromapi.discover.UpcomingDataSourceBase
 import com.themovie.repos.fromapi.discover.UpcomingDataSourceFactory
 import com.themovie.restapi.ApiInterface
+import javax.inject.Inject
 
-class UpComingViewModel(apiInterface: ApiInterface): ViewModel() {
+class UpComingViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() {
     private val upcomingLiveData: LiveData<PagedList<Upcoming>>
     private val uiList = MediatorLiveData<PagedList<Upcoming>>()
-    private val upcomingSourceFactory = UpcomingDataSourceFactory(viewModelScope, apiInterface)
+    private val upcomingSourceFactory by lazy { UpcomingDataSourceFactory(viewModelScope, apiInterface) }
 
     init {
         val pageConfig = PagedList.Config.Builder()

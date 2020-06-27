@@ -2,6 +2,7 @@ package com.themovie.base
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings.ACTION_SETTINGS
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -59,4 +60,6 @@ abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
     fun getBundle(): Bundle? {
         return this.arguments
     }
+
+
 }

@@ -8,8 +8,11 @@ import com.themovie.model.db.Tv
 import com.themovie.repos.fromapi.search.SearchTvDataSourceBase
 import com.themovie.repos.fromapi.search.SearchTvSourceFactory
 import com.themovie.restapi.ApiInterface
+import javax.inject.Inject
 
-class SearchTvViewModel(private val apiInterface: ApiInterface): ViewModel() {
+class SearchTvViewModel @Inject constructor (
+    apiInterface: ApiInterface
+): ViewModel() {
 
     private val searchLiveData: LiveData<PagedList<Tv>>
     private val uiList = MediatorLiveData<PagedList<Tv>>()
