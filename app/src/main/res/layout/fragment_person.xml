@@ -215,13 +215,6 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"/>
 
-            <com.themovie.helper.customview.NoInternetView
-                    android:id="@+id/pr_no_internet"
-                    android:layout_below="@id/header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-
         </RelativeLayout>
 
     </ScrollView>

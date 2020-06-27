@@ -13,6 +13,7 @@ import com.themovie.databinding.FragmentPersonBinding
 import com.themovie.di.detail.DetailViewModelFactory
 import com.themovie.helper.*
 import com.themovie.model.online.person.Filmography
+import com.themovie.restapi.Result.Status.*
 import com.themovie.ui.detail.DetailActivity
 import javax.inject.Inject
 
@@ -25,6 +26,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     private lateinit var personFilmAdapter: PersonFilmAdapter
     private lateinit var personImageAdapter: PersonImageAdapter
     private val viewModel by viewModels<PersonViewModel> { factory }
+    private var personId = 0
 
     override fun getLayout(): Int {
         return R.layout.fragment_person
@@ -33,8 +35,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
-            val personId = PersonFragmentArgs.fromBundle(it).personId
-            PersonViewModel.setPersonId(personId)
+            personId = PersonFragmentArgs.fromBundle(it).personId
         }
 
         binding.apply {
@@ -44,9 +45,9 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     override fun onMain(savedInstanceState: Bundle?) {
         setupRecycler()
-        getPersonData()
-        getLoadStatus()
+        subscribeUI()
         binding.header.setSearchVisibility(View.GONE)
+        viewModel.getDetailPersonRequest(personId)
     }
 
     private fun setupRecycler(){
@@ -76,45 +77,51 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
         })
     }
 
-    private fun getPersonData(){
-        viewModel.getPersonData()
-        viewModel.setPersonData().observe(
-            viewLifecycleOwner, Observer {
-                binding.cast = it.personResponse
-                personFilmAdapter.submitList(it.personFilmResponse?.filmographies)
-                personImageAdapter.setImageList(it.personImageResponse?.imageList)
-                if(it.personImageResponse?.imageList?.size == 0){
-                    binding.castImgEmpty.visibility = View.VISIBLE
-                    binding.castPhotos.visibility = View.GONE
-                }
-
-            }
-        )
-    }
-
-    private fun getLoadStatus(){
-        viewModel.getLoadStatus().observe(
-            viewLifecycleOwner, Observer {
-                when (it) {
-                    LoadDataState.LOADING -> showLoading()
-                    LoadDataState.LOADED -> hideLoading()
-                    else -> {
-                        showNetworkError()
-                        binding.prNoInternet.retryOnClick(View.OnClickListener {
-                            showLoading()
-                            viewModel.getPersonData()
-                        })
+    private fun subscribeUI(){
+        viewModel.apply {
+            detailPerson.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        hideLoading()
+                        binding.cast = res?.data
                     }
+                    ERROR -> {
+                        showNetworkError(false){
+                            viewModel.getDetailPersonRequest(personId)
+                        }
+                    }
+                    LOADING -> { showLoading() }
                 }
-            }
-        )
+            })
+
+            personFilm.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        personFilmAdapter.submitList(res.data?.filmographies)
+                    }
+                    else -> {}
+                }
+            })
+
+            personPict.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.imageList.isNullOrEmpty()){
+                            binding.castImgEmpty.visible()
+                            binding.castPhotos.gone()
+                        }
+                        personImageAdapter.setImageList(res?.data?.imageList)
+                    }
+                    else -> {}
+                }
+            })
+        }
     }
 
     private fun showLoading(){
         binding.apply {
             shimmerPerson.visible()
             personLayout.invisible()
-            prNoInternet.gone()
         }
     }
 
@@ -122,17 +129,6 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
         binding.apply {
             shimmerPerson.gone()
             personLayout.visible()
-            prNoInternet.gone()
         }
-
-    }
-
-    private fun showNetworkError(){
-        binding.apply {
-            shimmerPerson.gone()
-            personLayout.invisible()
-            prNoInternet.visible()
-        }
-
     }
 }

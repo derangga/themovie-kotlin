@@ -1,9 +1,10 @@
-package com.themovie.repos.fromapi
+package com.themovie.repos
 
 import com.themovie.di.main.MainScope
 import com.themovie.helper.resultLiveData
 import com.themovie.localdb.LocalSource
 import com.themovie.model.db.*
+import com.themovie.repos.fromapi.RemoteSource
 import javax.inject.Inject
 
 @MainScope

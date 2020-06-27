@@ -3,20 +3,17 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentSearchResultBinding
+import com.themovie.di.search.SearchViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
@@ -29,9 +26,9 @@ import javax.inject.Inject
  */
 class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-
+    @Inject lateinit var factory: SearchViewModelFactory
     private var query: String? = ""
-    private lateinit var viewModel: SearchMoviesViewModel
+    private val viewModel by viewModels<SearchMoviesViewModel> { factory }
     private lateinit var mAdapter: MovieAdapter
 
     override fun getLayout(): Int {
@@ -40,8 +37,9 @@ class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRe
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
-        query = getBundle()?.getString("query")
+        (activity as SearchActivity).getComponent()?.inject(this)
 
+        query = getBundle()?.getString("query")
         SearchMoviesViewModel.query = query.orEmpty()
 
     }

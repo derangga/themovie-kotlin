@@ -72,7 +72,7 @@ interface ApiInterface {
     ) : Response<DetailTvResponse>
 
     @GET(ApiUrl.RECOMMENDATION)
-    suspend fun getRecomendedMovies(
+    suspend fun getRecommendationMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
@@ -80,7 +80,7 @@ interface ApiInterface {
     ) : Response<MoviesResponse>
 
     @GET(ApiUrl.RECOMMENDATION_TV)
-    suspend fun getRecomendedTv(
+    suspend fun getRecommendationTv(
         @Path("tv_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
@@ -88,7 +88,7 @@ interface ApiInterface {
     ) : Response<TvResponse>
 
     @GET(ApiUrl.REVIEWS)
-    suspend fun getReviews(
+    suspend fun getReviewsMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String,
@@ -104,7 +104,7 @@ interface ApiInterface {
     ) : Response<ReviewResponse>
 
     @GET(ApiUrl.CREDITS)
-    suspend fun getCredits(
+    suspend fun getCreditsMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String
     ) : Response<CastResponse>
@@ -116,21 +116,21 @@ interface ApiInterface {
     ) : Response<CastResponse>
 
     @GET(ApiUrl.VIDEO_MOVIE)
-    suspend fun getVideosMovie(
+    suspend fun getTrailerMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("language") language: String
     ) : Response<VideoResponse>
 
     @GET(ApiUrl.VIDEO_TV)
-    suspend fun getVideosTv(
+    suspend fun getTrailerTv(
     @Path("tv_id") tv_id: Int,
     @Query("api_key") api_key: String ,
     @Query("language") language: String
     ) : Response<VideoResponse>
 
     @GET(ApiUrl.PERSON_FILM)
-    suspend fun getFilmography(
+    suspend fun getPersonFilm(
         @Path("person_id") personId: Int,
         @Query("api_key") api_key: String
     ) : Response<PersonFilmResponse>

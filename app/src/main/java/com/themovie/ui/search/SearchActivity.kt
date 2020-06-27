@@ -5,6 +5,7 @@ import android.view.View
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
+import com.themovie.di.search.SearchComponent
 import com.themovie.helper.ViewPagerFragment
 
 class SearchActivity : BaseActivity<ActivitySearchBinding>() {
@@ -53,5 +54,14 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
             hSearch.apply { isFocusable = false; setText(query) }
             pagerAdapter.notifyDataSetChanged()
         }
+    }
+
+    fun getComponent(): SearchComponent? {
+        return getApp().getSearchComponent()
+    }
+
+    override fun onDestroy() {
+        getApp().releaseSearchComponent()
+        super.onDestroy()
     }
 }

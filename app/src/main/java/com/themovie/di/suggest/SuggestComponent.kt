@@ -1,5 +1,7 @@
 package com.themovie.di.suggest
 
+import com.themovie.ui.search.SuggestMovieFragment
+import com.themovie.ui.search.SuggestTvFragment
 import dagger.Subcomponent
 
 @SuggestScope
@@ -10,4 +12,7 @@ interface SuggestComponent {
     interface Factory{
         fun create(): SuggestComponent
     }
+
+    fun inject(suggestMovieFragment: SuggestMovieFragment)
+    fun inject(suggestTvFragment: SuggestTvFragment)
 }

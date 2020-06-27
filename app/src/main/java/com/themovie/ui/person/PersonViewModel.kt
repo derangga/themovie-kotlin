@@ -2,47 +2,37 @@ package com.themovie.ui.person
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.themovie.helper.LoadDataState
-import com.themovie.model.online.FetchPersonData
-import com.themovie.repos.fromapi.ApiRepository
-import com.themovie.restapi.ApiCallback
+import com.themovie.model.online.person.PersonFilmResponse
+import com.themovie.model.online.person.PersonImageResponse
+import com.themovie.model.online.person.PersonResponse
+import com.themovie.repos.fromapi.RemoteSource
+import com.themovie.restapi.Result
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class PersonViewModel @Inject constructor(
-    private val apiRepository: ApiRepository
+    private val remote: RemoteSource
 ) : ViewModel() {
 
-    private val personAndFilmData by lazy { MutableLiveData<FetchPersonData>() }
-    private val loadDataState by lazy { MutableLiveData<LoadDataState>() }
+    private val _detailPerson by lazy { MutableLiveData<Result<PersonResponse>>() }
+    private val _personFilm by lazy { MutableLiveData<Result<PersonFilmResponse>>() }
+    private val _personPict by lazy { MutableLiveData<Result<PersonImageResponse>>() }
 
-    companion object{
-        private var personId = 0
-        fun setPersonId(personId: Int){
-            this.personId = personId
-        }
-    }
+    val detailPerson: LiveData<Result<PersonResponse>> get() = _detailPerson
+    val personFilm: LiveData<Result<PersonFilmResponse>> get() = _personFilm
+    val personPict: LiveData<Result<PersonImageResponse>> get() = _personPict
 
-    fun getPersonData(){
+    fun getDetailPersonRequest(personId: Int){
         viewModelScope.launch {
-            apiRepository.getPersonData(personId, object: ApiCallback<FetchPersonData>{
-                override fun onSuccessRequest(response: FetchPersonData?) {
-                    loadDataState.value = LoadDataState.LOADED
-                    personAndFilmData.value = response
-                }
+            val person = async(IO) { remote.getDetailPerson(personId) }
+            val pict = async(IO) { remote.getPersonPict(personId) }
+            val film = async(IO) { remote.getPersonFilm(personId) }
 
-                override fun onErrorRequest(errorBody: ResponseBody?) {
-                    loadDataState.value = LoadDataState.ERROR
-                }
-
-                override fun onFailure(e: Exception) {
-                    loadDataState.value = LoadDataState.ERROR
-                }
-            })
+            _detailPerson.value = person.await()
+            _personPict.value = pict.await()
+            _personFilm.value = film.await()
         }
     }
-
-    fun setPersonData(): MutableLiveData<FetchPersonData> = personAndFilmData
-    fun getLoadStatus(): MutableLiveData<LoadDataState> = loadDataState
 }

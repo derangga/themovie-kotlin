@@ -1,5 +1,7 @@
 package com.themovie.di.search
 
+import com.themovie.ui.search.SearchMovieFragment
+import com.themovie.ui.search.SearchTvFragment
 import dagger.Subcomponent
 
 @SearchScope
@@ -10,4 +12,7 @@ interface SearchComponent {
     interface Factory{
         fun create(): SearchComponent
     }
+
+    fun inject(searchMovieFragment: SearchMovieFragment)
+    fun inject(searchTvFragment: SearchTvFragment)
 }

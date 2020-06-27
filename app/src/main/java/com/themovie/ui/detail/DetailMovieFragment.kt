@@ -20,6 +20,8 @@ import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.db.Movies
 import com.themovie.model.online.video.Videos
+import com.themovie.restapi.Result
+import com.themovie.restapi.Result.Status.*
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
@@ -60,49 +62,72 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     override fun onMain(savedInstanceState: Bundle?) {
         initRecyclerView()
-        getAllDetailData()
-        observeNetworkLoad()
         adapterOnClick()
-    }
-
-    private fun getAllDetailData(){
+        subscribeUI()
         viewModel.getDetailMovieRequest(filmId)
-        viewModel.setDetailMovie().observe (
-            viewLifecycleOwner, Observer {
-                binding.movies = it.detailMovieResponse
-                creditsAdapter.submitList(it.castResponse?.credits)
-                recommendedAdapter.submitList(it.moviesResponse?.movies)
-                reviewsAdapter.submitList(it.reviewResponse?.reviewList)
-                videoAdapter.submitList(it.videoResponse?.videos)
-
-                if(it.moviesResponse?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visible()
-                else binding.dtRecomEmpty.gone()
-
-                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visible()
-                else binding.dtCastEmpty.gone()
-
-                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visible()
-                else binding.videoEmpty.gone()
-
-                if(it.reviewResponse?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visible()
-                else binding.dtReviewEmpty.gone()
-            }
-        )
     }
 
-    private fun observeNetworkLoad(){
-        viewModel.getLoadStatus().observe(viewLifecycleOwner, Observer {
-            when (it) {
-                LoadDataState.LOADED -> hideLoading()
-                else -> {
-                    showErrorConnection()
-                    binding.dtNoInternet.retryOnClick(View.OnClickListener {
-                        showLoading()
-                        viewModel.getDetailMovieRequest(filmId)
-                    })
+    private fun subscribeUI(){
+        viewModel.apply {
+            detailMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        hideLoading()
+                        binding.movies = res?.data
+                    }
+                    ERROR -> {
+                        showNetworkError(false){
+                            viewModel.getDetailMovieRequest(filmId)
+                        }
+                    }
+                    LOADING -> { showLoading() }
                 }
-            }
-        })
+            })
+
+            creditMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.credits.isNullOrEmpty()) binding.dtCastEmpty.visible()
+                        else binding.dtCastEmpty.gone()
+                        creditsAdapter.submitList(res.data?.credits)
+                    }
+                    else -> {}
+                }
+            })
+
+            recommendationMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visible()
+                        else binding.dtRecomEmpty.gone()
+                        recommendedAdapter.submitList(res.data?.movies)
+                    }
+                    else -> {}
+                }
+            })
+
+            trailerMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.videos.isNullOrEmpty()) binding.videoEmpty.visible()
+                        else binding.videoEmpty.gone()
+                        videoAdapter.submitList(res.data?.videos)
+                    }
+                    else -> {}
+                }
+            })
+
+            reviewsMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visible()
+                        else binding.dtReviewEmpty.gone()
+                        reviewsAdapter.submitList(res.data?.reviewList)
+                    }
+                    else -> {}
+                }
+            })
+        }
     }
 
     private fun initRecyclerView(){
@@ -165,7 +190,6 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         binding.apply {
             dtShimmer.visible()
             dtLayout.gone()
-            dtNoInternet.gone()
         }
 
     }
@@ -174,16 +198,6 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         binding.apply {
             dtShimmer.gone()
             dtLayout.visible()
-            dtNoInternet.gone()
-        }
-
-    }
-
-    private fun showErrorConnection(){
-        binding.apply {
-            dtShimmer.invisible()
-            dtLayout.gone()
-            dtNoInternet.visible()
         }
 
     }

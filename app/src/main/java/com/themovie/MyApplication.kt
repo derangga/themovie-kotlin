@@ -39,4 +39,26 @@ class MyApplication : Application() {
     fun releaseMainComponent(){
         mainComponent = null
     }
+
+    fun getSuggestComponent(): SuggestComponent? {
+        if(suggestComponent == null){
+            suggestComponent = appComponent.suggestComponent().create()
+        }
+        return suggestComponent
+    }
+
+    fun releaseSuggestComponent(){
+        suggestComponent = null
+    }
+
+    fun getSearchComponent(): SearchComponent? {
+        if(searchComponent == null){
+            searchComponent = appComponent.searchComponent().create()
+        }
+        return searchComponent
+    }
+
+    fun releaseSearchComponent() {
+        searchComponent = null
+    }
 }

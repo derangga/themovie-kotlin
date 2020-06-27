@@ -3,10 +3,6 @@ package com.themovie.di.main
 import com.themovie.localdb.LocalSource
 import com.themovie.localdb.LocalSourceImpl
 import com.themovie.localdb.dao.*
-import com.themovie.repos.fromapi.RemoteSource
-import com.themovie.repos.fromapi.RemoteSourceImpl
-import com.themovie.repos.fromapi.TheMovieRepository
-import com.themovie.restapi.ApiInterface
 import com.themovie.ui.main.adapter.*
 import dagger.Module
 import dagger.Provides
