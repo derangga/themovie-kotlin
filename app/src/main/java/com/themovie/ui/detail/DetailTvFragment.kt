@@ -95,6 +95,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                     SUCCESS -> {
                         hideLoading()
                         binding.tv = res?.data
+                        seasonAdapter.submitList(res?.data?.seasons)
                     }
                     Result.Status.ERROR -> {
                         showNetworkError(false){
