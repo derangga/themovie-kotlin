@@ -49,7 +49,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as DetailActivity).getDetailComponent()?.inject(this)
+        (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
             filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
         }

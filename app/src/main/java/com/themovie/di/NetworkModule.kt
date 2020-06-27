@@ -1,6 +1,9 @@
 package com.themovie.di
 
 import com.themovie.BuildConfig
+import com.themovie.di.main.MainScope
+import com.themovie.repos.fromapi.RemoteSource
+import com.themovie.repos.fromapi.RemoteSourceImpl
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import dagger.Module
@@ -13,7 +16,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-class NetworkModule {
+object NetworkModule {
 
     @Provides
     @Singleton
@@ -43,5 +46,11 @@ class NetworkModule {
     @Singleton
     fun provideApiInterface(retrofit: Retrofit): ApiInterface {
         return retrofit.create(ApiInterface::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteSource(apiInterface: ApiInterface): RemoteSource {
+        return RemoteSourceImpl(apiInterface)
     }
 }

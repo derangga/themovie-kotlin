@@ -79,7 +79,7 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
     }
 
     private fun getGenreList(){
-        viewModel.getGenreList().observe(this,
+        viewModel.genreMovies.observe(viewLifecycleOwner,
             Observer<List<Genre>>{
                 genreAdapter.submitList(it)
             })

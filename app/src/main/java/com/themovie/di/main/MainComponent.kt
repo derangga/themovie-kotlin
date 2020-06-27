@@ -9,7 +9,7 @@ import com.themovie.ui.main.HomeFragment
 import dagger.Subcomponent
 
 @MainScope
-@Subcomponent(modules = [MainViewModelModule::class])
+@Subcomponent(modules = [MainViewModelModule::class, MainModule::class])
 interface MainComponent {
 
     @Subcomponent.Factory

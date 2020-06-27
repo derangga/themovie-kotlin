@@ -16,59 +16,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@Deprecated("")
 class ApiRepository
 @Inject constructor(
-    private val apiInterface: ApiInterface,
-    private val localRepos: LocalRepository
+    private val apiInterface: ApiInterface
 ) : BaseRemoteDataSource() {
-
-    suspend fun getMainData(callback: ApiCallback<LoadDataState>){
-        try {
-            coroutineScope {
-                val trendingRows = async(IO) { localRepos.getTrendingRows() }
-                val upcomingRows = async(IO) { localRepos.getUpcomingRows() }
-                val genreRows = async(IO) { localRepos.getGenreRows() }
-                val tvRows = async(IO) { localRepos.getTvRows() }
-                val movieRows = async(IO) { localRepos.getMoviesRows() }
-                val popular = async(IO) { apiInterface.getPopularMovie(ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
-                val genre = async(IO) { apiInterface.getGenres(ApiUrl.TOKEN) }
-                val upcoming = async(IO) { apiInterface.getUpcomingMovies(ApiUrl.TOKEN, 1) }
-                val discoverTv = async(IO) {
-                    apiInterface.getDiscoverTvs(ApiUrl.TOKEN, Constant.LANGUAGE, Constant.SORTING, 1, "US")
-                }
-                val discoverMv = async(IO) {
-                    apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE, Constant.SORTING, 1,
-                        "2019", "")
-                }
-                if(popular.await().isSuccessful && upcoming.await().isSuccessful &&
-                    genre.await().isSuccessful && discoverTv.await().isSuccessful && discoverMv.await().isSuccessful){
-
-                    withContext(IO){
-                        if(trendingRows.await() == 0 && upcomingRows.await() == 0 &&
-                            genreRows.await() == 0 && tvRows.await() == 0 &&
-                            movieRows.await() == 0){
-                            localRepos.apply {
-                                insertAllTrend(popular.await().body()?.results!!)
-                                insertAllUpcoming(upcoming.await().body()?.results!!)
-                                insertAllGenre(genre.await().body()?.genres!!)
-                                insertAllTv(discoverTv.await().body()?.results!!)
-                                insertAllMovie(discoverMv.await().body()?.movies!!)
-                            }
-                        }
-
-                        else {
-                            localRepos.updateLocalData(popular.await().body()?.results!!, upcoming.await().body()?.results!!,
-                                genre.await().body()?.genres!!, discoverTv.await().body()?.results!!,
-                                discoverMv.await().body()?.movies!!)
-                        }
-                    }
-                    callback.onSuccessRequest(LoadDataState.LOADED)
-                } else callback.onErrorRequest(null)
-            }
-        } catch (e: Exception){
-            callback.onFailure(e)
-        }
-    }
 
     suspend fun getDetailDataMovie(movieId: Int, callback: ApiCallback<FetchDetailMovieData>) {
         var data: FetchDetailMovieData?

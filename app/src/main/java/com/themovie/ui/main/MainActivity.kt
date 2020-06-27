@@ -16,11 +16,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        getApp().releaseDetailComponent()
-    }
-
     fun getMainComponent(): MainComponent?{
         return getApp().getMainComponent()
     }

@@ -31,7 +31,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as DetailActivity).getDetailComponent()?.inject(this)
+        (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
             val personId = PersonFragmentArgs.fromBundle(it).personId
             PersonViewModel.setPersonId(personId)

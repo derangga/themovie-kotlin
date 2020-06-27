@@ -6,7 +6,6 @@ import com.themovie.ui.detail.DetailTvFragment
 import com.themovie.ui.person.PersonFragment
 import dagger.Subcomponent
 
-@DetailScope
 @Subcomponent(modules = [DetailViewModelModule::class])
 interface DetailComponent {
 

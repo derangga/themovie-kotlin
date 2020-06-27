@@ -13,7 +13,6 @@ class MyApplication : Application() {
 
     private lateinit var appComponent: AppComponent
     private var mainComponent: MainComponent? = null
-    private var detailComponent: DetailComponent? = null
     private var searchComponent: SearchComponent? = null
     private var suggestComponent: SuggestComponent? = null
 
@@ -39,16 +38,5 @@ class MyApplication : Application() {
 
     fun releaseMainComponent(){
         mainComponent = null
-    }
-
-    fun getDetailComponent(): DetailComponent? {
-        if(detailComponent == null){
-            detailComponent = appComponent.detailMovieComponent().create()
-        }
-        return detailComponent
-    }
-
-    fun releaseDetailComponent(){
-        detailComponent = null
     }
 }

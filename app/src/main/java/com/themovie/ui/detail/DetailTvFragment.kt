@@ -46,11 +46,10 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as DetailActivity).getDetailComponent()?.inject(this)
+        (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
             filmId = DetailTvFragmentArgs.fromBundle(it).filmId
         }
-
 
         binding.apply {
             lifecycleOwner = this@DetailTvFragment

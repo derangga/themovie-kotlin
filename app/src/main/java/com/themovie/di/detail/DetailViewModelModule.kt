@@ -12,23 +12,19 @@ import dagger.multibindings.IntoMap
 @Module
 abstract class DetailViewModelModule {
 
-    @DetailScope
     @Binds
     abstract fun bindViewModelFactory(detailViewModelFactory: DetailViewModelFactory): ViewModelProvider.Factory
 
-    @DetailScope
     @Binds
     @IntoMap
     @DetailViewModelKey(DetailMovieViewModel::class)
     abstract fun bindDetailMovieViewModel(detailMovieViewModel: DetailMovieViewModel): ViewModel
 
-    @DetailScope
     @Binds
     @IntoMap
     @DetailViewModelKey(PersonViewModel::class)
     abstract fun bindPersonViewModel(personViewModel: PersonViewModel): ViewModel
 
-    @DetailScope
     @Binds
     @IntoMap
     @DetailViewModelKey(DetailTvViewModel::class)

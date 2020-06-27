@@ -31,7 +31,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
         return true
     }
 
-    fun getDetailComponent(): DetailComponent? {
-        return getApp().getDetailComponent()
+    fun getDetailComponent(): DetailComponent {
+        return getApp().getAppComponent().detailMovieComponent().create()
     }
 }
