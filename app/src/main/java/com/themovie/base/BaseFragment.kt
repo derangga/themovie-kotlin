@@ -1,9 +1,6 @@
 package com.themovie.base
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings.ACTION_SETTINGS
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.crashlytics.android.Crashlytics
-import com.themovie.BuildConfig
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
@@ -38,17 +34,6 @@ abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
     abstract fun onCreateViewSetup(savedInstanceState: Bundle?)
     abstract fun onMain(savedInstanceState: Bundle?)
 
-    fun changeActivity(activityTarget: Class<*>){
-        val intent = Intent(context, activityTarget)
-        startActivity(intent)
-    }
-
-    fun changeActivity(bundle: Bundle, activityTarget: Class<*>){
-        val intent = Intent(context, activityTarget)
-        intent.putExtras(bundle)
-        startActivity(intent)
-    }
-
     fun setLog(message: String){
         Timber.e(message)
     }
@@ -60,6 +45,4 @@ abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
     fun getBundle(): Bundle? {
         return this.arguments
     }
-
-
 }

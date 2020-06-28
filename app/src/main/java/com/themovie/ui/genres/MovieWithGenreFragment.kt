@@ -17,6 +17,7 @@ import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.changeActivity
 import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.MovieViewModel
@@ -106,7 +107,7 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefre
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 

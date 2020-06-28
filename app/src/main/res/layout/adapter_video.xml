@@ -1,43 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:id="@+id/t_layout"
-        android:background="@color/colorPrimary">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.cardview.widget.CardView
-            android:layout_width="240dp"
-            android:layout_height="200dp"
-            android:layout_margin="4dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="@color/colorPrimaryDark">
+    <data>
+        <variable
+                name="video"
+                type="com.themovie.model.online.video.Videos" />
+        <variable
+                name="vh"
+                type="com.themovie.ui.detail.adapter.VideoAdapter.ViewHolder" />
+    </data>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
 
-            <ImageView
-                    android:id="@+id/t_thumbnail"
+        <androidx.cardview.widget.CardView
+                android:layout_width="240dp"
+                android:layout_height="200dp"
+                android:layout_margin="4dp"
+                android:onClick="@{(v) -> vh.onVideoTap(v, video)}"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="@color/colorPrimaryDark">
+
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"/>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <TextView
-                    android:id="@+id/t_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorWhite"
-                    android:maxLines="4"
-                    android:layout_marginStart="@dimen/extra_small_space"
-                    android:layout_marginEnd="@dimen/extra_small_space"
-                    android:layout_marginTop="@dimen/extra_small_space"/>
+                <ImageView
+                        android:id="@+id/t_thumbnail"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        app:thumbnail="@{video.key}"/>
 
-        </LinearLayout>
+                <TextView
+                        android:id="@+id/t_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorWhite"
+                        android:maxLines="4"
+                        android:text="@{video.name}"
+                        android:layout_marginStart="@dimen/extra_small_space"
+                        android:layout_marginEnd="@dimen/extra_small_space"
+                        android:layout_marginTop="@dimen/extra_small_space"/>
 
-    </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
-</LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+
+</layout>

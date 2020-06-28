@@ -13,6 +13,7 @@ import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
 import com.themovie.di.suggest.SuggestComponent
 import com.themovie.helper.ViewPagerFragment
+import com.themovie.helper.changeActivity
 import com.themovie.helper.gone
 import com.themovie.helper.visible
 import kotlinx.android.synthetic.main.activity_search.*
@@ -118,7 +119,7 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
         binding.hSearch.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH && binding.hSearch.text.isNotEmpty()){
                 val bundle = Bundle().apply { putString("query", h_search.text.toString()) }
-                changeActivity(bundle, SearchActivity::class.java)
+                changeActivity<SearchActivity>(bundle)
                 finish()
             } else showToastMessage(resources.getString(R.string.suggest_search_1))
             false

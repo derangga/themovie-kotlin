@@ -24,7 +24,6 @@ import com.themovie.restapi.Result
 import com.themovie.restapi.Result.Status.SUCCESS
 import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel
-import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
 
 
@@ -167,7 +166,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                     putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -183,7 +182,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
             override fun onClick(view: View, item: Videos) {
                 val bundle = Bundle()
                 bundle.putString("key", item.key)
-                changeActivity(bundle, YoutubeActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
     }

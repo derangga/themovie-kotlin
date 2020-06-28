@@ -35,7 +35,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     @Inject lateinit var trendingAdapter: TrendingAdapter
     @Inject lateinit var genreAdapter: GenreAdapter
     @Inject lateinit var discoverTvAdapter: DiscoverTvAdapter
-    @Inject lateinit var discoverMvAdapter: DiscoverMvAdapter
+    @Inject lateinit var discoverMovieAdapter: DiscoverMovieAdapter
+
     private var timer: Timer? = null
     private val homeViewModel by viewModels<HomeViewModel> { factory }
     private var isSliding: Boolean = false
@@ -82,12 +83,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun recyclerViewSetup(){
-        upcomingAdapter = UpcomingAdapter()
-        trendingAdapter = TrendingAdapter()
-        discoverTvAdapter = DiscoverTvAdapter()
-        discoverMvAdapter = DiscoverMvAdapter()
-        genreAdapter = GenreAdapter()
-
         binding.apply {
             homePopular.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -111,7 +106,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
             homeMovies.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = discoverMvAdapter
+                adapter = discoverMovieAdapter
             }
 
             val pagerSnapHelper = PagerSnapHelper()
@@ -131,7 +126,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -151,7 +146,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -169,18 +164,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
-        discoverMvAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
+        discoverMovieAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
             override fun onClick(view: View, item: Movies) {
                 stopSliding()
                 val bundle = Bundle().apply {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -213,6 +208,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 when(res.status){
                     SUCCESS -> {
                         hideLoading()
+                        sizeOfHeader = res.data?.size ?: 0
                         trendingAdapter.submitList(res.data)
                     }
                     ERROR -> {
@@ -255,7 +251,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             discoverMovies.observe(viewLifecycleOwner, Observer { res ->
                 when(res.status){
                     SUCCESS -> {
-                        discoverMvAdapter.submitList(res.data)
+                        discoverMovieAdapter.submitList(res.data)
                     }
                     else -> {}
                 }
@@ -283,7 +279,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             timer = Timer().apply {
                 scheduleAtFixedRate(SliderTimer(), 5000, 5000)
             }
-
         }
     }
 

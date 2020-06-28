@@ -4,20 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
-import com.themovie.helper.LoadDataState
+import com.themovie.databinding.AdapterLoadingBinding
+import com.themovie.databinding.AdapterTvBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Tv
+import com.themovie.restapi.Result
 
 class TvAdapter: PagedListAdapter<Tv, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private val DATA_VIEW = 1
     private val LOADING_VIEW = 2
-    private var loadState: LoadDataState? = null
+    private var loadState: Result.Status? = null
     private lateinit var context: Context
     private lateinit var onErrorClickListener: OnErrorClickListener
     private lateinit var onClickAdapterListener: OnAdapterListener<Tv>
@@ -37,20 +37,23 @@ class TvAdapter: PagedListAdapter<Tv, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        context = parent.context
+        val inflater = LayoutInflater.from(context)
         return if(viewType == DATA_VIEW){
-            val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_tv, parent, false)
-            context = parent.context
-            return TvViewHolder(view)
+            val view = AdapterTvBinding
+                .inflate(inflater, parent, false)
+            return TvViewHolder(view.root, view)
         } else {
-            val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_loading, parent, false)
-            context = parent.context
-            LoadingViewHolder(view)
+            val view = AdapterLoadingBinding
+                .inflate(inflater, parent, false)
+            LoadingViewHolder(view.root, view)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is TvViewHolder){
-            holder.bindView(context, getItem(position)!!, onClickAdapterListener)
+            holder.binding.tv = getItem(position)
+            holder.binding.vh = holder
         } else if(holder is LoadingViewHolder){
             holder.bindView(loadState, onErrorClickListener)
         }
@@ -68,14 +71,14 @@ class TvAdapter: PagedListAdapter<Tv, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     }
 
     private fun hasFooter(): Boolean {
-        return loadState != null && loadState != LoadDataState.LOADED
+        return loadState != null && loadState != Result.Status.SUCCESS
     }
 
-    fun setLoadState(loadState: LoadDataState){
-        val previousState = this.loadState;
+    fun setLoadState(loadState: Result.Status){
+        val previousState = this.loadState
         val previousExtraRow = hasFooter()
         this.loadState = loadState
-        val newExtraRow = hasFooter();
+        val newExtraRow = hasFooter()
         if(previousExtraRow != newExtraRow){
             if(previousExtraRow) notifyItemRemoved(super.getItemCount())
             else notifyItemInserted(super.getItemCount())
@@ -94,5 +97,11 @@ class TvAdapter: PagedListAdapter<Tv, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     interface OnErrorClickListener {
         fun onClick(view: View?)
+    }
+
+    inner class TvViewHolder(root: View, val binding: AdapterTvBinding) : RecyclerView.ViewHolder(root) {
+        fun onTvAdapterClick(view: View, tv: Tv){
+            onClickAdapterListener.onClick(view, tv)
+        }
     }
 }

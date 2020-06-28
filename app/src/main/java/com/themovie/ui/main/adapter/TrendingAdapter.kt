@@ -2,7 +2,6 @@ package com.themovie.ui.main.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -10,12 +9,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.themovie.databinding.ItemHeaderMainBinding
 import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.cacheImage
 import com.themovie.model.db.Trending
-import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.item_header_main.view.*
 
 class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -44,33 +40,27 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_header_main, parent, false)
         context = parent.context
-        return ViewHolder(view)
+
+        val view = ItemHeaderMainBinding
+            .inflate(LayoutInflater.from(context), parent, false)
+
+        return ViewHolder(view.root, view)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(getItem(position))
+        holder.binding.trend = getItem(position)
+        holder.binding.vh = holder
+        holder.binding.vCard.setOnTouchListener { v, event ->
+            onTouchAdapterListener.onTouchItem(v, event)
+            false
+        }
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(trending: Trending) {
-            itemView.apply {
-                val urlImg = "${ApiUrl.IMG_BACK}${trending.backdropPath}"
-                cacheImage(context, urlImg, v_img)
-                v_title.text = trending.title
-                v_card.setOnClickListener {
-                    clickListener.onClick(it, trending)
-                }
-                v_card.setOnTouchListener(object : View.OnTouchListener {
-                    @SuppressLint("ClickableViewAccessibility")
-                    override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-                        onTouchAdapterListener.onTouchItem(p0, p1)
-                        return false
-                    }
-                })
-            }
+    inner class ViewHolder(root: View, val binding: ItemHeaderMainBinding) : RecyclerView.ViewHolder(root) {
+        fun trendingClick(view: View, trending: Trending){
+            clickListener.onClick(view, trending)
         }
     }
 

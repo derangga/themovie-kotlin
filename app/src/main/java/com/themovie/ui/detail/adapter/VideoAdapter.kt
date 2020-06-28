@@ -1,22 +1,17 @@
 package com.themovie.ui.detail.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.themovie.databinding.AdapterVideoBinding
 import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.cacheImage
 import com.themovie.model.online.video.Videos
-import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_video.view.*
 
 class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private lateinit var context: Context
     private lateinit var listener: OnAdapterListener<Videos>
 
     companion object{
@@ -36,25 +31,19 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_video, parent, false)
-        context = parent.context
-        return ViewHolder(view)
+        val view = AdapterVideoBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(getItem(position))
+        holder.binding.video = getItem(position)
+        holder.binding.vh = holder
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun bindItem(video: Videos){
-            itemView.apply {
-                val urlThumbnail = ApiUrl.THUMBNAIL.replace("key", video.key)
-                cacheImage(context, urlThumbnail, t_thumbnail)
-                t_title.text = video.name
-                t_layout.setOnClickListener {
-                    listener.onClick(itemView, video)
-                }
-            }
+    inner class ViewHolder(itemView: View, val binding: AdapterVideoBinding) : RecyclerView.ViewHolder(itemView){
+        fun onVideoTap(view: View, video: Videos){
+            listener.onClick(view, video)
         }
     }
 }

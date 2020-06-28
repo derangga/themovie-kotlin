@@ -3,11 +3,11 @@ package com.themovie.ui.discover
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Movies
 import com.themovie.repos.fromapi.discover.MovieDataSourceBase
 import com.themovie.repos.fromapi.discover.MovieDataSourceFactory
 import com.themovie.restapi.ApiInterface
+import com.themovie.restapi.Result
 import javax.inject.Inject
 
 class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewModel() {
@@ -38,8 +38,8 @@ class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewMode
     }
 
 
-    fun getLoadState(): LiveData<LoadDataState> {
-        return Transformations.switchMap<MovieDataSourceBase, LoadDataState>(
+    fun getLoadState(): LiveData<Result.Status> {
+        return Transformations.switchMap<MovieDataSourceBase, Result.Status>(
             moviesSourceFactory.getMovieDataSource(),
             MovieDataSourceBase::loadState
         )

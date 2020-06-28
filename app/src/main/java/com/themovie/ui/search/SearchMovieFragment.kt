@@ -16,6 +16,7 @@ import com.themovie.databinding.FragmentSearchResultBinding
 import com.themovie.di.search.SearchViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.changeActivity
 import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
@@ -63,7 +64,7 @@ class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRe
                         putInt("filmId", item.id)
                         putString("type", Constant.MOVIE)
                     }
-                    changeActivity(bundle, DetailActivity::class.java)
+                    changeActivity<DetailActivity>(bundle)
                 }
             })
 

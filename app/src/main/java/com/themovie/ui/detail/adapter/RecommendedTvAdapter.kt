@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.themovie.databinding.AdapterRecomendedBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
 import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_recomended.view.*
 
 class RecommendedTvAdapter : ListAdapter<Tv, RecommendedTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -36,29 +35,31 @@ class RecommendedTvAdapter : ListAdapter<Tv, RecommendedTvAdapter.ViewHolder>(DI
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_recomended, parent, false)
+        val view = AdapterRecomendedBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         context = parent.context
-        return ViewHolder(view)
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(
+        itemView: View,
+        private val binding: AdapterRecomendedBinding
+    ) : RecyclerView.ViewHolder(itemView){
         fun bindItem(tv: Tv){
-            itemView.apply {
-                val imgUrl = "${ApiUrl.IMG_POSTER}${tv.posterPath.toString()}"
-                rec_item.apply {
-                    setImage(imgUrl)
-                    setTitle(tv.name)
-                    setRating(tv.voteAverage)
-                    setOnClickListener(object: PortraitView.OnClickListener{
-                        override fun onClick() {
-                            onClickAdapterListener.onClick(itemView, tv)
-                        }
-                    })
-                }
+            val imgUrl = "${ApiUrl.IMG_POSTER}${tv.posterPath.toString()}"
+            binding.recItem.apply {
+                setImage(imgUrl)
+                setTitle(tv.name)
+                setRating(tv.voteAverage)
+                setOnClickListener(object: PortraitView.OnClickListener{
+                    override fun onClick() {
+                        onClickAdapterListener.onClick(itemView, tv)
+                    }
+                })
             }
         }
     }

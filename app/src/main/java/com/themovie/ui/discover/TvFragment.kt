@@ -7,12 +7,10 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
@@ -20,6 +18,7 @@ import com.themovie.databinding.FragmentTvBinding
 import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.changeActivity
 import com.themovie.model.db.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
@@ -59,7 +58,7 @@ class TvFragment : BaseFragment<FragmentTvBinding>(), SwipeRefreshLayout.OnRefre
                 val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
             })
-            setSearchButtonOnClickListener(View.OnClickListener { changeActivity(SuggestActivity::class.java) })
+            setSearchButtonOnClickListener(View.OnClickListener { changeActivity<SuggestActivity>() })
         }
 
 
@@ -100,7 +99,7 @@ class TvFragment : BaseFragment<FragmentTvBinding>(), SwipeRefreshLayout.OnRefre
                     putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 

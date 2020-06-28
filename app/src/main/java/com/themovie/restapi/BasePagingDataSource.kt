@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 
 abstract class BasePagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
 
-    val loadState: MutableLiveData<LoadDataState> = MutableLiveData()
+    val loadState: MutableLiveData<Result.Status> = MutableLiveData()
     protected var pageSize: Int = 0
     protected var key = 0
     protected var retry: (() -> Any)? = null
@@ -27,7 +27,7 @@ abstract class BasePagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
 
     }
 
-    protected fun updateState(state: LoadDataState) {
+    protected fun updateState(state: Result.Status) {
         this.loadState.postValue(state)
     }
 
@@ -38,7 +38,7 @@ abstract class BasePagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
     }
 
     protected fun getJobErrorHandler() = CoroutineExceptionHandler { _, _ ->
-        updateState(LoadDataState.ERROR)
+        updateState(Result.Status.ERROR)
     }
 
     protected abstract fun fetchData(page: Int, callback: (List<T>?) -> Unit)
