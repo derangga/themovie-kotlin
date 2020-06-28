@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.databinding.AdapterUpcomingBinding
+import com.themovie.databinding.AdapterPortraitUpcomingBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.convertDate
 import com.themovie.helper.customview.PortraitView
@@ -38,7 +38,7 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
 
-        val view = AdapterUpcomingBinding
+        val view = AdapterPortraitUpcomingBinding
             .inflate(LayoutInflater.from(context), parent, false)
 
         return ViewHolder(view.root, view)
@@ -48,7 +48,7 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
         holder.bindItem(getItem(position))
     }
 
-    inner class ViewHolder(root: View, val binding: AdapterUpcomingBinding) : RecyclerView.ViewHolder(root){
+    inner class ViewHolder(root: View, val binding: AdapterPortraitUpcomingBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(upcoming: Upcoming){
             val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
             binding.upcomingItem.apply {

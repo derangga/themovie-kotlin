@@ -30,7 +30,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     android:src="@drawable/no_image"
-                    app:network_image="@{trend.backdropPath}"/>
+                    app:backdrop_image="@{trend.backdropPath}"/>
 
                 <View
                     android:layout_width="match_parent"

@@ -66,4 +66,6 @@
     <string name="search_box">Search</string>
     <string name="suggest_search_1">Please fill the search field</string>
 
+    <string name="tv_rating">Rating :</string>
+
 </resources>

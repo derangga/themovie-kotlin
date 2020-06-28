@@ -8,6 +8,7 @@ import com.themovie.model.db.Tv
 import com.themovie.repos.fromapi.search.SearchTvDataSourceBase
 import com.themovie.repos.fromapi.search.SearchTvSourceFactory
 import com.themovie.restapi.ApiInterface
+import com.themovie.restapi.Result
 import javax.inject.Inject
 
 class SearchTvViewModel @Inject constructor (
@@ -41,8 +42,8 @@ class SearchTvViewModel @Inject constructor (
         uiList.removeSource(searchLiveData)
     }
 
-    fun getLoadState(): LiveData<LoadDataState>{
-        return Transformations.switchMap<SearchTvDataSourceBase, LoadDataState>(
+    fun getLoadState(): LiveData<Result.Status>{
+        return Transformations.switchMap<SearchTvDataSourceBase, Result.Status>(
                 searchSourceFactory.getResultSearch(),
                 SearchTvDataSourceBase::loadState
             )

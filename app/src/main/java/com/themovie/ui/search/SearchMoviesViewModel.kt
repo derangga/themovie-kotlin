@@ -8,6 +8,7 @@ import com.themovie.model.db.Movies
 import com.themovie.repos.fromapi.search.SearchMovieDataSourceBase
 import com.themovie.repos.fromapi.search.SearchMovieSourceFactory
 import com.themovie.restapi.ApiInterface
+import com.themovie.restapi.Result
 import javax.inject.Inject
 
 class SearchMoviesViewModel @Inject constructor (
@@ -42,8 +43,8 @@ class SearchMoviesViewModel @Inject constructor (
         uiList.removeSource(searchLiveData)
     }
 
-    fun getLoadState(): LiveData<LoadDataState> {
-        return Transformations.switchMap<SearchMovieDataSourceBase, LoadDataState>(
+    fun getLoadState(): LiveData<Result.Status> {
+        return Transformations.switchMap<SearchMovieDataSourceBase, Result.Status>(
             searchSourceFactory.getResultSearch(),
             SearchMovieDataSourceBase::loadState
         )

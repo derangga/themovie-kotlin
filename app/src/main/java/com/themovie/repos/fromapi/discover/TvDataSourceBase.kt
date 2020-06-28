@@ -6,6 +6,7 @@ import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import com.themovie.restapi.BasePagingDataSource
+import com.themovie.restapi.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -16,7 +17,7 @@ class TvDataSourceBase(
 ) : BasePagingDataSource<Int, Tv>() {
 
     override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
-        updateState(LoadDataState.LOADING)
+        updateState(Result.Status.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
             callback.onResult(it!!.toMutableList(), null, 2)
@@ -25,7 +26,7 @@ class TvDataSourceBase(
 
     override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Tv>) {
         if(params.key <= pageSize){
-            updateState(LoadDataState.LOADING)
+            updateState(Result.Status.LOADING)
             retry = { loadAfter(params, callback) }
             fetchData(params.key){
                 key = params.key + 1
@@ -40,10 +41,10 @@ class TvDataSourceBase(
                 ApiUrl.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, page, "")
             if(discover.isSuccessful){
-                updateState(LoadDataState.LOADED)
+                updateState(Result.Status.SUCCESS)
                 pageSize = discover.body()!!.totalPages
                 callback(discover.body()?.results)
-            } else updateState(LoadDataState.ERROR)
+            } else updateState(Result.Status.ERROR)
         }
     }
 }

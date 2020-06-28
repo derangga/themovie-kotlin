@@ -7,16 +7,17 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
-import com.themovie.helper.LoadDataState
+import com.themovie.databinding.AdapterLoadingBinding
+import com.themovie.databinding.AdapterMoviesBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Movies
+import com.themovie.restapi.Result
 
 class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private val DATA_VIEW = 1
     private val LOADING_VIEW = 2
-    private var loadState: LoadDataState? = null
+    private var loadState: Result.Status? = null
     private lateinit var context: Context
     private lateinit var onErrorClickListener: OnErrorClickListener
     private lateinit var onClickAdapterListener: OnAdapterListener<Movies>
@@ -36,20 +37,23 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        context = parent.context
+        val inflater = LayoutInflater.from(context)
         return if(viewType == DATA_VIEW){
-            val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_movies, parent, false)
-            context = parent.context
-            MovieViewHolder(view)
+            val view = AdapterMoviesBinding
+                .inflate(inflater, parent, false)
+            MovieViewHolder(view.root, view)
         } else {
-            val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_loading, parent, false)
-            context = parent.context
-            LoadingViewHolder(view)
+            val view = AdapterLoadingBinding
+                .inflate(inflater, parent, false)
+            LoadingViewHolder(view.root, view)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is MovieViewHolder){
-            holder.bindView(context, getItem(position)!!, onClickAdapterListener)
+            holder.binding.movie = getItem(position)
+            holder.binding.vh = holder
         }else if(holder is LoadingViewHolder){
             holder.bindView(loadState, onErrorClickListener)
         }
@@ -67,14 +71,14 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
     }
 
     private fun hasFooter(): Boolean {
-        return loadState != null && loadState != LoadDataState.LOADED
+        return loadState != null && loadState != Result.Status.SUCCESS
     }
 
-    fun setLoadState(loadState: LoadDataState){
-        val previousState = this.loadState;
+    fun setLoadState(loadState: Result.Status){
+        val previousState = this.loadState
         val previousExtraRow = hasFooter()
         this.loadState = loadState
-        val newExtraRow = hasFooter();
+        val newExtraRow = hasFooter()
         if(previousExtraRow != newExtraRow){
             if(previousExtraRow) notifyItemRemoved(super.getItemCount())
             else notifyItemInserted(super.getItemCount())
@@ -93,5 +97,12 @@ class MovieAdapter: PagedListAdapter<Movies, RecyclerView.ViewHolder>(DIFF_CALLB
 
     interface OnErrorClickListener {
         fun onClick(view: View?)
+    }
+
+    inner class MovieViewHolder(root: View, val binding: AdapterMoviesBinding) : RecyclerView.ViewHolder(root){
+
+        fun onMovieClick(view: View, movies: Movies){
+            onClickAdapterListener.onClick(view, movies)
+        }
     }
 }

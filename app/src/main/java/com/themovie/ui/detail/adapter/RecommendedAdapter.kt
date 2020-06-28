@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.databinding.AdapterRecomendedBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
 import com.themovie.model.db.Movies
@@ -36,29 +37,28 @@ class RecommendedAdapter : ListAdapter<Movies, RecommendedAdapter.ViewHolder>(DI
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_recomended, parent, false)
+        val view = AdapterRecomendedBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         context = parent.context
-        return ViewHolder(view)
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(root: View, val binding: AdapterRecomendedBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(movies: Movies){
-            itemView.apply {
-                val imgUrl = "${ApiUrl.IMG_POSTER}${movies.posterPath.toString()}"
-                rec_item.apply {
-                    setImage(imgUrl)
-                    setTitle(movies.title)
-                    setRating(movies.voteAverage)
-                    setOnClickListener(object: PortraitView.OnClickListener{
-                        override fun onClick() {
-                            onClickAdapterListener.onClick(itemView, movies)
-                        }
-                    })
-                }
+            val imgUrl = "${ApiUrl.IMG_POSTER}${movies.posterPath.toString()}"
+            binding.recItem.apply {
+                setImage(imgUrl)
+                setTitle(movies.title)
+                setRating(movies.voteAverage)
+                setOnClickListener(object: PortraitView.OnClickListener{
+                    override fun onClick() {
+                        onClickAdapterListener.onClick(itemView, movies)
+                    }
+                })
             }
         }
     }

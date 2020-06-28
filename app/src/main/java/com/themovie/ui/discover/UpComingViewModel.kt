@@ -3,11 +3,11 @@ package com.themovie.ui.discover
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Upcoming
 import com.themovie.repos.fromapi.discover.UpcomingDataSourceBase
 import com.themovie.repos.fromapi.discover.UpcomingDataSourceFactory
 import com.themovie.restapi.ApiInterface
+import com.themovie.restapi.Result
 import javax.inject.Inject
 
 class UpComingViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() {
@@ -34,7 +34,7 @@ class UpComingViewModel @Inject constructor (apiInterface: ApiInterface): ViewMo
         uiList.removeSource(upcomingLiveData)
     }
 
-    fun getLoadState(): LiveData<LoadDataState> {
+    fun getLoadState(): LiveData<Result.Status> {
         return Transformations.switchMap(upcomingSourceFactory.getUpcomingDataSource(), UpcomingDataSourceBase::loadState)
     }
 
