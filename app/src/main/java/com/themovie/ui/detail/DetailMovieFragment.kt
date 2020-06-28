@@ -6,28 +6,26 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailMovieBinding
-import com.themovie.helper.Constant
-import com.themovie.helper.LoadDataState
-import com.themovie.helper.OnAdapterListener
-import com.themovie.model.online.FetchDetailMovieData
+import com.themovie.di.detail.DetailViewModelFactory
+import com.themovie.helper.*
 import com.themovie.model.online.detail.Credits
 import com.themovie.model.online.detail.Reviews
 import com.themovie.model.db.Movies
 import com.themovie.model.online.video.Videos
+import com.themovie.restapi.Result
+import com.themovie.restapi.Result.Status.*
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
 import com.themovie.ui.detail.adapter.VideoAdapter
-import com.themovie.ui.detail.viewmodel.DetailMovieViewModelFactory
 import com.themovie.ui.detail.viewmodel.DetailMovieViewModel
 import com.themovie.ui.youtube.YoutubeActivity
 import javax.inject.Inject
@@ -39,76 +37,97 @@ import javax.inject.Inject
  *
  */
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
-
-    private lateinit var detailMovieViewModel: DetailMovieViewModel
+    
+    @Inject lateinit var factory: DetailViewModelFactory
+    private val viewModel by viewModels<DetailMovieViewModel> { factory }
     private lateinit var creditsAdapter: CreditsAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
     private lateinit var videoAdapter: VideoAdapter
-
-    @Inject lateinit var viewModelFactory: DetailMovieViewModelFactory
+    private var filmId = 0
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_movie
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
+        (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
-            val filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
-            DetailMovieViewModel.setFilmId(filmId)
+            filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
         }
-        detailMovieViewModel = ViewModelProvider(this, viewModelFactory).get(DetailMovieViewModel::class.java)
-        binding.apply {
-            lifecycleOwner = this@DetailMovieFragment
-        }
+
+        binding.lifecycleOwner = this@DetailMovieFragment
+
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
         initRecyclerView()
-        getAllDetailData()
-        observeNetworkLoad()
         adapterOnClick()
+        subscribeUI()
+        viewModel.getDetailMovieRequest(filmId)
     }
 
-    private fun getAllDetailData(){
-        detailMovieViewModel.getDetailMovieRequest()
-        detailMovieViewModel.setDetailMovie().observe (
-            this, Observer<FetchDetailMovieData>{
-                binding.movies = it.detailMovieResponse
-                creditsAdapter.submitList(it.castResponse?.credits)
-                recommendedAdapter.submitList(it.moviesResponse?.movies)
-                reviewsAdapter.submitList(it.reviewResponse?.reviewList)
-                videoAdapter.submitList(it.videoResponse?.videos)
-
-                if(it.moviesResponse?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visibility = View.VISIBLE
-                else binding.dtRecomEmpty.visibility = View.GONE
-
-                if(it.castResponse?.credits.isNullOrEmpty()) binding.dtCastEmpty.visibility = View.VISIBLE
-                else binding.dtCastEmpty.visibility = View.GONE
-
-                if(it.videoResponse?.videos.isNullOrEmpty()) binding.videoEmpty.visibility = View.VISIBLE
-                else binding.videoEmpty.visibility = View.GONE
-
-                if(it.reviewResponse?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visibility = View.VISIBLE
-                else binding.dtReviewEmpty.visibility = View.GONE
-            }
-        )
-    }
-
-    private fun observeNetworkLoad(){
-        detailMovieViewModel.getLoadStatus().observe(this, Observer<LoadDataState>{
-            when (it) {
-                LoadDataState.LOADED -> hideLoading()
-                else -> {
-                    showErrorConnection()
-                    binding.dtNoInternet.retryOnClick(View.OnClickListener {
-                        showLoading()
-                        detailMovieViewModel.getDetailMovieRequest()
-                    })
+    private fun subscribeUI(){
+        viewModel.apply {
+            detailMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        hideLoading()
+                        binding.movies = res?.data
+                    }
+                    ERROR -> {
+                        showNetworkError(false){
+                            viewModel.getDetailMovieRequest(filmId)
+                        }
+                    }
+                    LOADING -> { showLoading() }
                 }
-            }
-        })
+            })
+
+            creditMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.credits.isNullOrEmpty()) binding.dtCastEmpty.visible()
+                        else binding.dtCastEmpty.gone()
+                        creditsAdapter.submitList(res.data?.credits)
+                    }
+                    else -> {}
+                }
+            })
+
+            recommendationMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visible()
+                        else binding.dtRecomEmpty.gone()
+                        recommendedAdapter.submitList(res.data?.movies)
+                    }
+                    else -> {}
+                }
+            })
+
+            trailerMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.videos.isNullOrEmpty()) binding.videoEmpty.visible()
+                        else binding.videoEmpty.gone()
+                        videoAdapter.submitList(res.data?.videos)
+                    }
+                    else -> {}
+                }
+            })
+
+            reviewsMovieRes.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        if(res.data?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visible()
+                        else binding.dtReviewEmpty.gone()
+                        reviewsAdapter.submitList(res.data?.reviewList)
+                    }
+                    else -> {}
+                }
+            })
+        }
     }
 
     private fun initRecyclerView(){
@@ -146,7 +165,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -162,34 +181,27 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             override fun onClick(view: View, item: Videos) {
                 val bundle = Bundle()
                 bundle.putString("key", item.key)
-                changeActivity(bundle, YoutubeActivity::class.java)
+                Intent(context, YoutubeActivity::class.java)
+                    .also { intent ->
+                        intent.putExtras(bundle)
+                        startActivity(intent)
+                    }
             }
         })
     }
 
     private fun showLoading(){
         binding.apply {
-            dtShimmer.visibility = View.VISIBLE
-            dtLayout.visibility = View.GONE
-            dtNoInternet.visibility = View.GONE
+            dtShimmer.visible()
+            dtLayout.gone()
         }
 
     }
 
     private fun hideLoading(){
         binding.apply {
-            dtShimmer.visibility = View.GONE
-            dtLayout.visibility = View.VISIBLE
-            dtNoInternet.visibility = View.GONE
-        }
-
-    }
-
-    private fun showErrorConnection(){
-        binding.apply {
-            dtShimmer.visibility = View.INVISIBLE
-            dtLayout.visibility = View.GONE
-            dtNoInternet.visibility = View.VISIBLE
+            dtShimmer.gone()
+            dtLayout.visible()
         }
 
     }

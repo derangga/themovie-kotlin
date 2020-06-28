@@ -5,22 +5,24 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentUpcomingBinding
+import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.changeActivity
 import com.themovie.model.db.Upcoming
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.UpcomingAdapter
+import com.themovie.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_upcoming.*
 import javax.inject.Inject
 
@@ -29,8 +31,8 @@ import javax.inject.Inject
  */
 class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var upcomingViewFactory: UpcomingViewModelFactory
-    private lateinit var viewModel: UpComingViewModel
+    @Inject lateinit var factory: MainViewModelFactory
+    private val viewModel by viewModels<UpComingViewModel> { factory }
     private lateinit var mAdapter: UpcomingAdapter
 
     override fun getLayout(): Int {
@@ -38,8 +40,7 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLa
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        viewModel = ViewModelProvider(this, upcomingViewFactory).get(UpComingViewModel::class.java)
+        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@UpcomingFragment
@@ -96,7 +97,7 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLa
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 

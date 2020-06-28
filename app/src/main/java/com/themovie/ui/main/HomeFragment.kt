@@ -6,25 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat.getColor
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.snackbar.Snackbar
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentHomeBinding
-import com.themovie.helper.Constant
-import com.themovie.helper.LoadDataState
-import com.themovie.helper.OnAdapterListener
+import com.themovie.di.main.MainViewModelFactory
+import com.themovie.helper.*
 import com.themovie.model.db.*
+import com.themovie.restapi.Result.Status.*
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.main.adapter.*
 import java.util.*
@@ -33,22 +28,20 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnRefreshListener {
+class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-    @Inject
-    lateinit var homeViewFactory: HomeViewFactory
+    @Inject lateinit var factory: MainViewModelFactory
+    @Inject lateinit var upcomingAdapter: UpcomingAdapter
+    @Inject lateinit var trendingAdapter: TrendingAdapter
+    @Inject lateinit var genreAdapter: GenreAdapter
+    @Inject lateinit var discoverTvAdapter: DiscoverTvAdapter
+    @Inject lateinit var discoverMovieAdapter: DiscoverMovieAdapter
 
     private var timer: Timer? = null
-    private lateinit var homeViewModel: HomeViewModel
-    private var isFirstLoad = false
+    private val homeViewModel by viewModels<HomeViewModel> { factory }
     private var isSliding: Boolean = false
     private var isFirstTouch: Boolean = true
-    private lateinit var upcomingAdapter: UpcomingAdapter
-    private lateinit var trendingAdapter: TrendingAdapter
-    private lateinit var genreAdapter: GenreAdapter
-    private lateinit var discoverTvAdapter: DiscoverTvAdapter
-    private lateinit var discoverMvAdapter: DiscoverMvAdapter
-    private lateinit var snackbar: Snackbar
+
     private var currentPosition: Int = 0
     private var sizeOfHeader = 0
 
@@ -58,8 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        homeViewModel = ViewModelProvider(this, homeViewFactory).get(HomeViewModel::class.java)
+        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = homeViewModel
             lifecycleOwner = this@HomeFragment
@@ -67,26 +59,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        binding.homeSwipe.setOnRefreshListener(this)
-        snackbar = Snackbar.make(activity!!.findViewById(android.R.id.content),
-            getString(R.string.detail_title_11), Snackbar.LENGTH_INDEFINITE)
 
         binding.header.setSearchVisibility(View.GONE)
         recyclerViewSetup()
         onClick()
-        showData()
-        fetchData()
-        observeNetworkLoad()
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 activity?.finishAffinity()
             }}
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
-    override fun onRefresh() {
-        stopSliding()
-        fetchData()
+        subscribeUI()
     }
 
     override fun onResume() {
@@ -101,12 +83,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
     }
 
     private fun recyclerViewSetup(){
-        upcomingAdapter = UpcomingAdapter()
-        trendingAdapter = TrendingAdapter()
-        discoverTvAdapter = DiscoverTvAdapter()
-        discoverMvAdapter = DiscoverMvAdapter()
-        genreAdapter = GenreAdapter()
-
         binding.apply {
             homePopular.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -130,7 +106,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
 
             homeMovies.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = discoverMvAdapter
+                adapter = discoverMovieAdapter
             }
 
             val pagerSnapHelper = PagerSnapHelper()
@@ -146,12 +122,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
     private fun onClick(){
         trendingAdapter.setOnClickListener(object: OnAdapterListener<Trending>{
             override fun onClick(view: View, item: Trending) {
-                snackbar.dismiss()
                 val bundle = Bundle().apply {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -166,13 +141,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
 
         upcomingAdapter.setOnClickListener(object: OnAdapterListener<Upcoming>{
             override fun onClick(view: View, item: Upcoming) {
-                snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -185,25 +159,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
 
         discoverTvAdapter.setOnClickListener(object: OnAdapterListener<Tv>{
             override fun onClick(view: View, item: Tv) {
-                snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
                     putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
-        discoverMvAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
+        discoverMovieAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
             override fun onClick(view: View, item: Movies) {
-                snackbar.dismiss()
                 stopSliding()
                 val bundle = Bundle().apply {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -211,126 +183,93 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
             seeUpco.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToUpcomingFragment()
                 Navigation.findNavController(it).navigate(action)
-                snackbar.dismiss()
             }
 
             seeGenre.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToGenresFragment()
                 Navigation.findNavController(it).navigate(action)
-                snackbar.dismiss()
             }
 
             seeTv.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToTvFragment()
                 Navigation.findNavController(it).navigate(action)
-                snackbar.dismiss()
             }
 
             seeMovies.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToMoviesFragment()
                 Navigation.findNavController(it).navigate(action)
-                snackbar.dismiss()
             }
-
-            noInternet.retryOnClick(View.OnClickListener { fetchData() })
         }
     }
 
-    private fun showData(){
+    private fun subscribeUI(){
         homeViewModel.apply {
-            getTrendingLocalData().observe(this@HomeFragment,
-                Observer<List<Trending>>{ t ->
-                    if(t.isNotEmpty()){
+            trendingMovies.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
                         hideLoading()
-                        sizeOfHeader = t.size
-                        trendingAdapter.submitList(t)
+                        sizeOfHeader = res.data?.size ?: 0
+                        trendingAdapter.submitList(res.data)
                     }
-                })
-
-            getUpcomingLocalData().observe(this@HomeFragment,
-                Observer<List<Upcoming>> { t ->
-                    if(t.isNotEmpty())
-                        upcomingAdapter.submitList(t)
-                })
-
-            getGenreLocalData().observe( this@HomeFragment,
-                Observer<List<Genre>> { t ->
-                    if(t.isNotEmpty())
-                        genreAdapter.submitList(t)
-                }
-            )
-
-            getDiscoverTvLocalData().observe(this@HomeFragment,
-                Observer<List<Tv>> { t ->
-                    if(t.isNotEmpty()){
-                        discoverTvAdapter.submitList(t)
+                    ERROR -> {
+                        hideLoading()
+                        showNetworkError(true){}
                     }
-                })
-
-            getDiscoverMvLocalData().observe(this@HomeFragment,
-                Observer<List<Movies>> { t ->
-                    if(t.isNotEmpty()){
-                        discoverMvAdapter.submitList(t)
-                    }
-                })
-        }
-    }
-
-    private fun fetchData(){
-        lifecycleScope.launchWhenStarted {
-            isFirstLoad = homeViewModel.isFirstLoad()
-            homeViewModel.getDataRequest()
-        }
-    }
-
-    private fun observeNetworkLoad(){
-        homeViewModel.getLoadDataStatus().observe(this,
-            Observer<LoadDataState>{
-                when(it){
-                    LoadDataState.LOADING -> {
-                        if(isFirstLoad) showLoading()
-                        snackbar.dismiss()
-                    }
-                    LoadDataState.LOADED -> hideLoading()
-                    else -> {
-                        binding.homeSwipe.isRefreshing = false
-                        val view = snackbar.view
-                        view.setBackgroundColor(getColor(context!!, R.color.colorBlackTransparent))
-                        if(!isFirstLoad){
-                            snackbar.setAction(getString(R.string.detail_title_12), View.OnClickListener {
-                                fetchData()
-                                snackbar.dismiss()
-                            }).show()
-                        } else networkError()
+                    LOADING -> {
+                        showLoading()
                     }
                 }
             })
+
+            upcomingMovies.observe(viewLifecycleOwner, Observer { res ->
+                 when(res.status){
+                     SUCCESS -> {
+                         upcomingAdapter.submitList(res.data)
+                     }
+                     else -> {}
+                 }
+            })
+
+            genreMovies.observe( viewLifecycleOwner, Observer { res ->
+                 when(res.status){
+                     SUCCESS -> {
+                         genreAdapter.submitList(res.data)
+                     }
+                     else -> {}
+                 }
+            })
+
+            discoverTv.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        discoverTvAdapter.submitList(res.data)
+                    }
+                    else -> {}
+                }
+            })
+
+            discoverMovies.observe(viewLifecycleOwner, Observer { res ->
+                when(res.status){
+                    SUCCESS -> {
+                        discoverMovieAdapter.submitList(res.data)
+                    }
+                    else -> {}
+                }
+            })
+        }
     }
 
     private fun hideLoading(){
         binding.apply {
-            homeSwipe.isRefreshing = false
-            shimmerHome.visibility = View.GONE
-            homeLayout.visibility = View.VISIBLE
-            noInternet.visibility = View.GONE
+            shimmerHome.gone()
+            homeLayout.visible()
         }
     }
 
     private fun showLoading(){
         binding.apply {
-            shimmerHome.visibility = View.VISIBLE
-            homeLayout.visibility = View.GONE
-            noInternet.visibility = View.GONE
-        }
-    }
-
-    private fun networkError(){
-        binding.apply {
-            shimmerHome.visibility = View.GONE
-            if(isFirstLoad){
-                homeLayout.visibility = View.GONE
-                noInternet.visibility = View.VISIBLE
-            } else homeLayout.visibility = View.VISIBLE
+            shimmerHome.visible()
+            homeLayout.gone()
         }
     }
 
@@ -340,7 +279,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), SwipeRefreshLayout.OnR
             timer = Timer().apply {
                 scheduleAtFixedRate(SliderTimer(), 5000, 5000)
             }
-
         }
     }
 

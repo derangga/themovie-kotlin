@@ -6,6 +6,7 @@ import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import com.themovie.restapi.BasePagingDataSource
+import com.themovie.restapi.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class SearchMovieDataSourceBase(
 ): BasePagingDataSource<Int, Movies>() {
 
     override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
-        updateState(LoadDataState.LOADING)
+        updateState(Result.Status.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
             callback.onResult(it!!.toMutableList(), null, 2)
@@ -26,7 +27,7 @@ class SearchMovieDataSourceBase(
 
     override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
         if(params.key <= pageSize){
-            updateState(LoadDataState.LOADING)
+            updateState(Result.Status.LOADING)
             retry = { loadAfter(params, callback) }
             fetchData(params.key){
                 key = params.key + 1
@@ -39,10 +40,10 @@ class SearchMovieDataSourceBase(
         scope.launch(IO + getJobErrorHandler()) {
             val response = apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query.orEmpty(), page)
             if(response.isSuccessful){
-                updateState(LoadDataState.LOADED)
+                updateState(Result.Status.SUCCESS)
                 pageSize = response.body()?.totalPages ?: 0
                 callback(response.body()?.movies)
-            } else updateState(LoadDataState.ERROR)
+            } else updateState(Result.Status.ERROR)
         }
     }
 }

@@ -21,299 +21,286 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/home_swipe"
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/header">
 
-            <androidx.core.widget.NestedScrollView
+            <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <RelativeLayout
+                <include
+                        android:id="@+id/shimmer_home"
+                        layout="@layout/shimmer_content_main"/>
+
+                <LinearLayout
+                        android:id="@+id/home_layout"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                    <include
-                            android:id="@+id/shimmer_home"
-                            layout="@layout/shimmer_content_main"/>
-
-                    <LinearLayout
-                            android:id="@+id/home_layout"
-                            android:visibility="gone"
+                    <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:textColor="@color/colorWhite"
+                            android:text="@string/home_title_1"
+                            android:textStyle="bold"
+                            android:layout_marginStart="@dimen/medium_space"
+                            android:layout_marginEnd="@dimen/medium_space"
+                            android:layout_marginTop="@dimen/extra_medium_space"
+                            android:textSize="20sp"/>
 
-                        <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorWhite"
-                                android:text="@string/home_title_1"
-                                android:textStyle="bold"
-                                android:layout_marginStart="@dimen/medium_space"
-                                android:layout_marginEnd="@dimen/medium_space"
-                                android:layout_marginTop="@dimen/extra_medium_space"
-                                android:textSize="20sp"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/home_popular"
+                            android:layout_width="match_parent"
+                            android:layout_height="190dp"
+                            android:layout_marginTop="@dimen/small_space"
+                            android:clipToPadding="false"
+                            android:foregroundGravity="center">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/home_popular"
-                                android:layout_width="match_parent"
-                                android:layout_height="190dp"
-                                android:layout_marginTop="@dimen/small_space"
-                                android:clipToPadding="false"
-                                android:foregroundGravity="center">
+                    </androidx.recyclerview.widget.RecyclerView>
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                    <me.relex.circleindicator.CircleIndicator2
+                            android:id="@+id/indicator"
+                            android:layout_marginTop="@dimen/extra_small_space"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            app:ci_drawable="@drawable/selected_indicator"
+                            app:ci_drawable_unselected="@drawable/unselected_indicator"
+                            app:ci_gravity="start"/>
 
-                        <me.relex.circleindicator.CircleIndicator2
-                                android:id="@+id/indicator"
-                                android:layout_marginTop="@dimen/extra_small_space"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                app:ci_drawable="@drawable/selected_indicator"
-                                app:ci_drawable_unselected="@drawable/unselected_indicator"
-                                app:ci_gravity="start"/>
-
-                        <androidx.cardview.widget.CardView
-                                android:layout_marginTop="@dimen/medium_space"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:cardBackgroundColor="@color/colorPrimary">
-
-                            <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/medium_space">
-
-                                <LinearLayout
-                                        android:id="@+id/header_2"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:paddingTop="@dimen/extra_small_space"
-                                        android:paddingStart="@dimen/medium_space"
-                                        android:paddingEnd="@dimen/medium_space">
-
-                                    <TextView
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="wrap_content"
-                                            android:textStyle="bold"
-                                            android:textSize="18sp"
-                                            android:text="@string/title_main_2"
-                                            android:textColor="@color/colorWhite"/>
-
-                                    <TextView
-                                            android:id="@+id/see_upco"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="0.5"
-                                            android:gravity="end"
-                                            android:text="@string/title_main_5"
-                                            android:textAlignment="textEnd"
-                                            android:textColor="@color/colorAccent"
-                                            android:textStyle="bold" />
-
-                                </LinearLayout>
-
-                                <androidx.recyclerview.widget.RecyclerView
-                                        android:id="@+id/home_upcoming"
-                                        android:layout_marginTop="@dimen/extra_small_space"
-                                        android:layout_below="@id/header_2"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
-
-                                </androidx.recyclerview.widget.RecyclerView>
-
-                            </RelativeLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                                android:layout_marginTop="@dimen/small_space"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:cardBackgroundColor="@color/colorPrimary">
-
-                            <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/medium_space">
-
-                                <LinearLayout
-                                        android:id="@+id/header_3"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:paddingTop="@dimen/extra_small_space"
-                                        android:paddingStart="@dimen/medium_space"
-                                        android:paddingEnd="@dimen/medium_space">
-
-                                    <TextView
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="wrap_content"
-                                            android:textStyle="bold"
-                                            android:textSize="18sp"
-                                            android:text="@string/home_title_3"
-                                            android:textColor="@color/colorWhite"/>
-
-                                    <TextView
-                                            android:id="@+id/see_genre"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="0.5"
-                                            android:gravity="end"
-                                            android:text="@string/title_main_5"
-                                            android:textAlignment="textEnd"
-                                            android:textColor="@color/colorAccent"
-                                            android:textStyle="bold" />
-
-                                </LinearLayout>
-
-                                <androidx.recyclerview.widget.RecyclerView
-                                        android:id="@+id/home_genre"
-                                        android:layout_marginTop="@dimen/extra_small_space"
-                                        android:layout_below="@id/header_3"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="@dimen/small_space"
-                                        android:layout_marginEnd="@dimen/small_space"
-                                        android:clipToPadding="false">
-
-                                </androidx.recyclerview.widget.RecyclerView>
-
-                            </RelativeLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                                android:layout_marginTop="@dimen/small_space"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:cardBackgroundColor="@color/colorPrimary">
-
-                            <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/medium_space">
-
-                                <LinearLayout
-                                        android:id="@+id/header_4"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:paddingTop="@dimen/extra_small_space"
-                                        android:paddingStart="@dimen/medium_space"
-                                        android:paddingEnd="@dimen/medium_space">
-
-                                    <TextView
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="wrap_content"
-                                            android:textStyle="bold"
-                                            android:textSize="18sp"
-                                            android:text="@string/home_title_4"
-                                            android:textColor="@color/colorWhite"/>
-
-                                    <TextView
-                                            android:id="@+id/see_tv"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="0.5"
-                                            android:gravity="end"
-                                            android:text="@string/title_main_5"
-                                            android:textAlignment="textEnd"
-                                            android:textColor="@color/colorAccent"
-                                            android:textStyle="bold" />
-
-                                </LinearLayout>
-
-                                <androidx.recyclerview.widget.RecyclerView
-                                        android:id="@+id/home_tv"
-                                        android:layout_below="@id/header_4"
-                                        android:layout_marginTop="@dimen/extra_small_space"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
-
-                                </androidx.recyclerview.widget.RecyclerView>
-
-                            </RelativeLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                                android:layout_marginTop="@dimen/small_space"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:cardBackgroundColor="@color/colorPrimary">
-
-                            <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/medium_space">
-
-                                <LinearLayout
-                                        android:id="@+id/header_5"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:paddingTop="@dimen/extra_small_space"
-                                        android:paddingStart="@dimen/medium_space"
-                                        android:paddingEnd="@dimen/medium_space">
-
-                                    <TextView
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="wrap_content"
-                                            android:textStyle="bold"
-                                            android:textSize="18sp"
-                                            android:text="@string/home_title_5"
-                                            android:textColor="@color/colorWhite"/>
-
-                                    <TextView
-                                            android:id="@+id/see_movies"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="0.5"
-                                            android:gravity="end"
-                                            android:text="@string/title_main_5"
-                                            android:textAlignment="textEnd"
-                                            android:textColor="@color/colorAccent"
-                                            android:textStyle="bold" />
-
-                                </LinearLayout>
-
-                                <androidx.recyclerview.widget.RecyclerView
-                                        android:id="@+id/home_movies"
-                                        android:layout_below="@id/header_5"
-                                        android:layout_marginTop="@dimen/extra_small_space"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
-
-                                </androidx.recyclerview.widget.RecyclerView>
-
-                            </RelativeLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-
-                    <com.themovie.helper.customview.NoInternetView
-                            android:id="@+id/no_internet"
+                    <androidx.cardview.widget.CardView
+                            android:layout_marginTop="@dimen/medium_space"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"/>
+                            app:cardBackgroundColor="@color/colorPrimary">
 
-                </RelativeLayout>
+                        <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/medium_space">
 
-            </androidx.core.widget.NestedScrollView>
+                            <LinearLayout
+                                    android:id="@+id/header_2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingTop="@dimen/extra_small_space"
+                                    android:paddingStart="@dimen/medium_space"
+                                    android:paddingEnd="@dimen/medium_space">
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                                <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:textStyle="bold"
+                                        android:textSize="18sp"
+                                        android:text="@string/title_main_2"
+                                        android:textColor="@color/colorWhite"/>
+
+                                <TextView
+                                        android:id="@+id/see_upco"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:gravity="end"
+                                        android:text="@string/title_main_5"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorAccent"
+                                        android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/home_upcoming"
+                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_below="@id/header_2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_marginTop="@dimen/small_space"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/colorPrimary">
+
+                        <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/medium_space">
+
+                            <LinearLayout
+                                    android:id="@+id/header_3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingTop="@dimen/extra_small_space"
+                                    android:paddingStart="@dimen/medium_space"
+                                    android:paddingEnd="@dimen/medium_space">
+
+                                <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:textStyle="bold"
+                                        android:textSize="18sp"
+                                        android:text="@string/home_title_3"
+                                        android:textColor="@color/colorWhite"/>
+
+                                <TextView
+                                        android:id="@+id/see_genre"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:gravity="end"
+                                        android:text="@string/title_main_5"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorAccent"
+                                        android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/home_genre"
+                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_below="@id/header_3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/small_space"
+                                    android:layout_marginEnd="@dimen/small_space"
+                                    android:clipToPadding="false">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_marginTop="@dimen/small_space"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/colorPrimary">
+
+                        <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/medium_space">
+
+                            <LinearLayout
+                                    android:id="@+id/header_4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingTop="@dimen/extra_small_space"
+                                    android:paddingStart="@dimen/medium_space"
+                                    android:paddingEnd="@dimen/medium_space">
+
+                                <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:textStyle="bold"
+                                        android:textSize="18sp"
+                                        android:text="@string/home_title_4"
+                                        android:textColor="@color/colorWhite"/>
+
+                                <TextView
+                                        android:id="@+id/see_tv"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:gravity="end"
+                                        android:text="@string/title_main_5"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorAccent"
+                                        android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/home_tv"
+                                    android:layout_below="@id/header_4"
+                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_marginTop="@dimen/small_space"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/colorPrimary">
+
+                        <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/medium_space">
+
+                            <LinearLayout
+                                    android:id="@+id/header_5"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingTop="@dimen/extra_small_space"
+                                    android:paddingStart="@dimen/medium_space"
+                                    android:paddingEnd="@dimen/medium_space">
+
+                                <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:textStyle="bold"
+                                        android:textSize="18sp"
+                                        android:text="@string/home_title_5"
+                                        android:textColor="@color/colorWhite"/>
+
+                                <TextView
+                                        android:id="@+id/see_movies"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:gravity="end"
+                                        android:text="@string/title_main_5"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorAccent"
+                                        android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/home_movies"
+                                    android:layout_below="@id/header_5"
+                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </RelativeLayout>
 

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "tbl_genre")
 data class Genre(
     @PrimaryKey(autoGenerate = true)
-    val pkId: Int? = 0,
+    val pkId: Int = 0,
     @ColumnInfo(name = "genreId")
     @SerializedName("id") val id: Int,
     @ColumnInfo(name = "name")

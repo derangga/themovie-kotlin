@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.themovie.databinding.AdapterPortraitMovieBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
 import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_maindmv.view.*
 
-class DiscoverMvAdapter : ListAdapter<Movies, DiscoverMvAdapter.ViewHolder>(DIFF_CALLBACK) {
+class DiscoverMovieAdapter : ListAdapter<Movies, DiscoverMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
     private lateinit var listener: OnAdapterListener<Movies>
@@ -32,10 +31,12 @@ class DiscoverMvAdapter : ListAdapter<Movies, DiscoverMvAdapter.ViewHolder>(DIFF
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_maindmv, parent, false)
         context = parent.context
-        return ViewHolder(view)
+
+        val view = AdapterPortraitMovieBinding
+            .inflate(LayoutInflater.from(context), parent, false)
+
+        return ViewHolder(view.root, view)
     }
 
     fun setOnClickListener(listener: OnAdapterListener<Movies>){
@@ -46,20 +47,18 @@ class DiscoverMvAdapter : ListAdapter<Movies, DiscoverMvAdapter.ViewHolder>(DIFF
         holder.bindItem(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(root: View, val binding: AdapterPortraitMovieBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(movies: Movies){
-            itemView.apply {
-                val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
-                movie_item.apply {
-                    setImage(imgPoster)
-                    setTitle(movies.title)
-                    setRating(movies.voteAverage)
-                    setOnClickListener(object: PortraitView.OnClickListener{
-                        override fun onClick() {
-                            listener.onClick(itemView, movies)
-                        }
-                    })
-                }
+            val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
+            binding.movieItem.apply {
+                setImage(imgPoster)
+                setTitle(movies.title)
+                setRating(movies.voteAverage)
+                setOnClickListener(object: PortraitView.OnClickListener{
+                    override fun onClick() {
+                        listener.onClick(itemView, movies)
+                    }
+                })
             }
         }
     }

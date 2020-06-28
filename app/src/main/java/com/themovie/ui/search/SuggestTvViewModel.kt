@@ -4,17 +4,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.themovie.model.online.discovertv.TvResponse
-import com.themovie.repos.fromapi.ApiRepository
+import com.themovie.repos.fromapi.RemoteSource
 import com.themovie.restapi.Result
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SuggestTvViewModel(private val apiRepository: ApiRepository): ViewModel() {
+class SuggestTvViewModel @Inject constructor (
+    private val remote: RemoteSource
+): ViewModel() {
 
     private val tvSearch: MutableLiveData<Result<TvResponse>> by lazy { MutableLiveData<Result<TvResponse>>() }
 
     fun fetchSuggestTv(query: String) {
         viewModelScope.launch {
-            val response = apiRepository.getSuggestionTvSearch(query)
+            val response = remote.getSuggestSearchTv(query)
             tvSearch.value = response
         }
     }

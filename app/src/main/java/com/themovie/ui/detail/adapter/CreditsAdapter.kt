@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.themovie.R
+import com.themovie.databinding.AdapterCreditsBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
 import com.themovie.model.online.detail.Credits
@@ -16,7 +17,6 @@ import kotlinx.android.synthetic.main.adapter_credits.view.*
 
 class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private lateinit var context: Context
     private lateinit var onClickAdapterListener: OnAdapterListener<Credits>
 
     companion object{
@@ -36,32 +36,28 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.adapter_credits, parent, false)
-        context = parent.context
-        return ViewHolder(view)
+        val view = AdapterCreditsBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(root: View, val binding: AdapterCreditsBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(credits: Credits){
-            itemView.apply {
-                val imgUrl = "${ApiUrl.IMG_POSTER}${credits.profilePath.toString()}"
-                cast_portrait.apply {
-                    setTitle(credits.name)
-                    setSubtitle(credits.character)
-                    setImage(imgUrl)
-                    setOnClickListener(object: PortraitView.OnClickListener{
-                        override fun onClick() {
-                            onClickAdapterListener.onClick(itemView, credits)
-                        }
-                    })
-                }
-
+            val imgUrl = "${ApiUrl.IMG_POSTER}${credits.profilePath.toString()}"
+            binding.castPortrait.apply {
+                setTitle(credits.name)
+                setSubtitle(credits.character)
+                setImage(imgUrl)
+                setOnClickListener(object: PortraitView.OnClickListener{
+                    override fun onClick() {
+                        onClickAdapterListener.onClick(itemView, credits)
+                    }
+                })
             }
-
         }
     }
 }

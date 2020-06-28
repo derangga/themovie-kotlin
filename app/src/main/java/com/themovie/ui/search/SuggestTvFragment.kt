@@ -3,21 +3,16 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentSuggestBinding
-import com.themovie.helper.Constant
-import com.themovie.helper.LoadDataState
-import com.themovie.helper.OnAdapterListener
+import com.themovie.di.suggest.SuggestViewModelFactory
+import com.themovie.helper.*
 import com.themovie.model.db.Tv
 import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.restapi.Result
@@ -30,8 +25,8 @@ import javax.inject.Inject
  */
 class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.TvSearchFragmentListener {
 
-    @Inject lateinit var viewModelFactory: SuggestTvFactory
-    private lateinit var viewModel: SuggestTvViewModel
+    @Inject lateinit var factory: SuggestViewModelFactory
+    private val viewModel by viewModels<SuggestTvViewModel> { factory }
     private lateinit var mAdapter: SuggestTvAdapter
 
     override fun getLayout(): Int {
@@ -39,8 +34,7 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SuggestTvViewModel::class.java)
+        (activity as SuggestActivity).getComponent()?.inject(this)
         binding.lifecycleOwner = this
     }
 
@@ -58,7 +52,7 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
                     putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
                 activity?.finish()
             }
         })
@@ -76,11 +70,11 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
                     Result.Status.LOADING -> {setLog("Loading")}
                     Result.Status.SUCCESS -> {
                         if(binding.recyclerView.visibility == View.GONE)
-                            binding.recyclerView.visibility = View.VISIBLE
+                            binding.recyclerView.visible()
                         mAdapter.submitList(it.data?.results)
                     }
                     Result.Status.ERROR -> {
-                        binding.recyclerView.visibility = View.GONE
+                        binding.recyclerView.gone()
                     }
                 }
             })

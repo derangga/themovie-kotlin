@@ -8,12 +8,14 @@ import com.themovie.model.db.Tv
 import com.themovie.repos.fromapi.discover.TvDataSourceBase
 import com.themovie.repos.fromapi.discover.TvDataSourceFactory
 import com.themovie.restapi.ApiInterface
+import com.themovie.restapi.Result
+import javax.inject.Inject
 
-class TvViewModel(apiInterface: ApiInterface): ViewModel() {
+class TvViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() {
 
     private var tvLiveData: LiveData<PagedList<Tv>>
     private val uiList = MediatorLiveData<PagedList<Tv>>()
-    private val tvSourceFactory = TvDataSourceFactory(viewModelScope, apiInterface)
+    private val tvSourceFactory by lazy { TvDataSourceFactory(viewModelScope, apiInterface) }
 
     init {
         val pageConfig = PagedList.Config.Builder()
@@ -36,8 +38,9 @@ class TvViewModel(apiInterface: ApiInterface): ViewModel() {
     }
 
 
-    fun getLoadState(): LiveData<LoadDataState> {
-        return Transformations.switchMap<TvDataSourceBase, LoadDataState>(tvSourceFactory.getTvDataSource(), TvDataSourceBase::loadState)
+    fun getLoadState(): LiveData<Result.Status> {
+        return Transformations
+            .switchMap<TvDataSourceBase, Result.Status>(tvSourceFactory.getTvDataSource(), TvDataSourceBase::loadState)
     }
 
     fun retry(){

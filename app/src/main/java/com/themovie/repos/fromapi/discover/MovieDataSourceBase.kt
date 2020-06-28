@@ -1,11 +1,11 @@
 package com.themovie.repos.fromapi.discover
 
 import com.themovie.helper.Constant
-import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import com.themovie.restapi.BasePagingDataSource
+import com.themovie.restapi.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ class MovieDataSourceBase(
 ): BasePagingDataSource<Int, Movies>() {
 
     override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
-        updateState(LoadDataState.LOADING)
+        updateState(Result.Status.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
             callback.onResult(it!!.toMutableList(), null, 2)
@@ -26,7 +26,7 @@ class MovieDataSourceBase(
 
     override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
         if(params.key <= pageSize){
-            updateState(LoadDataState.LOADING)
+            updateState(Result.Status.LOADING)
             retry = {loadAfter(params, callback)}
             fetchData(params.key){
                 key = params.key + 1
@@ -40,10 +40,10 @@ class MovieDataSourceBase(
             val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, page, "2019", genre)
             if(discover.isSuccessful){
-                updateState(LoadDataState.LOADED)
+                updateState(Result.Status.SUCCESS)
                 pageSize = discover.body()?.totalPages ?: 0
                 callback(discover.body()?.movies)
-            } else updateState(LoadDataState.ERROR)
+            } else updateState(Result.Status.ERROR)
         }
     }
 }

@@ -4,22 +4,24 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentMoviesBinding
+import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.changeActivity
 import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
+import com.themovie.ui.main.MainActivity
 import com.themovie.ui.search.SuggestActivity
 import kotlinx.android.synthetic.main.fragment_movies.*
 import javax.inject.Inject
@@ -29,8 +31,8 @@ import javax.inject.Inject
  */
 class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var movieViewFactory: MovieViewModelFactory
-    private lateinit var viewModel: MovieViewModel
+    @Inject lateinit var factory: MainViewModelFactory
+    private val viewModel by viewModels<MovieViewModel>{ factory }
     private lateinit var mAdapter: MovieAdapter
 
     override fun getLayout(): Int {
@@ -38,8 +40,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity?.application as MyApplication).getAppComponent().inject(this)
-        viewModel = ViewModelProvider(this, movieViewFactory).get(MovieViewModel::class.java)
+        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@MoviesFragment
@@ -47,6 +48,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
+        viewModel.resetMovieWithGenre("")
         setupUIComponent()
         recyclerViewSetup()
     }
@@ -76,7 +78,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout
                 Navigation.findNavController(it).navigate(action)
             })
 
-            setSearchButtonOnClickListener(View.OnClickListener { changeActivity(SuggestActivity::class.java) })
+            setSearchButtonOnClickListener(View.OnClickListener { changeActivity<SuggestActivity>() })
         }
 
 
@@ -102,7 +104,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 

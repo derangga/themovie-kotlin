@@ -1,95 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+                name="movie"
+                type="com.themovie.model.db.Movies" />
+
+        <variable
+                name="vh"
+                type="com.themovie.ui.discover.adapter.MovieAdapter.MovieViewHolder" />
+    </data>
+
+    <RelativeLayout
+            android:id="@+id/mv_item"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:onClick="@{(v) -> vh.onMovieClick(v, movie)}">
+
+        <ImageView
+                android:id="@+id/mv_background"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/mv_item">
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                app:backdrop_image="@{movie.backdropPath}"/>
 
-    <ImageView
-            android:id="@+id/mv_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:transitionName="@string/transition_name"/>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBlack"
+                android:alpha=".4"
+                android:id="@+id/vw_blacklayer" />
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorBlack"
-            android:alpha=".4"
-            android:id="@+id/vw_blacklayer" />
-
-    <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/mv_poster"
-            android:layout_width="80dp"
-            android:layout_height="110dp"
-            android:src="@drawable/no_image"
-            android:scaleType="centerCrop"
-            app:riv_border_width="1dip"
-            app:riv_border_color="@color/colorGrayYoung"
-            android:layout_marginBottom="12dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/small_space" />
-
-    <TextView
-            android:id="@+id/mv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:singleLine="true"
-            android:paddingStart="@dimen/small_space"
-            android:paddingEnd="@dimen/small_space"
-            android:textSize="20sp"
-            android:textColor="@color/colorWhite"
-            android:layout_alignTop="@+id/mv_poster"
-            android:layout_toEndOf="@id/mv_poster" />
-
-    <TextView
-            android:id="@+id/mv_descript"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:paddingStart="@dimen/small_space"
-            android:paddingEnd="@dimen/small_space"
-            android:lines="3"
-            android:textSize="12sp"
-            android:ellipsize="end"
-            android:textColor="@color/colorWhite"
-            android:layout_below="@+id/mv_title"
-            android:layout_toEndOf="@+id/mv_poster" />
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/mv_descript"
-            android:layout_toEndOf="@+id/mv_poster"
-            android:paddingStart="@dimen/small_space"
-            android:paddingEnd="@dimen/small_space"
-            android:layout_marginTop="4dp">
+        <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/mv_poster"
+                android:layout_width="80dp"
+                android:layout_height="110dp"
+                android:src="@drawable/no_image"
+                android:scaleType="centerCrop"
+                app:riv_border_width="1dip"
+                app:riv_border_color="@color/colorGrayYoung"
+                android:layout_marginBottom="12dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/small_space"
+                app:poster_image="@{movie.posterPath}"/>
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/movie_title_1"
-                android:textColor="@color/colorWhite"
-                android:textSize="14sp"
-                android:layout_marginEnd="@dimen/very_small_space"/>
-
-        <TextView
-                android:id="@+id/mv_date"
+                android:id="@+id/mv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:singleLine="true"
+                android:paddingStart="@dimen/small_space"
+                android:paddingEnd="@dimen/small_space"
+                android:textSize="20sp"
                 android:textColor="@color/colorWhite"
-                android:textSize="14sp"
-                android:textAlignment="textEnd"
-                android:gravity="end" />
+                android:layout_alignTop="@+id/mv_poster"
+                android:layout_toEndOf="@id/mv_poster"
+                android:text="@{movie.title}"/>
 
-    </LinearLayout>
+        <TextView
+                android:id="@+id/mv_descript"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:paddingStart="@dimen/small_space"
+                android:paddingEnd="@dimen/small_space"
+                android:lines="3"
+                android:textSize="12sp"
+                android:ellipsize="end"
+                android:textColor="@color/colorWhite"
+                android:layout_below="@+id/mv_title"
+                android:layout_toEndOf="@+id/mv_poster"
+                android:text="@{movie.overview}"/>
 
-</RelativeLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/mv_descript"
+                android:layout_toEndOf="@+id/mv_poster"
+                android:paddingStart="@dimen/small_space"
+                android:paddingEnd="@dimen/small_space"
+                android:layout_marginTop="4dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/movie_title_1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="@dimen/very_small_space"/>
+
+            <TextView
+                    android:id="@+id/mv_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"
+                    app:date_release="@{movie.releaseDate}"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

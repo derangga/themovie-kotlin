@@ -7,18 +7,17 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
+import com.themovie.di.suggest.SuggestComponent
 import com.themovie.helper.ViewPagerFragment
+import com.themovie.helper.changeActivity
+import com.themovie.helper.gone
+import com.themovie.helper.visible
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
@@ -62,6 +61,11 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
     }
 
+    override fun onDestroy() {
+        getApp().releaseSuggestComponent()
+        super.onDestroy()
+    }
+
     private fun showSoftKeyboard(view: View?){
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
@@ -87,11 +91,11 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
                 binding.apply {
                     if(hSearch.text.toString().isEmpty()){
-                        tabLayout.visibility = View.GONE
-                        viewPager.visibility = View.GONE
+                        tabLayout.gone()
+                        viewPager.gone()
                     } else{
-                        tabLayout.visibility = View.VISIBLE
-                        viewPager.visibility = View.VISIBLE
+                        tabLayout.visible()
+                        viewPager.visible()
                     }
                 }
 
@@ -115,11 +119,15 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
         binding.hSearch.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH && binding.hSearch.text.isNotEmpty()){
                 val bundle = Bundle().apply { putString("query", h_search.text.toString()) }
-                changeActivity(bundle, SearchActivity::class.java)
+                changeActivity<SearchActivity>(bundle)
                 finish()
             } else showToastMessage(resources.getString(R.string.suggest_search_1))
             false
         }
+    }
+
+    fun getComponent(): SuggestComponent? {
+        return getApp().getSuggestComponent()
     }
 
     companion object{

@@ -1,23 +1,21 @@
 package com.themovie.ui.search
 
 import androidx.lifecycle.*
-import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Movies
 import com.themovie.model.online.discovermv.MoviesResponse
-import com.themovie.repos.fromapi.ApiRepository
-import com.themovie.restapi.ApiCallback
+import com.themovie.repos.fromapi.RemoteSource
 import com.themovie.restapi.Result
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import kotlin.Exception
+import javax.inject.Inject
 
-class SuggestMoviesViewModel(private val apiRepository: ApiRepository): ViewModel() {
+class SuggestMoviesViewModel @Inject constructor (
+    private val remote: RemoteSource
+): ViewModel() {
 
     private val movieSearch: MutableLiveData<Result<MoviesResponse>> by lazy { MutableLiveData<Result<MoviesResponse>>() }
 
     fun fetchSuggestMovie(query: String){
         viewModelScope.launch {
-            val response = apiRepository.getSuggestionMoviesSearch(query)
+            val response = remote.getSuggestSearchMovie(query)
             movieSearch.value = response
         }
     }
