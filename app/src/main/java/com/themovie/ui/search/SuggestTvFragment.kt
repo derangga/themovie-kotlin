@@ -3,15 +3,10 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
@@ -57,7 +52,7 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
                     putInt("filmId", item.id)
                     putString("type", Constant.TV)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
                 activity?.finish()
             }
         })

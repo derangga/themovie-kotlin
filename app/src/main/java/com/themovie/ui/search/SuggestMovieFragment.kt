@@ -12,10 +12,7 @@ import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentSuggestBinding
 import com.themovie.di.suggest.SuggestViewModelFactory
-import com.themovie.helper.Constant
-import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.gone
-import com.themovie.helper.visible
+import com.themovie.helper.*
 import com.themovie.model.db.Movies
 import com.themovie.model.online.discovermv.MoviesResponse
 import com.themovie.restapi.Result
@@ -55,7 +52,7 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
                 activity?.finish()
             }
         })

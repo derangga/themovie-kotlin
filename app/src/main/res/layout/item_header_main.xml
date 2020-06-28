@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+                name="trend"
+                type="com.themovie.model.db.Trending" />
+        <variable
+                name="vh"
+                type="com.themovie.ui.main.adapter.TrendingAdapter.ViewHolder" />
+    </data>
 
     <androidx.cardview.widget.CardView
             android:id="@+id/v_card"
@@ -10,7 +17,8 @@
             android:layout_height="180dp"
             android:layout_margin="5dp"
             app:cardCornerRadius="10dp"
-            app:cardElevation="1dp">
+            app:cardElevation="1dp"
+            android:onClick="@{(v) -> vh.trendingClick(v, trend)}">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -21,7 +29,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/no_image"/>
+                    android:src="@drawable/no_image"
+                    app:network_image="@{trend.backdropPath}"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -37,6 +46,7 @@
                     android:maxLines="2"
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold"
+                    android:text="@{trend.title}"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="10dp"
@@ -46,4 +56,4 @@
 
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+</layout>

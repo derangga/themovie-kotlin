@@ -165,7 +165,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
@@ -181,7 +181,11 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             override fun onClick(view: View, item: Videos) {
                 val bundle = Bundle()
                 bundle.putString("key", item.key)
-                changeActivity(bundle, YoutubeActivity::class.java)
+                Intent(context, YoutubeActivity::class.java)
+                    .also { intent ->
+                        intent.putExtras(bundle)
+                        startActivity(intent)
+                    }
             }
         })
     }

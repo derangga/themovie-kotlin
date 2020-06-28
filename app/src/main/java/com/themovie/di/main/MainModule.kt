@@ -37,5 +37,5 @@ object MainModule {
 
     @Provides
     @MainScope
-    fun provideDiscoverMovieAdapter() = DiscoverMvAdapter()
+    fun provideDiscoverMovieAdapter() = DiscoverMovieAdapter()
 }

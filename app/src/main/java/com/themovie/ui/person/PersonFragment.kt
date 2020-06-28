@@ -72,7 +72,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
     }

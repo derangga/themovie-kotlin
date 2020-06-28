@@ -7,12 +7,10 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.themovie.MyApplication
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
@@ -20,6 +18,7 @@ import com.themovie.databinding.FragmentUpcomingBinding
 import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.changeActivity
 import com.themovie.model.db.Upcoming
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.UpcomingAdapter
@@ -98,7 +97,7 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLa
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 

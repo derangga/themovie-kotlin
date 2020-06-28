@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.themovie.databinding.AdapterUpcomingBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.convertDate
 import com.themovie.helper.customview.PortraitView
 import com.themovie.model.db.Upcoming
 import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_upcoming.view.*
 
 class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -37,30 +36,30 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_upcoming, parent, false)
         context = parent.context
-        return ViewHolder(view)
+
+        val view = AdapterUpcomingBinding
+            .inflate(LayoutInflater.from(context), parent, false)
+
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(root: View, val binding: AdapterUpcomingBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(upcoming: Upcoming){
-            itemView.apply {
-                val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
-                upcoming_item.apply {
-                    setImage(posterImg)
-                    setTitle(upcoming.title)
-                    setDateRelease(upcoming.releaseDate.convertDate())
-                    setOnClickListener(object: PortraitView.OnClickListener{
-                        override fun onClick() {
-                            listener.onClick(itemView, upcoming)
-                        }
-                    })
-                }
+            val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
+            binding.upcomingItem.apply {
+                setImage(posterImg)
+                setTitle(upcoming.title)
+                setDateRelease(upcoming.releaseDate.convertDate())
+                setOnClickListener(object: PortraitView.OnClickListener{
+                    override fun onClick() {
+                        listener.onClick(itemView, upcoming)
+                    }
+                })
             }
         }
     }

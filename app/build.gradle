@@ -1,15 +1,9 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
-
 apply plugin: 'androidx.navigation.safeargs.kotlin'
-
 apply plugin: 'io.fabric'
-
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -24,7 +18,7 @@ android {
     }
 
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.themovie"
         minSdkVersion 23
@@ -59,8 +53,10 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures{
+        dataBinding = true
+        // for view binding :
+        // viewBinding = true
     }
 
 }
@@ -108,7 +104,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
 
     // Kotlin
-    def nav_version = '2.2.2'
+    def nav_version = '2.3.0'
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 

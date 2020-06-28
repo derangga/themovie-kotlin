@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.themovie.databinding.AdapterGenreBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.model.db.Genre
-import kotlinx.android.synthetic.main.adapter_genre.view.*
 
 class GenreAdapter : ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -28,20 +27,19 @@ class GenreAdapter : ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_genre, parent, false)
-        return ViewHolder(view)
+        val view = AdapterGenreBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(getItem(position))
+        holder.binding.genre = getItem(position)
+        holder.binding.vh = holder
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(item: Genre){
-            itemView.apply {
-                genre_name.text = item.name
-            }
-            itemView.setOnClickListener { listener.onClick(itemView, item) }
+    inner class ViewHolder(root: View, val binding: AdapterGenreBinding) : RecyclerView.ViewHolder(root) {
+        fun genreClick(view: View, genre: Genre){
+            itemView.setOnClickListener { listener.onClick(view, genre) }
         }
     }
 

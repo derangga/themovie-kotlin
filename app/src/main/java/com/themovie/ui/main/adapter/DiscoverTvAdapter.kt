@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.themovie.databinding.AdapterPortraitTvBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
 import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_maindtv.view.*
 
 class DiscoverTvAdapter : ListAdapter<Tv, DiscoverTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -35,10 +34,12 @@ class DiscoverTvAdapter : ListAdapter<Tv, DiscoverTvAdapter.ViewHolder>(DIFF_CAL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_maindtv, parent, false)
         context = parent.context
-        return ViewHolder(view)
+
+        val view = AdapterPortraitTvBinding
+            .inflate(LayoutInflater.from(context), parent, false)
+
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,20 +47,18 @@ class DiscoverTvAdapter : ListAdapter<Tv, DiscoverTvAdapter.ViewHolder>(DIFF_CAL
     }
 
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(root: View, val binding: AdapterPortraitTvBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(tvLocal: Tv){
-            itemView.apply {
-                val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
-                tv_item.apply {
-                    setTitle(tvLocal.name)
-                    setImage(imgPoster)
-                    setRating(tvLocal.voteAverage)
-                    setOnClickListener(object: PortraitView.OnClickListener{
-                        override fun onClick() {
-                            listener.onClick(itemView, tvLocal)
-                        }
-                    })
-                }
+            val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
+            binding.tvItem.apply {
+                setTitle(tvLocal.name)
+                setImage(imgPoster)
+                setRating(tvLocal.voteAverage)
+                setOnClickListener(object: PortraitView.OnClickListener{
+                    override fun onClick() {
+                        listener.onClick(itemView, tvLocal)
+                    }
+                })
             }
         }
     }

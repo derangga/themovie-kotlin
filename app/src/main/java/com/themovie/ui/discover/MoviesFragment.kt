@@ -17,6 +17,7 @@ import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
 import com.themovie.helper.OnAdapterListener
+import com.themovie.helper.changeActivity
 import com.themovie.model.db.Movies
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.MovieAdapter
@@ -77,7 +78,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout
                 Navigation.findNavController(it).navigate(action)
             })
 
-            setSearchButtonOnClickListener(View.OnClickListener { changeActivity(SuggestActivity::class.java) })
+            setSearchButtonOnClickListener(View.OnClickListener { changeActivity<SuggestActivity>() })
         }
 
 
@@ -103,7 +104,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout
                     putInt("filmId", item.id)
                     putString("type", Constant.MOVIE)
                 }
-                changeActivity(bundle, DetailActivity::class.java)
+                changeActivity<DetailActivity>(bundle)
             }
         })
 
