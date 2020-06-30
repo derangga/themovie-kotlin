@@ -1,4 +1,4 @@
-package com.themovie.repos.fromapi.search
+package com.themovie.repos.search
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
@@ -15,7 +15,11 @@ class SearchTvSourceFactory(
     private val searchDataSource = MutableLiveData<SearchTvDataSourceBase>()
 
     override fun create(): DataSource<Int, Tv> {
-        val dataSource = SearchTvDataSourceBase(scope, apiInterface, query)
+        val dataSource = SearchTvDataSourceBase(
+            scope,
+            apiInterface,
+            query
+        )
         searchDataSource.postValue(dataSource)
         return dataSource
     }

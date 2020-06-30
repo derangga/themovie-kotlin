@@ -1,15 +1,13 @@
 package com.themovie.ui.detail.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.themovie.model.online.detail.CastResponse
 import com.themovie.model.online.detail.DetailTvResponse
 import com.themovie.model.online.detail.ReviewResponse
 import com.themovie.model.online.discovertv.TvResponse
 import com.themovie.model.online.video.VideoResponse
-import com.themovie.repos.fromapi.RemoteSource
+import com.themovie.repos.RemoteSource
 import com.themovie.restapi.Result
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch

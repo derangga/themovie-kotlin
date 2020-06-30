@@ -1,4 +1,4 @@
-package com.themovie.repos.fromapi.discover
+package com.themovie.repos.discover
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
@@ -15,7 +15,10 @@ class UpcomingDataSourceFactory
     private val upcomingLiveDataSource = MutableLiveData<UpcomingDataSourceBase>()
 
     override fun create(): DataSource<Int, Upcoming> {
-        val dataSource = UpcomingDataSourceBase(scope, apiInterface)
+        val dataSource = UpcomingDataSourceBase(
+            scope,
+            apiInterface
+        )
         upcomingLiveDataSource.postValue(dataSource)
         return dataSource
     }

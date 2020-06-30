@@ -1,4 +1,4 @@
-package com.themovie.repos.fromapi.search
+package com.themovie.repos.discover
 
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
@@ -11,11 +11,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class SearchTvDataSourceBase(
+class TvDataSourceBase(
     private val scope: CoroutineScope,
-    private val apiInterface: ApiInterface,
-    private val query: String? = ""
-): BasePagingDataSource<Int, Tv>() {
+    private val apiInterface: ApiInterface
+) : BasePagingDataSource<Int, Tv>() {
 
     override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(Result.Status.LOADING)
@@ -38,12 +37,13 @@ class SearchTvDataSourceBase(
 
     override fun fetchData(page: Int, callback: (List<Tv>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val response = apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE,
-                query.orEmpty(), page)
-            if(response.isSuccessful){
+            val discover = apiInterface.getDiscoverTvs(
+                ApiUrl.TOKEN, Constant.LANGUAGE,
+                Constant.SORTING, page, "")
+            if(discover.isSuccessful){
                 updateState(Result.Status.SUCCESS)
-                pageSize = response.body()?.totalPages ?: 0
-                callback(response.body()?.results)
+                pageSize = discover.body()!!.totalPages
+                callback(discover.body()?.results)
             } else updateState(Result.Status.ERROR)
         }
     }

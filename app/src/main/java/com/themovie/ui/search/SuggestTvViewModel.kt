@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.themovie.model.online.discovertv.TvResponse
-import com.themovie.repos.fromapi.RemoteSource
+import com.themovie.repos.RemoteSource
 import com.themovie.restapi.Result
 import kotlinx.coroutines.launch
 import javax.inject.Inject

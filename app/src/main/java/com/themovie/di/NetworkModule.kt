@@ -1,9 +1,8 @@
 package com.themovie.di
 
 import com.themovie.BuildConfig
-import com.themovie.di.main.MainScope
-import com.themovie.repos.fromapi.RemoteSource
-import com.themovie.repos.fromapi.RemoteSourceImpl
+import com.themovie.repos.RemoteSource
+import com.themovie.repos.RemoteSourceImpl
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import dagger.Module

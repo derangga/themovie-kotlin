@@ -1,4 +1,4 @@
-package com.themovie.repos.fromapi
+package com.themovie.repos
 
 import com.themovie.helper.Constant
 import com.themovie.model.online.PopularResponse
@@ -14,6 +14,7 @@ import com.themovie.model.online.person.PersonImageResponse
 import com.themovie.model.online.person.PersonResponse
 import com.themovie.model.online.upcoming.UpcomingResponse
 import com.themovie.model.online.video.VideoResponse
+import com.themovie.repos.RemoteSource
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import com.themovie.restapi.BaseRemoteDataSource
