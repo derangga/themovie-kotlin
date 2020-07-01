@@ -51,9 +51,9 @@ class DiscoverTvAdapter : ListAdapter<Tv, DiscoverTvAdapter.ViewHolder>(DIFF_CAL
         fun bindItem(tvLocal: Tv){
             val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
             binding.tvItem.apply {
-                setTitle(tvLocal.name)
+                setTitle(tvLocal.name.orEmpty())
                 setImage(imgPoster)
-                setRating(tvLocal.voteAverage)
+                setRating(tvLocal.voteAverage.orEmpty())
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {
                         listener.onClick(itemView, tvLocal)

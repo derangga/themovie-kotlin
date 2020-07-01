@@ -42,7 +42,7 @@ class TvDataSourceBase(
                 Constant.SORTING, page, "")
             if(discover.isSuccessful){
                 updateState(Result.Status.SUCCESS)
-                pageSize = discover.body()!!.totalPages
+                pageSize = discover.body()?.totalPages ?: 0
                 callback(discover.body()?.results)
             } else updateState(Result.Status.ERROR)
         }

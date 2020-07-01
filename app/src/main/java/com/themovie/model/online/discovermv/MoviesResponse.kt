@@ -5,6 +5,5 @@ import com.themovie.model.db.Movies
 
 data class MoviesResponse(
     @SerializedName("results") val movies: List<Movies>,
-    @SerializedName("total_pages") val totalPages: Int,
-    @SerializedName("page") val page: Int
+    @SerializedName("total_pages") val totalPages: Int? = 0
 )

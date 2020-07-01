@@ -1,13 +1,11 @@
 package com.themovie.ui.detail.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
 import com.themovie.databinding.AdapterCreditsBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
@@ -49,8 +47,8 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
         fun bindItem(credits: Credits){
             val imgUrl = "${ApiUrl.IMG_POSTER}${credits.profilePath.toString()}"
             binding.castPortrait.apply {
-                setTitle(credits.name)
-                setSubtitle(credits.character)
+                setTitle(credits.name.orEmpty())
+                setSubtitle(credits.character.orEmpty())
                 setImage(imgUrl)
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {

@@ -53,7 +53,7 @@ class UpcomingAdapter : ListAdapter<Upcoming, UpcomingAdapter.ViewHolder>(DIFF_C
             val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
             binding.upcomingItem.apply {
                 setImage(posterImg)
-                setTitle(upcoming.title)
+                setTitle(upcoming.title.orEmpty())
                 setDateRelease(upcoming.releaseDate.convertDate())
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {

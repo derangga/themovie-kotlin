@@ -7,8 +7,8 @@ data class CastResponse(
 )
 
 data class Credits(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("character") val character: String,
-    @SerializedName("profile_path") val profilePath: String?
+    @SerializedName("id") val id: Int? = 0,
+    @SerializedName("name") val name: String? = "",
+    @SerializedName("character") val character: String? = "",
+    @SerializedName("profile_path") val profilePath: String? = ""
 )

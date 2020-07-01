@@ -52,8 +52,8 @@ class DiscoverMovieAdapter : ListAdapter<Movies, DiscoverMovieAdapter.ViewHolder
             val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
             binding.movieItem.apply {
                 setImage(imgPoster)
-                setTitle(movies.title)
-                setRating(movies.voteAverage)
+                setTitle(movies.title.orEmpty())
+                setRating(movies.voteAverage.orEmpty())
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {
                         listener.onClick(itemView, movies)

@@ -155,7 +155,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
         creditsAdapter.setOnClickListener(object: OnAdapterListener<Credits>{
             override fun onClick(view: View, item: Credits) {
-                val action = DetailTvFragmentDirections.actionDetailTvFragmentToPersonFragment2(item.id)
+                val action = DetailTvFragmentDirections.actionDetailTvFragmentToPersonFragment2(item.id ?: 0)
                 Navigation.findNavController(view).navigate(action)
             }
         })
@@ -163,7 +163,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
         recommendedTvAdapter.setOnClickListener(object: OnAdapterListener<Tv>{
             override fun onClick(view: View, item: Tv) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.TV)
                 }
                 changeActivity<DetailActivity>(bundle)

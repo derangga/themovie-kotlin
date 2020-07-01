@@ -69,7 +69,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
         personFilmAdapter.setOnItemCLickListener(object: OnAdapterListener<Filmography>{
             override fun onClick(view: View, item: Filmography) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity<DetailActivity>(bundle)
