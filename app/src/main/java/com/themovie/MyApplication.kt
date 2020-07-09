@@ -9,7 +9,7 @@ import com.themovie.di.search.SearchComponent
 import com.themovie.di.suggest.SuggestComponent
 import timber.log.Timber
 
-class MyApplication : Application() {
+open class MyApplication : Application() {
 
     private lateinit var appComponent: AppComponent
     private var mainComponent: MainComponent? = null
@@ -18,18 +18,19 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.builder()
-            .application(this)
-            .build()
-
         if(BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 
-    fun getAppComponent(): AppComponent {
+    open fun getAppComponent(): AppComponent {
+        if(!this::appComponent.isInitialized){
+            appComponent = DaggerAppComponent.builder()
+                .application(this)
+                .build()
+        }
         return appComponent
     }
 
-    fun getMainComponent(): MainComponent?{
+    open fun getMainComponent(): MainComponent?{
         if(mainComponent == null){
             mainComponent = appComponent.mainComponent().create()
         }
@@ -40,25 +41,25 @@ class MyApplication : Application() {
         mainComponent = null
     }
 
-    fun getSuggestComponent(): SuggestComponent? {
+    open fun getSuggestComponent(): SuggestComponent? {
         if(suggestComponent == null){
             suggestComponent = appComponent.suggestComponent().create()
         }
         return suggestComponent
     }
 
-    fun releaseSuggestComponent(){
+    open fun releaseSuggestComponent(){
         suggestComponent = null
     }
 
-    fun getSearchComponent(): SearchComponent? {
+    open fun getSearchComponent(): SearchComponent? {
         if(searchComponent == null){
             searchComponent = appComponent.searchComponent().create()
         }
         return searchComponent
     }
 
-    fun releaseSearchComponent() {
+    open fun releaseSearchComponent() {
         searchComponent = null
     }
 }
