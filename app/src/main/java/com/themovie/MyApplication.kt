@@ -19,14 +19,13 @@ open class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         if(BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+
+        appComponent = DaggerAppComponent.builder()
+            .application(this)
+            .build()
     }
 
     open fun getAppComponent(): AppComponent {
-        if(!this::appComponent.isInitialized){
-            appComponent = DaggerAppComponent.builder()
-                .application(this)
-                .build()
-        }
         return appComponent
     }
 

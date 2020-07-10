@@ -1,11 +1,11 @@
-package com.themovie.ui.detail
+package com.themovie.ui.person
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.themovie.helper.CoroutinesTestRule
 import com.themovie.repos.RemoteSource
-import com.themovie.ui.detail.viewmodel.DetailMovieViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -13,7 +13,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
-class DetailMovieViewModelTest{
+class PersonViewModelTest{
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -21,25 +21,21 @@ class DetailMovieViewModelTest{
     @get:Rule
     var coroutinesTestRule = CoroutinesTestRule()
 
-
     private val remoteSource = mock(RemoteSource::class.java)
-    private lateinit var viewModel: DetailMovieViewModel
+    private lateinit var viewModel: PersonViewModel
 
     @Before
     fun setUp() {
-        viewModel =
-            DetailMovieViewModel(remoteSource)
+        viewModel = PersonViewModel(remoteSource)
     }
 
     @Test
-    fun `get detail movie content`() = coroutinesTestRule
+    fun `get content person detail`() = coroutinesTestRule
         .testDispatcher.runBlockingTest {
-        viewModel.getDetailMovieRequest(1)
+            viewModel.getDetailPersonRequest(10)
 
-        verify(remoteSource).getDetailMovie(1)
-        verify(remoteSource).getCreditMovie(1)
-        verify(remoteSource).getRecommendationMovie(1)
-        verify(remoteSource).getTrailerMovie(1)
-        verify(remoteSource).getReviewMovie(1)
-    }
+            verify(remoteSource).getDetailPerson(10)
+            verify(remoteSource).getPersonPict(10)
+            verify(remoteSource).getPersonFilm(10)
+        }
 }

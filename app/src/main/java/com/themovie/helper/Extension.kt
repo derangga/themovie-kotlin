@@ -23,16 +23,12 @@ import java.text.SimpleDateFormat
 @SuppressLint("SimpleDateFormat")
 fun String?.convertDate(): String {
     val simpleDate = SimpleDateFormat("yyyy-M-dd")
-    var formattedDate: String? = null
-    try{
+    return try{
         val newDate = simpleDate.parse(this.orEmpty())
-        formattedDate = SimpleDateFormat("MMM dd, yyyy").format(newDate!!)
+        SimpleDateFormat("MMM dd, yyyy").format(newDate!!)
     } catch (e: ParseException){
-        e.printStackTrace()
+        ""
     }
-
-    return formattedDate.orEmpty()
-
 }
 
 fun <T:ImageView> cacheImage(context: Context, url: String, imageView: T){
