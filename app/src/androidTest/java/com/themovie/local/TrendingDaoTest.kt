@@ -8,11 +8,12 @@ import androidx.test.filters.SmallTest
 import com.themovie.localdb.TheMovieDatabase
 import com.themovie.model.db.Trending
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.After
-import org.junit.Assert.assertThat
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -21,7 +22,7 @@ import org.junit.runner.RunWith
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @SmallTest
-class MoviesDaoTest {
+class TrendingDaoTest {
 
     private lateinit var database: TheMovieDatabase
 
@@ -42,19 +43,33 @@ class MoviesDaoTest {
     }
 
     @Test
-    fun insertTrendingMovieAndGetAll() {
-        runBlockingTest {
-            val movie = Trending(1, 1, "Pokemon")
-            database.trendingDao().insert(movie)
+    fun insertTrendingMovieAndGetTrendingMovie() =
+         runBlockingTest {
+             // given
+             val movie = Trending(1, 1, "Pokemon")
+             database.trendingDao().insert(movie)
 
-            val loaded = database.trendingDao().getTrending()
+             // when
+             val loaded = database.trendingDao().getTrending().take(1).toList().first()
 
-            loaded.collect { db ->
-                val res = db.first()
-                assertThat(res.pkId, `is`(1))
-                assertThat(res.id, `is`(1))
-                assertThat(res.title, `is`("Pokemon"))
-            }
+             // then
+             assertThat(loaded[0].id, `is`(1))
+             assertThat(loaded[0].title, `is`("Pokemon"))
         }
+
+    @Test
+    fun insertTrendingMovieAndGetCountRow() = runBlockingTest {
+        // given
+        val movie = listOf(
+            Trending(1, 1, "Pokemon"),
+            Trending(2, 2, "Ultraman")
+        )
+        database.trendingDao().insertAll(*movie.toTypedArray())
+
+        // when
+        val row = database.trendingDao().countRows()
+
+        // then
+        assertThat(row, `is`(2))
     }
 }
