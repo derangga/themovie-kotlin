@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+
+    def globalConfig = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfig.androidCompileSdkVersion
+    buildToolsVersion globalConfig.androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion globalConfig.androidMinSdkVersion
+        targetSdkVersion globalConfig.androidTargetSdkVersion
+        versionCode globalConfig.androidVersionCode
+        versionName globalConfig.androidVersionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            buildConfigField('String', 'API_GATEWAY', '"https://api.themoviedb.org/3/"')
+            buildConfigField('String', 'TOKEN', '"98e5a808562ae58e4db7aecb3a0eda01"')
+            buildConfigField('String', 'YOUTUBE_TOKEN', '"AIzaSyB79JGvfJLIPLy6yLECjghWD3_1FfB1PlQ"')
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation project(':domain')
+    rootProject.appDependencies.each {
+        add(it.configuration, it.dependency, it.options)
+    }
+
+}
