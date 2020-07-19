@@ -1,10 +1,10 @@
-package com.aldebaran.domain.repository
+package com.aldebaran.domain.repository.remote
 
 import com.aldebaran.domain.Result
 import com.aldebaran.domain.entities.DataList
 import com.aldebaran.domain.entities.remote.*
 
-interface MovieRepository {
+interface MovieRemoteSource {
 
     suspend fun getPopularMovie(page: Int): Result<DataList<MovieResponse>>
 
@@ -18,9 +18,11 @@ interface MovieRepository {
 
     suspend fun getRecommendationMovie(movieId: Int): Result<DataList<MovieResponse>>
 
-    suspend fun getReviewMovie(movieId: Int): Result<ReviewResponse>
+    suspend fun getReviewMovie(movieId: Int): Result<DataList<ReviewsResponse>>
 
     suspend fun getCreditMovie(movieId: Int): Result<CastResponse>
 
     suspend fun getTrailerMovie(movieId: Int): Result<VideoResponse>
+
+    suspend fun searchMovie(query: String, page: Int): Result<DataList<MovieResponse>>
 }

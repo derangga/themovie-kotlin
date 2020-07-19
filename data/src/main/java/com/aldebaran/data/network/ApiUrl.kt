@@ -28,6 +28,6 @@ class ApiUrl {
         const val SEARCH_TV = "search/tv"
 
         const val SORTING = "popularity.desc"
-
+        const val TIMEZONE = "US"
     }
 }

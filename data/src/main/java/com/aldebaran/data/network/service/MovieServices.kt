@@ -53,7 +53,7 @@ interface MovieServices {
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
-    ) : Response<ReviewResponse>
+    ) : Response<DataList<ReviewsResponse>>
 
     @GET(ApiUrl.CREDITS)
     suspend fun getCreditsMovie(
@@ -66,4 +66,11 @@ interface MovieServices {
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String
     ) : Response<VideoResponse>
+
+    @GET(ApiUrl.SEARCH_MOVIE)
+    suspend fun getSearchMovie(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ) : Response<DataList<MovieResponse>>
 }

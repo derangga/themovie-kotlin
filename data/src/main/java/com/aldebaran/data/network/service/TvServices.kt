@@ -10,12 +10,11 @@ import retrofit2.http.Query
 
 interface TvServices {
     @GET(ApiUrl.DISCOVER_TV)
-    suspend fun getDiscoverTvs(
+    suspend fun getDiscoverTv(
         @Query("api_key") api_key: String,
-        @Query("language") language: String,
         @Query("sort_by") sort_by: String,
-        @Query("page") page: Int,
-        @Query("timezone") timezone: String
+        @Query("timezone") timezone: String,
+        @Query("page") page: Int
     ) : Response<DataList<TvResponse>>
 
     @GET(ApiUrl.DETAIL_TV)
@@ -28,7 +27,6 @@ interface TvServices {
     suspend fun getRecommendationTv(
         @Path("tv_id") movie_id: Int,
         @Query("api_key") api_key: String,
-        @Query("language") language: String,
         @Query("page") page: Int
     ) : Response<DataList<TvResponse>>
 
@@ -36,9 +34,8 @@ interface TvServices {
     suspend fun getReviewsTV(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") api_key: String,
-        @Query("language") language: String,
         @Query("page") page: Int
-    ) : Response<ReviewResponse>
+    ) : Response<DataList<ReviewsResponse>>
 
     @GET(ApiUrl.CREDITS_TV)
     suspend fun getCreditsTv(
@@ -49,7 +46,13 @@ interface TvServices {
     @GET(ApiUrl.VIDEO_TV)
     suspend fun getTrailerTv(
         @Path("tv_id") tv_id: Int,
-        @Query("api_key") api_key: String ,
-        @Query("language") language: String
+        @Query("api_key") api_key: String
     ) : Response<VideoResponse>
+
+    @GET(ApiUrl.SEARCH_TV)
+    suspend fun getSearchTv(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ) : Response<DataList<TvResponse>>
 }

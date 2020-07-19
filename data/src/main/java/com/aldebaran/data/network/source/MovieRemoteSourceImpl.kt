@@ -1,4 +1,4 @@
-package com.aldebaran.data.network.repository
+package com.aldebaran.data.network.source
 
 import com.aldebaran.data.BuildConfig
 import com.aldebaran.data.network.ApiUrl
@@ -7,9 +7,10 @@ import com.aldebaran.data.network.service.MovieServices
 import com.aldebaran.domain.Result
 import com.aldebaran.domain.entities.DataList
 import com.aldebaran.domain.entities.remote.*
-import com.aldebaran.domain.repository.MovieRepository
+import com.aldebaran.domain.repository.remote.MovieRemoteSource
 
-class MovieRepositoryImpl(private val services: MovieServices): MovieRepository {
+class MovieRemoteSourceImpl(private val services: MovieServices):
+    MovieRemoteSource {
     override suspend fun getPopularMovie(page: Int): Result<DataList<MovieResponse>> {
         return safeCallApi { services.getPopularMovie(BuildConfig.TOKEN, page) }
     }
@@ -38,7 +39,7 @@ class MovieRepositoryImpl(private val services: MovieServices): MovieRepository 
         return safeCallApi { services.getRecommendationMovie(movieId, BuildConfig.TOKEN, 1) }
     }
 
-    override suspend fun getReviewMovie(movieId: Int): Result<ReviewResponse> {
+    override suspend fun getReviewMovie(movieId: Int): Result<DataList<ReviewsResponse>> {
         return safeCallApi { services.getReviewsMovie(movieId, BuildConfig.TOKEN, 1) }
     }
 
@@ -48,5 +49,9 @@ class MovieRepositoryImpl(private val services: MovieServices): MovieRepository 
 
     override suspend fun getTrailerMovie(movieId: Int): Result<VideoResponse> {
         return safeCallApi { services.getTrailerMovie(movieId, BuildConfig.TOKEN) }
+    }
+
+    override suspend fun searchMovie(query: String, page: Int): Result<DataList<MovieResponse>> {
+        return safeCallApi { services.getSearchMovie(BuildConfig.TOKEN, query, page) }
     }
 }

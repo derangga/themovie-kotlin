@@ -210,17 +210,21 @@ ext {
 
     dataDependencies = [
             [configuration: "implementation", dependency: networkLibs.retrofit],
-            [configuration: "implementation", dependency: networkLibs.gsonConverter],
+
             [configuration: "implementation", dependency: networkLibs.okHttp],
             [configuration: "implementation", dependency: networkLibs.okHttpLogging],
 
             [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
             [configuration: "implementation", dependency: jetPackLibs.roomExtension],
+            [configuration: "implementation", dependency: jetPackLibs.androidPaging],
             [configuration: "kapt", dependency: jetPackLibs.roomProcessor],
+
+            [configuration: "implementation", dependency: dependencyInjectionLibs.daggerCore],
+            [configuration: "kapt", dependency: dependencyInjectionLibs.daggerProcessor],
     ]
 
     domainDependencies = [
             [configuration: "api", dependency: coroutines.coroutines],
-            [configuration: "implementation", dependency: networkLibs.gsonConverter]
+            [configuration: "api", dependency: networkLibs.gsonConverter]
     ]
 }
