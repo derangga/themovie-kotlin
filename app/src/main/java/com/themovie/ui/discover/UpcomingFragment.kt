@@ -94,7 +94,7 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLa
         mAdapter.setOnClickAdapter(object: OnAdapterListener<Upcoming>{
             override fun onClick(view: View, item: Upcoming) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity<DetailActivity>(bundle)

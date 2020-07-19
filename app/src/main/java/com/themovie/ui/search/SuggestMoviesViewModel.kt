@@ -2,7 +2,7 @@ package com.themovie.ui.search
 
 import androidx.lifecycle.*
 import com.themovie.model.online.discovermv.MoviesResponse
-import com.themovie.repos.fromapi.RemoteSource
+import com.themovie.repos.RemoteSource
 import com.themovie.restapi.Result
 import kotlinx.coroutines.launch
 import javax.inject.Inject

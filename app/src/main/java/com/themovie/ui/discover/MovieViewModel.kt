@@ -4,8 +4,8 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.model.db.Movies
-import com.themovie.repos.fromapi.discover.MovieDataSourceBase
-import com.themovie.repos.fromapi.discover.MovieDataSourceFactory
+import com.themovie.repos.discover.MovieDataSourceBase
+import com.themovie.repos.discover.MovieDataSourceFactory
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.Result
 import javax.inject.Inject
@@ -14,7 +14,12 @@ class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewMode
 
     private var movieLiveData: LiveData<PagedList<Movies>>
     private val uiList = MediatorLiveData<PagedList<Movies>>()
-    private val moviesSourceFactory by lazy { MovieDataSourceFactory(viewModelScope, apiInterface) }
+    private val moviesSourceFactory by lazy {
+        MovieDataSourceFactory(
+            viewModelScope,
+            apiInterface
+        )
+    }
 
     init {
         val pageConfig = PagedList.Config.Builder()

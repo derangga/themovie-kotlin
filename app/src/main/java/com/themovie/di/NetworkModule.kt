@@ -1,11 +1,9 @@
 package com.themovie.di
 
 import com.themovie.BuildConfig
-import com.themovie.di.main.MainScope
-import com.themovie.repos.fromapi.RemoteSource
-import com.themovie.repos.fromapi.RemoteSourceImpl
+import com.themovie.repos.RemoteSource
+import com.themovie.repos.RemoteSourceImpl
 import com.themovie.restapi.ApiInterface
-import com.themovie.restapi.ApiUrl
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -36,7 +34,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(ApiUrl.BASE_URL)
+            .baseUrl(BuildConfig.GATEWAY)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

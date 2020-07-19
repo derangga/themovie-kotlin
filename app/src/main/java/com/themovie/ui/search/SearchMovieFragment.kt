@@ -61,7 +61,7 @@ class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRe
             setOnClickAdapter(object: OnAdapterListener<Movies>{
                 override fun onClick(view: View, item: Movies) {
                     val bundle = Bundle().apply {
-                        putInt("filmId", item.id)
+                        putInt("filmId", item.id ?: 0)
                         putString("type", Constant.MOVIE)
                     }
                     changeActivity<DetailActivity>(bundle)

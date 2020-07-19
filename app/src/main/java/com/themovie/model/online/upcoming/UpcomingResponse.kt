@@ -5,5 +5,5 @@ import com.themovie.model.db.Upcoming
 
 data class UpcomingResponse (
     @SerializedName("results") val results: List<Upcoming>,
-    @SerializedName("total_pages") val totalPages: Int
+    @SerializedName("total_pages") val totalPages: Int? = 0
 )

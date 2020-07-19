@@ -5,8 +5,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
-import com.themovie.repos.fromapi.search.SearchTvDataSourceBase
-import com.themovie.repos.fromapi.search.SearchTvSourceFactory
+import com.themovie.repos.search.SearchTvDataSourceBase
+import com.themovie.repos.search.SearchTvSourceFactory
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.Result
 import javax.inject.Inject
@@ -17,7 +17,12 @@ class SearchTvViewModel @Inject constructor (
 
     private val searchLiveData: LiveData<PagedList<Tv>>
     private val uiList = MediatorLiveData<PagedList<Tv>>()
-    private val searchSourceFactory = SearchTvSourceFactory(viewModelScope, apiInterface, query)
+    private val searchSourceFactory =
+        SearchTvSourceFactory(
+            viewModelScope,
+            apiInterface,
+            query
+        )
 
     companion object{
         var query = ""

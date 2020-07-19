@@ -123,7 +123,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         trendingAdapter.setOnClickListener(object: OnAdapterListener<Trending>{
             override fun onClick(view: View, item: Trending) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity<DetailActivity>(bundle)
@@ -143,7 +143,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             override fun onClick(view: View, item: Upcoming) {
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity<DetailActivity>(bundle)
@@ -152,7 +152,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
             override fun onClick(view: View, item: Genre) {
-                val action = HomeFragmentDirections.actionHomeFragmentToMovieWithGenreFragment(item.id, item.name)
+                val action = HomeFragmentDirections
+                    .actionHomeFragmentToMovieWithGenreFragment(item.id ?: 0, item.name.orEmpty())
                 Navigation.findNavController(view).navigate(action)
             }
         })
@@ -161,7 +162,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             override fun onClick(view: View, item: Tv) {
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.TV)
                 }
                 changeActivity<DetailActivity>(bundle)
@@ -172,7 +173,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             override fun onClick(view: View, item: Movies) {
                 stopSliding()
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity<DetailActivity>(bundle)

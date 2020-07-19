@@ -1,7 +1,8 @@
-package com.themovie.repos.fromapi.discover
+package com.themovie.repos.discover
 
-import com.themovie.helper.Constant
-import com.themovie.model.db.Movies
+import com.themovie.BuildConfig
+import com.themovie.helper.LoadDataState
+import com.themovie.model.db.Upcoming
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import com.themovie.restapi.BasePagingDataSource
@@ -10,13 +11,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class MovieDataSourceBase(
+class UpcomingDataSourceBase(
     private val scope: CoroutineScope,
-    private val apiInterface: ApiInterface,
-    private val genre: String
-): BasePagingDataSource<Int, Movies>() {
+    private val apiInterface: ApiInterface
+): BasePagingDataSource<Int, Upcoming>() {
 
-    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
+    override fun loadFirstPage(params: LoadInitialParams<Int>,callback: LoadInitialCallback<Int, Upcoming>) {
         updateState(Result.Status.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
@@ -24,10 +24,10 @@ class MovieDataSourceBase(
         }
     }
 
-    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
+    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Upcoming>) {
         if(params.key <= pageSize){
             updateState(Result.Status.LOADING)
-            retry = {loadAfter(params, callback)}
+            retry = { loadAfter(params, callback) }
             fetchData(params.key){
                 key = params.key + 1
                 callback.onResult(it!!.toMutableList(), key)
@@ -35,14 +35,13 @@ class MovieDataSourceBase(
         }
     }
 
-    override fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
+    override fun fetchData(page: Int, callback: (List<Upcoming>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
-                Constant.SORTING, page, "2019", genre)
-            if(discover.isSuccessful){
+            val upcoming = apiInterface.getUpcomingMovies(BuildConfig.TOKEN, page)
+            if(upcoming.isSuccessful){
                 updateState(Result.Status.SUCCESS)
-                pageSize = discover.body()?.totalPages ?: 0
-                callback(discover.body()?.movies)
+                pageSize = upcoming.body()?.totalPages ?: 0
+                callback(upcoming.body()?.results)
             } else updateState(Result.Status.ERROR)
         }
     }

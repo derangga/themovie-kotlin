@@ -5,8 +5,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
-import com.themovie.repos.fromapi.discover.TvDataSourceBase
-import com.themovie.repos.fromapi.discover.TvDataSourceFactory
+import com.themovie.repos.discover.TvDataSourceBase
+import com.themovie.repos.discover.TvDataSourceFactory
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.Result
 import javax.inject.Inject
@@ -15,7 +15,12 @@ class TvViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() 
 
     private var tvLiveData: LiveData<PagedList<Tv>>
     private val uiList = MediatorLiveData<PagedList<Tv>>()
-    private val tvSourceFactory by lazy { TvDataSourceFactory(viewModelScope, apiInterface) }
+    private val tvSourceFactory by lazy {
+        TvDataSourceFactory(
+            viewModelScope,
+            apiInterface
+        )
+    }
 
     init {
         val pageConfig = PagedList.Config.Builder()

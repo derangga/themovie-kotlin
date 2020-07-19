@@ -1,0 +1,211 @@
+ext {
+
+    // Android Core
+    androidCompileSdkVersion = 29
+    androidBuildToolsVersion = "29.0.3"
+    androidMinSdkVersion = 23
+    androidTargetSdkVersion = 29
+    androidVersionCode = 1
+    androidVersionName = "1.0.0"
+
+    // android lib
+    androidxVersion = '1.1.0'
+    androidxLegacyVersion = '1.0.0'
+    androidxCoreVersion = '1.3.0'
+    constraintLayoutVersion = '1.1.3'
+
+    // android arch component
+    archLifecycleVersion = '2.2.0'
+
+    // dependencies injection
+    daggerVersion = '2.28'
+
+    // android paging
+    pagingVersion = '2.1.2'
+
+    // image cache
+    glideVersion = '4.11.0'
+
+    // navigation component
+    navVersion = '2.3.0'
+
+    // network
+    retrofitVersion = '2.9.0'
+    okHttpVersion = '4.8.0'
+
+    // database
+    roomVersion = '2.2.5'
+
+    // view
+    shimmerVersion = '0.5.0'
+    circleIndicatorVersion = '2.1.4'
+    roundedImageViewVersion = '2.3.0'
+
+    // crashlytics
+    firebaseAnalytics = '17.4.4'
+    firebaseCrashlyticsVersion = '17.1.1'
+
+    // coroutines
+    coroutinesVersion = '1.3.7'
+
+    // logging
+    timberVersion = '4.7.1'
+
+    // test
+    androidxTestVersion = '1.2.0'
+    androidxJunitExtVersion = '1.1.1'
+    archTestingVersion = '2.1.0'
+
+    espressoVersion = '3.2.0'
+
+    junitVersion = '4.12'
+    hamcrestVersion = '1.3'
+    mockitoVersion = '3.2.0'
+    robolectricVersion = '4.3.1'
+
+    def androidLibs = [
+            androidCore:        [group: 'androidx.core', name: 'core-ktx', version: androidxCoreVersion],
+            appCompat:          [group: 'androidx.appcompat', name: 'appcompat', version: androidxVersion],
+            constraintLayout:   [group: 'androidx.constraintlayout', name: 'constraintlayout', version: constraintLayoutVersion],
+            legacySupport:      [group: 'androidx.legacy', name: 'legacy-support-v4', version: androidxLegacyVersion],
+            meterialComponent:  [group: 'com.google.android.material', name: 'material', version: androidxVersion]
+    ]
+
+    def coroutines = [
+            coroutines:         [group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: coroutinesVersion],
+            coroutinesTest:     [group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-test', version: coroutinesVersion]
+    ]
+
+    def dependencyInjectionLibs = [
+            daggerCore:         [group: 'com.google.dagger', name: 'dagger', version: daggerVersion],
+            daggerProcessor:    [group: 'com.google.dagger', name: 'dagger-compiler', version: daggerVersion]
+    ]
+
+    def jetPackLibs = [
+            androidViewModel:       [group: 'androidx.lifecycle', name: 'lifecycle-viewmodel-ktx', version: archLifecycleVersion],
+            androidLiveData:        [group: 'androidx.lifecycle', name: 'lifecycle-livedata-ktx', version: archLifecycleVersion],
+            archProcessor:          [group: 'androidx.lifecycle', name: 'lifecycle-compiler', version: archLifecycleVersion],
+
+            roomRunTime:            [group: 'androidx.room', name: 'room-runtime', version: roomVersion],
+            roomExtension:          [group: 'androidx.room', name: 'room-ktx', version: roomVersion],
+            roomProcessor:          [group: 'androidx.room', name: 'room-compiler', version: roomVersion],
+
+            androidPaging:          [group: 'androidx.paging', name: 'paging-runtime-ktx', version: pagingVersion],
+
+            navigationFragment:     [group: 'androidx.navigation', name: 'navigation-fragment-ktx', version: navVersion],
+            navigationUI:           [group: 'androidx.navigation', name: 'navigation-ui-ktx', version: navVersion]
+    ]
+
+    def imageCacheLibs = [
+            glide:                  [group: 'com.github.bumptech.glide', name: 'glide', version: glideVersion],
+            glideProcessor:         [group: 'com.github.bumptech.glide', name: 'compiler', version: glideVersion],
+    ]
+
+    def crashlyticsLibs = [
+            analytics:              [group: 'com.google.firebase', name: 'firebase-analytics-ktx', version: firebaseAnalytics],
+            crashlytics:            [group: 'com.google.firebase', name: 'firebase-crashlytics', version: firebaseCrashlyticsVersion]
+    ]
+
+    def networkLibs = [
+            retrofit:               [group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofitVersion],
+            gsonConverter:          [group: 'com.squareup.retrofit2', name: 'converter-gson', version: retrofitVersion],
+            okHttp:                 [group: 'com.squareup.okhttp3', name: 'okhttp', version: okHttpVersion],
+            okHttpLogging:          [group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: okHttpVersion]
+    ]
+
+    def viewLibs = [
+            circleIndicator:        [group: 'me.relex', name: 'circleindicator', version: circleIndicatorVersion],
+            roundedImage:           [group: 'com.makeramen', name: 'roundedimageview', version: roundedImageViewVersion],
+            shimmer:                [group: 'com.facebook.shimmer', name: 'shimmer', version: shimmerVersion]
+    ]
+
+    def loggingLibs = [
+            timber:                 [group: 'com.jakewharton.timber', name: 'timber', version: timberVersion]
+    ]
+
+    def testLibs = [
+            androidxCore:           [group: 'androidx.test', name: 'core', version: androidxTestVersion],
+            androidxCoreExt:        [group: 'androidx.test', name: 'core-ktx', version: androidxTestVersion],
+            androidxRunner:         [group: 'androidx.test', name: 'runner', version: androidxTestVersion],
+            androidxRule:           [group: 'androidx.test', name: 'rules', version: androidxTestVersion],
+            androidxJunitExt:       [group: 'androidx.test.ext', name: 'junit-ktx', version: androidxJunitExtVersion],
+            androidxArchTest:       [group: 'androidx.arch.core', name: 'core-testing', version: archTestingVersion],
+
+            espresso:               [group: 'androidx.test.espresso', name: 'espresso-core', version: espressoVersion],
+
+            mockWebServer:          [group: 'com.squareup.okhttp3', name: 'mockwebserver', version: okHttpVersion],
+
+            roomTest:               [group: 'androidx.room', name: 'room-testing', version: roomVersion],
+
+            junit:                  [group: 'junit', name: 'junit', version: junitVersion],
+            hamCrestAll:            [group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion],
+            mockitoCore:            [group: 'org.mockito', name: 'mockito-core', version: mockitoVersion],
+            mockitoAndroid:         [group: 'org.mockito', name: 'mockito-android', version: mockitoVersion],
+            robolectric:            [group: 'org.robolectric', name: 'robolectric', version: robolectricVersion],
+    ]
+
+    appDependencies = [
+            [configuration: "implementation", dependency: androidLibs.androidCore],
+            [configuration: "implementation", dependency: androidLibs.appCompat],
+            [configuration: "implementation", dependency: androidLibs.constraintLayout],
+            [configuration: "implementation", dependency: androidLibs.legacySupport],
+            [configuration: "implementation", dependency: androidLibs.meterialComponent],
+
+            [configuration: "implementation", dependency: coroutines.coroutines],
+            [configuration: "testImplementation", dependency: coroutines.coroutinesTest],
+            [configuration: "androidTestImplementation", dependency: coroutines.coroutinesTest],
+
+            [configuration: "implementation", dependency: dependencyInjectionLibs.daggerCore],
+            [configuration: "kapt", dependency: dependencyInjectionLibs.daggerProcessor],
+
+            [configuration: "implementation", dependency: jetPackLibs.androidViewModel],
+            [configuration: "implementation", dependency: jetPackLibs.androidLiveData],
+            [configuration: "kapt", dependency: jetPackLibs.archProcessor],
+
+            [configuration: "implementation", dependency: jetPackLibs.navigationFragment],
+            [configuration: "implementation", dependency: jetPackLibs.navigationUI],
+
+            [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
+            [configuration: "implementation", dependency: jetPackLibs.roomExtension],
+            [configuration: "kapt", dependency: jetPackLibs.roomProcessor],
+
+            [configuration: "implementation", dependency: jetPackLibs.androidPaging],
+
+            [configuration: "implementation", dependency: imageCacheLibs.glide],
+            [configuration: "kapt", dependency: imageCacheLibs.glideProcessor],
+
+            [configuration: "implementation", dependency: networkLibs.retrofit],
+            [configuration: "implementation", dependency: networkLibs.gsonConverter],
+            [configuration: "implementation", dependency: networkLibs.okHttp],
+            [configuration: "implementation", dependency: networkLibs.okHttpLogging],
+
+            [configuration: "implementation", dependency: crashlyticsLibs.analytics],
+            [configuration: "implementation", dependency: crashlyticsLibs.crashlytics],
+
+            [configuration: "implementation", dependency: viewLibs.circleIndicator],
+            [configuration: "implementation", dependency: viewLibs.roundedImage],
+            [configuration: "implementation", dependency: viewLibs.shimmer],
+
+            [configuration: "implementation", dependency: loggingLibs.timber],
+
+            [configuration: "testImplementation", dependency: testLibs.androidxCore],
+            [configuration: "testImplementation", dependency: testLibs.androidxCoreExt],
+            [configuration: "testImplementation", dependency: testLibs.androidxJunitExt],
+            [configuration: "testImplementation", dependency: testLibs.androidxArchTest],
+
+            [configuration: "testImplementation", dependency: testLibs.mockWebServer],
+
+            [configuration: "testImplementation", dependency: testLibs.junit],
+            [configuration: "testImplementation", dependency: testLibs.mockitoCore],
+            [configuration: "testImplementation", dependency: testLibs.hamCrestAll],
+
+            [configuration: "androidTestImplementation", dependency: testLibs.androidxRunner],
+            [configuration: "androidTestImplementation", dependency: testLibs.androidxRule],
+            [configuration: "androidTestImplementation", dependency: testLibs.androidxJunitExt],
+            [configuration: "androidTestImplementation", dependency: testLibs.androidxArchTest],
+            [configuration: "androidTestImplementation", dependency: testLibs.espresso],
+
+            [configuration: "androidTestImplementation", dependency: testLibs.mockitoAndroid],
+    ]
+
+}

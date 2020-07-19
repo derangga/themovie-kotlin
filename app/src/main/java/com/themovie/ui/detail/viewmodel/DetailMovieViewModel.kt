@@ -6,7 +6,7 @@ import com.themovie.model.online.detail.DetailMovieResponse
 import com.themovie.model.online.detail.ReviewResponse
 import com.themovie.model.online.discovermv.MoviesResponse
 import com.themovie.model.online.video.VideoResponse
-import com.themovie.repos.fromapi.RemoteSource
+import com.themovie.repos.RemoteSource
 import com.themovie.restapi.Result
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async

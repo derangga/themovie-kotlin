@@ -72,7 +72,7 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
         genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
             override fun onClick(view: View, item: Genre) {
                 val action = GenresFragmentDirections
-                    .actionGenresFragmentToMovieWithGenreFragment(item.id, item.name, "genreList")
+                    .actionGenresFragmentToMovieWithGenreFragment(item.id ?: 0, item.name.orEmpty(), "genreList")
                 Navigation.findNavController(view).navigate(action)
             }
         })

@@ -21,18 +21,14 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 
 @SuppressLint("SimpleDateFormat")
-fun String.convertDate(): String{
+fun String?.convertDate(): String {
     val simpleDate = SimpleDateFormat("yyyy-M-dd")
-    var formattedDate: String? = null
-    try{
-        val newDate = simpleDate.parse(this)
-        formattedDate = SimpleDateFormat("MMM dd, yyyy").format(newDate!!)
+    return try{
+        val newDate = simpleDate.parse(this.orEmpty())
+        SimpleDateFormat("MMM dd, yyyy").format(newDate!!)
     } catch (e: ParseException){
-        e.printStackTrace()
+        ""
     }
-
-    return formattedDate.orEmpty()
-
 }
 
 fun <T:ImageView> cacheImage(context: Context, url: String, imageView: T){

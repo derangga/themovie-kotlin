@@ -51,7 +51,7 @@ class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>
                 val imgUrl = "${ApiUrl.IMG_POSTER}${item.posterPath.toString()}"
                 rec_item.apply {
                     setImage(imgUrl)
-                    setTitle(item.title)
+                    setTitle(item.title.orEmpty())
                     setRating(item.rating.orEmpty())
                     setOnClickListener(object: PortraitView.OnClickListener{
                         override fun onClick() {

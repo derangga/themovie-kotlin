@@ -1,4 +1,4 @@
-package com.themovie.repos.fromapi
+package com.themovie.repos
 
 import com.themovie.model.online.PopularResponse
 import com.themovie.model.online.detail.CastResponse

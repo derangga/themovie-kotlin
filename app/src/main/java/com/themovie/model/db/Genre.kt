@@ -10,7 +10,7 @@ data class Genre(
     @PrimaryKey(autoGenerate = true)
     val pkId: Int = 0,
     @ColumnInfo(name = "genreId")
-    @SerializedName("id") val id: Int,
+    @SerializedName("id") val id: Int? = 0,
     @ColumnInfo(name = "name")
-    @SerializedName("name") val name: String
+    @SerializedName("name") val name: String? = ""
 )

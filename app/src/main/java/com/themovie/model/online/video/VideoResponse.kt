@@ -7,8 +7,8 @@ data class VideoResponse(
 )
 
 data class Videos(
-    @SerializedName("id") val id: String,
-    @SerializedName("key") val key: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("type") val type: String
+    @SerializedName("id") val id: String? = "",
+    @SerializedName("key") val key: String? = "",
+    @SerializedName("name") val name: String? = "",
+    @SerializedName("type") val type: String? = ""
 )

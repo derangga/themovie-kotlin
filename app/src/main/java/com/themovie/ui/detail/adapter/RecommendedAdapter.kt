@@ -52,8 +52,8 @@ class RecommendedAdapter : ListAdapter<Movies, RecommendedAdapter.ViewHolder>(DI
             val imgUrl = "${ApiUrl.IMG_POSTER}${movies.posterPath.toString()}"
             binding.recItem.apply {
                 setImage(imgUrl)
-                setTitle(movies.title)
-                setRating(movies.voteAverage)
+                setTitle(movies.title.orEmpty())
+                setRating(movies.voteAverage.orEmpty())
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {
                         onClickAdapterListener.onClick(itemView, movies)

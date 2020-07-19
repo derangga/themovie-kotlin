@@ -1,11 +1,10 @@
 package com.themovie.ui.person
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.themovie.model.online.person.PersonFilmResponse
 import com.themovie.model.online.person.PersonImageResponse
 import com.themovie.model.online.person.PersonResponse
-import com.themovie.repos.fromapi.RemoteSource
+import com.themovie.repos.RemoteSource
 import com.themovie.restapi.Result
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
