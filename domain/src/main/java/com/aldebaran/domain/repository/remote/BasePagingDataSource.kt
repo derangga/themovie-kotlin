@@ -1,4 +1,4 @@
-package com.aldebaran.data
+package com.aldebaran.domain.repository.remote
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
@@ -39,5 +39,5 @@ abstract class BasePagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
 
     }
 
-    protected abstract fun fetchData(page: Int, callback: (List<T>?) -> Unit)
+    protected abstract fun fetchData(page: Int, callback: (List<T>) -> Unit)
 }

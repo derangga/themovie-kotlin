@@ -213,10 +213,11 @@ ext {
 
             [configuration: "implementation", dependency: networkLibs.okHttp],
             [configuration: "implementation", dependency: networkLibs.okHttpLogging],
+            [configuration: "implementation", dependency: networkLibs.gsonConverter],
 
             [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
             [configuration: "implementation", dependency: jetPackLibs.roomExtension],
-            [configuration: "implementation", dependency: jetPackLibs.androidPaging],
+
             [configuration: "kapt", dependency: jetPackLibs.roomProcessor],
 
             [configuration: "implementation", dependency: dependencyInjectionLibs.daggerCore],
@@ -225,6 +226,6 @@ ext {
 
     domainDependencies = [
             [configuration: "api", dependency: coroutines.coroutines],
-            [configuration: "api", dependency: networkLibs.gsonConverter]
+            [configuration: "implementation", dependency: jetPackLibs.androidPaging]
     ]
 }

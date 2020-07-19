@@ -6,7 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-abstract class UseCase<out T, in Params> {
+abstract class UseCase<T, in Params> {
 
     abstract suspend fun run(params: Params): Result<T>
 
