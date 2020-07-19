@@ -1,8 +1,9 @@
-package com.themovie.repos.fromapi.search
+package com.themovie.repos.discover
 
+import com.themovie.BuildConfig
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Movies
+import com.themovie.model.db.Tv
 import com.themovie.restapi.ApiInterface
 import com.themovie.restapi.ApiUrl
 import com.themovie.restapi.BasePagingDataSource
@@ -11,13 +12,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class SearchMovieDataSourceBase(
+class TvDataSourceBase(
     private val scope: CoroutineScope,
-    private val apiInterface: ApiInterface,
-    private val query: String? =""
-): BasePagingDataSource<Int, Movies>() {
+    private val apiInterface: ApiInterface
+) : BasePagingDataSource<Int, Tv>() {
 
-    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movies>) {
+    override fun loadFirstPage(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Tv>) {
         updateState(Result.Status.LOADING)
         retry = { loadInitial(params, callback) }
         fetchData(1){
@@ -25,7 +25,7 @@ class SearchMovieDataSourceBase(
         }
     }
 
-    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Movies>) {
+    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, Tv>) {
         if(params.key <= pageSize){
             updateState(Result.Status.LOADING)
             retry = { loadAfter(params, callback) }
@@ -36,13 +36,15 @@ class SearchMovieDataSourceBase(
         }
     }
 
-    override fun fetchData(page: Int, callback: (List<Movies>?) -> Unit) {
+    override fun fetchData(page: Int, callback: (List<Tv>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val response = apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query.orEmpty(), page)
-            if(response.isSuccessful){
+            val discover = apiInterface.getDiscoverTvs(
+                BuildConfig.TOKEN, Constant.LANGUAGE,
+                Constant.SORTING, page, "")
+            if(discover.isSuccessful){
                 updateState(Result.Status.SUCCESS)
-                pageSize = response.body()?.totalPages ?: 0
-                callback(response.body()?.movies)
+                pageSize = discover.body()?.totalPages ?: 0
+                callback(discover.body()?.results)
             } else updateState(Result.Status.ERROR)
         }
     }

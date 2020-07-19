@@ -96,7 +96,7 @@ class TvFragment : BaseFragment<FragmentTvBinding>(), SwipeRefreshLayout.OnRefre
         tvAdapter.setOnClickAdapter(object: OnAdapterListener<Tv>{
             override fun onClick(view: View, item: Tv) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.TV)
                 }
                 changeActivity<DetailActivity>(bundle)

@@ -154,7 +154,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     private fun adapterOnClick(){
         creditsAdapter.setOnClickListener(object: OnAdapterListener<Credits>{
             override fun onClick(view: View, item: Credits) {
-                val action = DetailMovieFragmentDirections.actionDetailMovieFragmentToPersonFragment(item.id)
+                val action = DetailMovieFragmentDirections.actionDetailMovieFragmentToPersonFragment(item.id ?: 0)
                 Navigation.findNavController(view).navigate(action)
             }
         })
@@ -162,7 +162,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         recommendedAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
             override fun onClick(view: View, item: Movies) {
                 val bundle = Bundle().apply {
-                    putInt("filmId", item.id)
+                    putInt("filmId", item.id ?: 0)
                     putString("type", Constant.MOVIE)
                 }
                 changeActivity<DetailActivity>(bundle)
