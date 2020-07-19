@@ -42,8 +42,8 @@ ext {
     roundedImageViewVersion = '2.3.0'
 
     // crashlytics
-    crashlyticsVersion = '2.10.1'
-    firebaseCrashlyticsVersion = '17.4.4'
+    firebaseAnalytics = '17.4.4'
+    firebaseCrashlyticsVersion = '17.1.1'
 
     // coroutines
     coroutinesVersion = '1.3.7'
@@ -102,8 +102,8 @@ ext {
     ]
 
     def crashlyticsLibs = [
-            firebaseCrashlytics:    [group: 'com.google.firebase', name: 'firebase-analytics', version: firebaseCrashlyticsVersion],
-            crashlytics:            [group: 'com.crashlytics.sdk.android', name: 'crashlytics', version: crashlyticsVersion]
+            analytics:              [group: 'com.google.firebase', name: 'firebase-analytics-ktx', version: firebaseAnalytics],
+            crashlytics:            [group: 'com.google.firebase', name: 'firebase-crashlytics', version: firebaseCrashlyticsVersion]
     ]
 
     def networkLibs = [
@@ -179,7 +179,7 @@ ext {
             [configuration: "implementation", dependency: networkLibs.okHttp],
             [configuration: "implementation", dependency: networkLibs.okHttpLogging],
 
-            [configuration: "implementation", dependency: crashlyticsLibs.firebaseCrashlytics],
+            [configuration: "implementation", dependency: crashlyticsLibs.analytics],
             [configuration: "implementation", dependency: crashlyticsLibs.crashlytics],
 
             [configuration: "implementation", dependency: viewLibs.circleIndicator],

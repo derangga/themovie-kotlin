@@ -2,7 +2,6 @@ package com.themovie.restapi
 
 class ApiUrl {
     companion object{
-        const val BASE_URL = "https://api.themoviedb.org/3/"
         const val UPCOMING = "movie/upcoming"
         const val TRENDING = "trending/tv/day"
         const val POPULAR_MOVIE = "movie/popular"
@@ -17,8 +16,6 @@ class ApiUrl {
         const val REVIEWS_TV = "tv/{tv_id}/reviews"
         const val CREDITS = "movie/{movie_id}/credits"
         const val CREDITS_TV = "tv/{tv_id}/credits"
-        const val TOKEN = "98e5a808562ae58e4db7aecb3a0eda01"
-        const val YT_API = "AIzaSyB79JGvfJLIPLy6yLECjghWD3_1FfB1PlQ"
         const val IMG_BACK = "https://image.tmdb.org/t/p/w780"
         const val IMG_POSTER = "https://image.tmdb.org/t/p/w185"
         const val VIDEO_MOVIE = "movie/{movie_id}/videos"
