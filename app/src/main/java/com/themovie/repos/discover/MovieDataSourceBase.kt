@@ -1,5 +1,6 @@
 package com.themovie.repos.discover
 
+import com.themovie.BuildConfig
 import com.themovie.helper.Constant
 import com.themovie.model.db.Movies
 import com.themovie.restapi.ApiInterface
@@ -37,7 +38,7 @@ class MovieDataSourceBase(
 
     override fun fetchData(page: Int, callback: (List<Movies>?) -> Unit){
         scope.launch(IO + getJobErrorHandler()) {
-            val discover = apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
+            val discover = apiInterface.getDiscoverMovies(BuildConfig.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, page, "2019", genre)
             if(discover.isSuccessful){
                 updateState(Result.Status.SUCCESS)

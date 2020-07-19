@@ -1,5 +1,6 @@
 package com.themovie.repos.discover
 
+import com.themovie.BuildConfig
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Upcoming
 import com.themovie.restapi.ApiInterface
@@ -36,7 +37,7 @@ class UpcomingDataSourceBase(
 
     override fun fetchData(page: Int, callback: (List<Upcoming>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val upcoming = apiInterface.getUpcomingMovies(ApiUrl.TOKEN, page)
+            val upcoming = apiInterface.getUpcomingMovies(BuildConfig.TOKEN, page)
             if(upcoming.isSuccessful){
                 updateState(Result.Status.SUCCESS)
                 pageSize = upcoming.body()?.totalPages ?: 0

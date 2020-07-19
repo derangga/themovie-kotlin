@@ -1,5 +1,6 @@
 package com.themovie.repos.discover
 
+import com.themovie.BuildConfig
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
@@ -38,7 +39,7 @@ class TvDataSourceBase(
     override fun fetchData(page: Int, callback: (List<Tv>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
             val discover = apiInterface.getDiscoverTvs(
-                ApiUrl.TOKEN, Constant.LANGUAGE,
+                BuildConfig.TOKEN, Constant.LANGUAGE,
                 Constant.SORTING, page, "")
             if(discover.isSuccessful){
                 updateState(Result.Status.SUCCESS)

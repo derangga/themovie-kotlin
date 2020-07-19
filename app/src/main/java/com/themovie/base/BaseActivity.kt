@@ -5,9 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.crashlytics.android.Crashlytics
 import com.themovie.MyApplication
-import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
 abstract class BaseActivity<B: ViewDataBinding> : AppCompatActivity() {
@@ -16,7 +14,6 @@ abstract class BaseActivity<B: ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
         binding = DataBindingUtil.setContentView(this, getLayout())
         onActivityCreated(savedInstanceState)
     }

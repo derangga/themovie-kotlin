@@ -8,8 +8,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
 abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
@@ -20,7 +18,6 @@ abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
-        Fabric.with(context, Crashlytics())
         onCreateViewSetup(savedInstanceState)
         return binding.root
     }

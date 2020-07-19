@@ -39,7 +39,7 @@ class GenreAdapter : ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) 
 
     inner class ViewHolder(root: View, val binding: AdapterGenreBinding) : RecyclerView.ViewHolder(root) {
         fun genreClick(view: View, genre: Genre){
-            itemView.setOnClickListener { listener.onClick(view, genre) }
+            listener.onClick(view, genre)
         }
     }
 

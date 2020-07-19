@@ -1,5 +1,6 @@
 package com.themovie.repos.search
 
+import com.themovie.BuildConfig
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Movies
@@ -38,7 +39,7 @@ class SearchMovieDataSourceBase(
 
     override fun fetchData(page: Int, callback: (List<Movies>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val response = apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query.orEmpty(), page)
+            val response = apiInterface.getSearchMovie(BuildConfig.TOKEN, Constant.LANGUAGE, query.orEmpty(), page)
             if(response.isSuccessful){
                 updateState(Result.Status.SUCCESS)
                 pageSize = response.body()?.totalPages ?: 0
