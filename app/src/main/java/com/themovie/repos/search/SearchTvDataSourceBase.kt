@@ -1,5 +1,6 @@
 package com.themovie.repos.search
 
+import com.themovie.BuildConfig
 import com.themovie.helper.Constant
 import com.themovie.helper.LoadDataState
 import com.themovie.model.db.Tv
@@ -38,7 +39,7 @@ class SearchTvDataSourceBase(
 
     override fun fetchData(page: Int, callback: (List<Tv>?) -> Unit) {
         scope.launch(IO + getJobErrorHandler()) {
-            val response = apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE,
+            val response = apiInterface.getSearchTv(BuildConfig.TOKEN, Constant.LANGUAGE,
                 query.orEmpty(), page)
             if(response.isSuccessful){
                 updateState(Result.Status.SUCCESS)

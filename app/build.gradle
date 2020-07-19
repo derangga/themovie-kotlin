@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -38,12 +38,17 @@ android {
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
-            zipAlignEnabled true
-            lintOptions {
-                disable 'MissingTranslation'
-                checkReleaseBuilds false
-                abortOnError false
-            }
+            buildConfigField('String', 'GATEWAY', '"https://api.themoviedb.org/3/"')
+            buildConfigField('String', 'TOKEN', '"98e5a808562ae58e4db7aecb3a0eda01"')
+            buildConfigField('String', 'YT', '"AIzaSyAf0F79CPI0aXg2lQFSUBnMNL7hUGpNprE"')
+        }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField('String', 'GATEWAY', '"https://api.themoviedb.org/3/"')
+            buildConfigField('String', 'TOKEN', '"98e5a808562ae58e4db7aecb3a0eda01"')
+            buildConfigField('String', 'YT', '"AIzaSyAf0F79CPI0aXg2lQFSUBnMNL7hUGpNprE"')
         }
     }
 

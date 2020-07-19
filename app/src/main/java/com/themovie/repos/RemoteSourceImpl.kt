@@ -1,5 +1,6 @@
 package com.themovie.repos
 
+import com.themovie.BuildConfig
 import com.themovie.helper.Constant
 import com.themovie.model.online.PopularResponse
 import com.themovie.model.online.detail.CastResponse
@@ -24,85 +25,85 @@ class RemoteSourceImpl(
     private val apiInterface: ApiInterface
 ): BaseRemoteDataSource(), RemoteSource {
     override suspend fun getPopularMovie(page: Int): Result<PopularResponse> {
-        return getResult { apiInterface.getPopularMovie(ApiUrl.TOKEN, Constant.LANGUAGE, page) }
+        return getResult { apiInterface.getPopularMovie(BuildConfig.TOKEN, Constant.LANGUAGE, page) }
     }
 
     override suspend fun getGenreMovie(): Result<GenreResponse> {
-        return getResult { apiInterface.getGenres(ApiUrl.TOKEN) }
+        return getResult { apiInterface.getGenres(BuildConfig.TOKEN) }
     }
 
     override suspend fun getUpcomingMovie(page: Int): Result<UpcomingResponse> {
-        return getResult { apiInterface.getUpcomingMovies(ApiUrl.TOKEN, page) }
+        return getResult { apiInterface.getUpcomingMovies(BuildConfig.TOKEN, page) }
     }
 
     override suspend fun getDiscoverTv(page: Int): Result<TvResponse> {
-        return getResult { apiInterface.getDiscoverTvs(ApiUrl.TOKEN, Constant.LANGUAGE,
+        return getResult { apiInterface.getDiscoverTvs(BuildConfig.TOKEN, Constant.LANGUAGE,
             Constant.SORTING, page, "US")
         }
     }
 
     override suspend fun getDiscoverMovie(page: Int): Result<MoviesResponse> {
-        return getResult { apiInterface.getDiscoverMovies(ApiUrl.TOKEN, Constant.LANGUAGE,
+        return getResult { apiInterface.getDiscoverMovies(BuildConfig.TOKEN, Constant.LANGUAGE,
             Constant.SORTING, page, "2019", "") }
     }
 
     override suspend fun getDetailMovie(movieId: Int): Result<DetailMovieResponse> {
-        return getResult { apiInterface.getMovieDetail(movieId, ApiUrl.TOKEN) }
+        return getResult { apiInterface.getMovieDetail(movieId, BuildConfig.TOKEN) }
     }
 
     override suspend fun getDetailTv(tvId: Int): Result<DetailTvResponse> {
-        return getResult { apiInterface.getTvDetail(tvId, ApiUrl.TOKEN) }
+        return getResult { apiInterface.getTvDetail(tvId, BuildConfig.TOKEN) }
     }
 
     override suspend fun getCreditMovie(movieId: Int): Result<CastResponse> {
-        return getResult { apiInterface.getCreditsMovie(movieId, ApiUrl.TOKEN) }
+        return getResult { apiInterface.getCreditsMovie(movieId, BuildConfig.TOKEN) }
     }
 
     override suspend fun getCreditTv(tvId: Int): Result<CastResponse> {
-        return getResult { apiInterface.getCreditsTv(tvId, ApiUrl.TOKEN) }
+        return getResult { apiInterface.getCreditsTv(tvId, BuildConfig.TOKEN) }
     }
 
     override suspend fun getRecommendationMovie(movieId: Int): Result<MoviesResponse> {
-        return getResult { apiInterface.getRecommendationMovie(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+        return getResult { apiInterface.getRecommendationMovie(movieId, BuildConfig.TOKEN, Constant.LANGUAGE, 1) }
     }
 
     override suspend fun getRecommendationTv(tvId: Int): Result<TvResponse> {
-        return getResult { apiInterface.getRecommendationTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+        return getResult { apiInterface.getRecommendationTv(tvId, BuildConfig.TOKEN, Constant.LANGUAGE, 1) }
     }
 
     override suspend fun getReviewMovie(movieId: Int): Result<ReviewResponse> {
-        return getResult { apiInterface.getReviewsMovie(movieId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+        return getResult { apiInterface.getReviewsMovie(movieId, BuildConfig.TOKEN, Constant.LANGUAGE, 1) }
     }
 
     override suspend fun getReviewTv(tvId: Int): Result<ReviewResponse> {
-        return getResult { apiInterface.getReviewsTV(tvId, ApiUrl.TOKEN, Constant.LANGUAGE, 1) }
+        return getResult { apiInterface.getReviewsTV(tvId, BuildConfig.TOKEN, Constant.LANGUAGE, 1) }
     }
 
     override suspend fun getTrailerMovie(movieId: Int): Result<VideoResponse> {
-        return getResult { apiInterface.getTrailerMovie(movieId, ApiUrl.TOKEN, Constant.LANGUAGE) }
+        return getResult { apiInterface.getTrailerMovie(movieId, BuildConfig.TOKEN, Constant.LANGUAGE) }
     }
 
     override suspend fun getTrailerTv(tvId: Int): Result<VideoResponse> {
-        return getResult { apiInterface.getTrailerTv(tvId, ApiUrl.TOKEN, Constant.LANGUAGE) }
+        return getResult { apiInterface.getTrailerTv(tvId, BuildConfig.TOKEN, Constant.LANGUAGE) }
     }
 
     override suspend fun getDetailPerson(personId: Int): Result<PersonResponse> {
-        return getResult { apiInterface.getPerson(personId, ApiUrl.TOKEN) }
+        return getResult { apiInterface.getPerson(personId, BuildConfig.TOKEN) }
     }
 
     override suspend fun getPersonFilm(personId: Int): Result<PersonFilmResponse> {
-        return getResult { apiInterface.getPersonFilm(personId, ApiUrl.TOKEN) }
+        return getResult { apiInterface.getPersonFilm(personId, BuildConfig.TOKEN) }
     }
 
     override suspend fun getPersonPict(personId: Int): Result<PersonImageResponse> {
-        return getResult { apiInterface.getPersonImages(personId, ApiUrl.TOKEN) }
+        return getResult { apiInterface.getPersonImages(personId, BuildConfig.TOKEN) }
     }
 
     override suspend fun getSuggestSearchTv(query: String): Result<TvResponse> {
-        return getResult { apiInterface.getSearchTv(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1) }
+        return getResult { apiInterface.getSearchTv(BuildConfig.TOKEN, Constant.LANGUAGE, query, 1) }
     }
 
     override suspend fun getSuggestSearchMovie(query: String): Result<MoviesResponse> {
-        return getResult { apiInterface.getSearchMovie(ApiUrl.TOKEN, Constant.LANGUAGE, query, 1) }
+        return getResult { apiInterface.getSearchMovie(BuildConfig.TOKEN, Constant.LANGUAGE, query, 1) }
     }
 }
