@@ -13,7 +13,7 @@ interface MovieServices {
     @GET(ApiUrl.UPCOMING)
     suspend fun getUpcomingMovies (
         @Query("api_key") api_key: String,
-        @Query("page") page: Int = 1,
+        @Query("page") page: Int,
         @Query("region") region: String = "US"
     ) : Response<DataList<MovieResponse>>
 
@@ -31,7 +31,7 @@ interface MovieServices {
         @Query("api_key") api_key: String ,
         @Query("sort_by") sort_by: String ,
         @Query("page") page: Int ,
-        @Query("primary_release_year") primary_release_year: String,
+        @Query("primary_release_year") primaryReleaseYear: Int,
         @Query("with_genres") withGenres: String
     ) : Response<DataList<MovieResponse>>
 

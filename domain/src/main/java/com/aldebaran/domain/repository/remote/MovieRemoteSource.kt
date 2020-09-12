@@ -10,9 +10,9 @@ interface MovieRemoteSource {
 
     suspend fun getGenreMovie(): Result<GenreResponse>
 
-    suspend fun getUpcomingMovie(): Result<DataList<MovieResponse>>
+    suspend fun getUpcomingMovie(page: Int): Result<DataList<MovieResponse>>
 
-    suspend fun getDiscoverMovie(withGenres: String, page: Int): Result<DataList<MovieResponse>>
+    suspend fun getDiscoverMovie(withGenres: String, primaryReleaseYear: Int, page: Int): Result<DataList<MovieResponse>>
 
     suspend fun getDetailMovie(movieId: Int): Result<DetailMovieResponse>
 

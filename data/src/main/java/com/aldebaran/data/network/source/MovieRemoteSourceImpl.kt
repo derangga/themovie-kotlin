@@ -19,16 +19,18 @@ class MovieRemoteSourceImpl(private val services: MovieServices):
         return safeCallApi { services.getGenres(BuildConfig.TOKEN) }
     }
 
-    override suspend fun getUpcomingMovie(): Result<DataList<MovieResponse>> {
-        return safeCallApi { services.getUpcomingMovies(BuildConfig.TOKEN) }
+    override suspend fun getUpcomingMovie(page: Int): Result<DataList<MovieResponse>> {
+        return safeCallApi { services.getUpcomingMovies(BuildConfig.TOKEN, page) }
     }
 
     override suspend fun getDiscoverMovie(
-        withGenres: String, page: Int
+        withGenres: String,
+        primaryReleaseYear: Int,
+        page: Int
     ): Result<DataList<MovieResponse>> {
         return safeCallApi {
             services.getDiscoverMovies(BuildConfig.TOKEN, ApiUrl.SORTING,
-                page, "2020", withGenres) }
+                page, primaryReleaseYear, withGenres) }
     }
 
     override suspend fun getDetailMovie(movieId: Int): Result<DetailMovieResponse> {
