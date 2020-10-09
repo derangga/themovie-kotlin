@@ -1,24 +1,23 @@
 package com.themovie.ui.discover
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Tv
-import com.themovie.repos.discover.TvDataSourceBase
-import com.themovie.repos.discover.TvDataSourceFactory
-import com.themovie.restapi.ApiInterface
-import com.themovie.restapi.Result
-import javax.inject.Inject
+import com.aldebaran.data.network.source.TvPagingFactory
+import com.aldebaran.data.network.source.TvPagingSource
+import com.aldebaran.domain.Result.*
+import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.repository.remote.TvRemoteSource
 
-class TvViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() {
+class TvViewModel @ViewModelInject constructor (remote: TvRemoteSource): ViewModel() {
 
-    private var tvLiveData: LiveData<PagedList<Tv>>
-    private val uiList = MediatorLiveData<PagedList<Tv>>()
+    private var tvLiveData: LiveData<PagedList<TvResponse>>
+    private val uiList = MediatorLiveData<PagedList<TvResponse>>()
     private val tvSourceFactory by lazy {
-        TvDataSourceFactory(
+        TvPagingFactory(
             viewModelScope,
-            apiInterface
+            remote
         )
     }
 
@@ -31,7 +30,7 @@ class TvViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() 
         tvLiveData = LivePagedListBuilder(tvSourceFactory, pageConfig).build()
     }
 
-    fun getTvLiveData(): MediatorLiveData<PagedList<Tv>> {
+    fun getTvLiveData(): MediatorLiveData<PagedList<TvResponse>> {
         uiList.addSource(tvLiveData){
             uiList.value = it
         }
@@ -43,9 +42,9 @@ class TvViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() 
     }
 
 
-    fun getLoadState(): LiveData<Result.Status> {
+    fun getLoadState(): LiveData<Status> {
         return Transformations
-            .switchMap<TvDataSourceBase, Result.Status>(tvSourceFactory.getTvDataSource(), TvDataSourceBase::loadState)
+            .switchMap(tvSourceFactory.getTvDataSource(), TvPagingSource::loadState)
     }
 
     fun retry(){

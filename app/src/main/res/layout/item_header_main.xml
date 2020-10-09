@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="trend"
-                type="com.themovie.model.db.Trending" />
+                type="com.aldebaran.domain.entities.local.TrendingEntity" />
         <variable
                 name="vh"
                 type="com.themovie.ui.main.adapter.TrendingAdapter.ViewHolder" />

@@ -1,23 +1,23 @@
 package com.themovie.ui.discover
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.themovie.model.db.Movies
-import com.themovie.repos.discover.MovieDataSourceBase
-import com.themovie.repos.discover.MovieDataSourceFactory
-import com.themovie.restapi.ApiInterface
-import com.themovie.restapi.Result
-import javax.inject.Inject
+import com.aldebaran.data.network.source.MoviePagingFactory
+import com.aldebaran.data.network.source.MoviePagingSource
+import com.aldebaran.domain.Result.*
+import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.repository.remote.MovieRemoteSource
 
-class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewModel() {
+class MovieViewModel @ViewModelInject constructor (remote: MovieRemoteSource) : ViewModel() {
 
-    private var movieLiveData: LiveData<PagedList<Movies>>
-    private val uiList = MediatorLiveData<PagedList<Movies>>()
+    private var movieLiveData: LiveData<PagedList<MovieResponse>>
+    private val uiList = MediatorLiveData<PagedList<MovieResponse>>()
     private val moviesSourceFactory by lazy {
-        MovieDataSourceFactory(
+        MoviePagingFactory(
             viewModelScope,
-            apiInterface
+            remote
         )
     }
 
@@ -31,7 +31,7 @@ class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewMode
 
     }
 
-    fun getMovieLiveData(): MediatorLiveData<PagedList<Movies>>{
+    fun getMovieLiveData(): MediatorLiveData<PagedList<MovieResponse>>{
         uiList.addSource(movieLiveData){
             uiList.value = it
         }
@@ -43,10 +43,10 @@ class MovieViewModel @Inject constructor (apiInterface: ApiInterface) : ViewMode
     }
 
 
-    fun getLoadState(): LiveData<Result.Status> {
-        return Transformations.switchMap<MovieDataSourceBase, Result.Status>(
+    fun getLoadState(): LiveData<Status> {
+        return Transformations.switchMap(
             moviesSourceFactory.getMovieDataSource(),
-            MovieDataSourceBase::loadState
+            MoviePagingSource::loadState
         )
     }
 

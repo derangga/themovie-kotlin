@@ -3,8 +3,7 @@ package com.themovie.helper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_video.view.*
+import com.aldebaran.data.network.ApiUrl
 
 @BindingAdapter("loadImage")
 fun loadImage(view: ImageView, imageUrl: String?){
@@ -32,4 +31,11 @@ fun setDateRelease(view: TextView, date: String?){
 fun setThumbnail(view: ImageView, key: String?){
     val url = ApiUrl.THUMBNAIL.replace("key", key.orEmpty())
     cacheImage(view.context, url, view)
+}
+
+@BindingAdapter(value = ["birthDate", "birthPlace"], requireAll = true)
+fun setBirthOfDate(view: TextView, birthDate: String?, birthPlace: String?) {
+    view.text = if (!birthDate.isNullOrEmpty() && !birthPlace.isNullOrEmpty()) {
+        "Born: ${birthDate.convertDate()} ${birthPlace.orEmpty()}"
+    } else ""
 }

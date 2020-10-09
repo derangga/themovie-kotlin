@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="video"
-                type="com.themovie.model.online.video.Videos" />
+                type="com.aldebaran.domain.entities.remote.Videos" />
         <variable
                 name="vh"
                 type="com.themovie.ui.detail.adapter.VideoAdapter.ViewHolder" />

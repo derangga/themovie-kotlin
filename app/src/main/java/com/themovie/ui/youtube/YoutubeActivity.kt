@@ -6,7 +6,6 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.themovie.BuildConfig
 import com.themovie.R
-import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.activity_youtube.*
 
 class YoutubeActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {

@@ -1,31 +1,25 @@
 package com.themovie.ui.person
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.domain.entities.remote.person.Filmography
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentPersonBinding
-import com.themovie.di.detail.DetailViewModelFactory
 import com.themovie.helper.*
-import com.themovie.model.online.person.Filmography
-import com.themovie.restapi.Result.Status.*
 import com.themovie.ui.detail.DetailActivity
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * A simple [Fragment] subclass.
- */
+@AndroidEntryPoint
 class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
-    @Inject lateinit var factory: DetailViewModelFactory
-    private lateinit var personFilmAdapter: PersonFilmAdapter
-    private lateinit var personImageAdapter: PersonImageAdapter
-    private val viewModel by viewModels<PersonViewModel> { factory }
+    private val personFilmAdapter by lazy { PersonFilmAdapter() }
+    private val personImageAdapter by lazy { PersonImageAdapter() }
+    private val viewModel by viewModels<PersonViewModel>()
     private var personId = 0
 
     override fun getLayout(): Int {
@@ -33,7 +27,6 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
             personId = PersonFragmentArgs.fromBundle(it).personId
         }
@@ -51,9 +44,6 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     }
 
     private fun setupRecycler(){
-        personFilmAdapter = PersonFilmAdapter()
-        personImageAdapter = PersonImageAdapter()
-
         binding.apply{
             castFilm.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -79,7 +69,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     private fun subscribeUI(){
         viewModel.apply {
-            detailPerson.observe(viewLifecycleOwner, Observer { res ->
+            detailPerson.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         hideLoading()
@@ -94,7 +84,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
                 }
             })
 
-            personFilm.observe(viewLifecycleOwner, Observer { res ->
+            personFilm.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         personFilmAdapter.submitList(res.data?.filmographies)
@@ -103,7 +93,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
                 }
             })
 
-            personPict.observe(viewLifecycleOwner, Observer { res ->
+            personPict.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         if(res.data?.imageList.isNullOrEmpty()){

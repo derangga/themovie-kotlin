@@ -7,24 +7,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.data.network.ApiUrl
+import com.aldebaran.domain.entities.local.MovieEntity
 import com.themovie.databinding.AdapterPortraitMovieBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
-import com.themovie.model.db.Movies
-import com.themovie.restapi.ApiUrl
 
-class DiscoverMovieAdapter : ListAdapter<Movies, DiscoverMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
+class DiscoverMovieAdapter : ListAdapter<MovieEntity, DiscoverMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var listener: OnAdapterListener<Movies>
+    private lateinit var listener: OnAdapterListener<MovieEntity>
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Movies> = object: DiffUtil.ItemCallback<Movies>(){
-            override fun areItemsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<MovieEntity> = object: DiffUtil.ItemCallback<MovieEntity>(){
+            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
                 return oldItem.title == newItem.title && oldItem.posterPath == newItem.posterPath
             }
         }
@@ -39,7 +39,7 @@ class DiscoverMovieAdapter : ListAdapter<Movies, DiscoverMovieAdapter.ViewHolder
         return ViewHolder(view.root, view)
     }
 
-    fun setOnClickListener(listener: OnAdapterListener<Movies>){
+    fun setOnClickListener(listener: OnAdapterListener<MovieEntity>){
         this.listener = listener
     }
 
@@ -48,7 +48,7 @@ class DiscoverMovieAdapter : ListAdapter<Movies, DiscoverMovieAdapter.ViewHolder
     }
 
     inner class ViewHolder(root: View, val binding: AdapterPortraitMovieBinding) : RecyclerView.ViewHolder(root){
-        fun bindItem(movies: Movies){
+        fun bindItem(movies: MovieEntity){
             val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
             binding.movieItem.apply {
                 setImage(imgPoster)

@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="movie"
-                type="com.themovie.model.db.Movies" />
+                type="com.aldebaran.domain.entities.remote.MovieResponse" />
 
         <variable
                 name="vh"

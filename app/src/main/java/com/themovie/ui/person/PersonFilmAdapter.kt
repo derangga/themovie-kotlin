@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.data.network.ApiUrl
+import com.aldebaran.domain.entities.remote.person.Filmography
 import com.themovie.R
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
-import com.themovie.model.online.person.Filmography
-import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_recomended.view.*
 
 class PersonFilmAdapter : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>(DIFF_CALLBACK) {

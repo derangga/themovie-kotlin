@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.data.network.ApiUrl
+import com.aldebaran.domain.entities.remote.person.PersonImage
 import com.themovie.R
 import com.themovie.helper.cacheImage
-import com.themovie.model.online.person.PersonImage
-import com.themovie.restapi.ApiUrl
 import kotlinx.android.synthetic.main.adapter_profile_pict.view.*
 
 class PersonImageAdapter: RecyclerView.Adapter<PersonImageAdapter.ViewHolder>() {

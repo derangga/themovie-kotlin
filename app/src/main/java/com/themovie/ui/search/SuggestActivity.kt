@@ -11,14 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
-import com.themovie.di.suggest.SuggestComponent
 import com.themovie.helper.ViewPagerFragment
 import com.themovie.helper.changeActivity
 import com.themovie.helper.gone
 import com.themovie.helper.visible
-import kotlinx.android.synthetic.main.activity_search.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
+@AndroidEntryPoint
 class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
     private lateinit var imm: InputMethodManager
@@ -31,10 +31,12 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         initTab()
         binding.hSearch.requestFocus()
-        h_back.setOnClickListener {
+        binding.hSearch.setOnClickListener {
             hideSoftKeyboard(findViewById(android.R.id.content))
             onBackPressed()
         }
+
+        binding.hBack.setOnClickListener { onBackPressed() }
 
         searchSoftKeyboardAction()
         textStream()
@@ -61,11 +63,6 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
     }
 
-    override fun onDestroy() {
-        getApp().releaseSuggestComponent()
-        super.onDestroy()
-    }
-
     private fun showSoftKeyboard(view: View?){
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
@@ -90,7 +87,7 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
                 val searchText = s.toString().trim()
 
                 binding.apply {
-                    if(hSearch.text.toString().isEmpty()){
+                    if(binding.hSearch.text.toString().isEmpty()){
                         tabLayout.gone()
                         viewPager.gone()
                     } else{
@@ -118,16 +115,12 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
     private fun searchSoftKeyboardAction(){
         binding.hSearch.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH && binding.hSearch.text.isNotEmpty()){
-                val bundle = Bundle().apply { putString("query", h_search.text.toString()) }
+                val bundle = Bundle().apply { putString("query", binding.hSearch.text.toString()) }
                 changeActivity<SearchActivity>(bundle)
                 finish()
             } else showToastMessage(resources.getString(R.string.suggest_search_1))
-            false
+            true
         }
-    }
-
-    fun getComponent(): SuggestComponent? {
-        return getApp().getSuggestComponent()
     }
 
     companion object{

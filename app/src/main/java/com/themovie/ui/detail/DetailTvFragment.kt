@@ -4,42 +4,34 @@ package com.themovie.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.domain.entities.remote.Credits
+import com.aldebaran.domain.entities.remote.ReviewsResponse
+import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.entities.remote.Videos
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailTvBinding
-import com.themovie.di.detail.DetailViewModelFactory
 import com.themovie.helper.*
-import com.themovie.model.online.detail.Credits
-import com.themovie.model.online.detail.Reviews
-import com.themovie.model.db.Tv
-import com.themovie.model.online.video.Videos
-import com.themovie.restapi.Result
-import com.themovie.restapi.Result.Status.SUCCESS
 import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel
-import javax.inject.Inject
+import com.themovie.ui.youtube.YoutubeActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-
-/**
- * A simple [Fragment] subclass.
- *
- */
+@AndroidEntryPoint
 class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
-    @Inject lateinit var factory: DetailViewModelFactory
-    private val viewModel by viewModels<DetailTvViewModel> { factory }
-    private lateinit var seasonAdapter: SeasonAdapter
-    private lateinit var creditsAdapter: CreditsAdapter
-    private lateinit var recommendedTvAdapter: RecommendedTvAdapter
-    private lateinit var reviewsAdapter: ReviewsAdapter
-    private lateinit var videoAdapter: VideoAdapter
+    private val viewModel by viewModels<DetailTvViewModel>()
+    private val seasonAdapter by lazy { SeasonAdapter() }
+    private val creditsAdapter by lazy { CreditsAdapter() }
+    private val recommendedTvAdapter by lazy { RecommendedTvAdapter() }
+    private val reviewsAdapter by lazy { ReviewsAdapter() }
+    private val videoAdapter by lazy { VideoAdapter() }
     private var filmId = 0
 
     override fun getLayout(): Int {
@@ -47,7 +39,6 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
             filmId = DetailTvFragmentArgs.fromBundle(it).filmId
         }
@@ -65,11 +56,6 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
     }
 
     private fun setupRecycler(){
-        seasonAdapter = SeasonAdapter()
-        creditsAdapter = CreditsAdapter()
-        recommendedTvAdapter = RecommendedTvAdapter()
-        reviewsAdapter = ReviewsAdapter()
-        videoAdapter = VideoAdapter()
 
         binding.apply {
             dtSeasonList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -89,23 +75,23 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
     private fun subscribeUI(){
         viewModel.apply {
-            detailTvRes.observe(viewLifecycleOwner, Observer { res ->
+            detailTvRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         hideLoading()
                         binding.tv = res?.data
                         seasonAdapter.submitList(res?.data?.seasons)
                     }
-                    Result.Status.ERROR -> {
+                    ERROR -> {
                         showNetworkError(false){
                             viewModel.getDetailTvRequest(filmId)
                         }
                     }
-                    Result.Status.LOADING -> { showLoading() }
+                    LOADING -> { showLoading() }
                 }
             })
 
-            creditMovieRes.observe(viewLifecycleOwner, Observer { res ->
+            creditMovieRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         if(res.data?.credits.isNullOrEmpty()) binding.dtCastEmpty.visible()
@@ -116,7 +102,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                 }
             })
 
-            recommendationTvRes.observe(viewLifecycleOwner, Observer { res ->
+            recommendationTvRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         if(res.data?.results.isNullOrEmpty()) binding.dtRecomEmpty.visible()
@@ -127,7 +113,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                 }
             })
 
-            trailerTvRes.observe(viewLifecycleOwner, Observer { res ->
+            trailerTvRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         if(res.data?.videos.isNullOrEmpty()) binding.videoEmpty.visible()
@@ -138,12 +124,12 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                 }
             })
 
-            reviewsTvRes.observe(viewLifecycleOwner, Observer { res ->
+            reviewsTvRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
-                        if(res.data?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visible()
+                        if(res.data?.results.isNullOrEmpty()) binding.dtReviewEmpty.visible()
                         else binding.dtReviewEmpty.gone()
-                        reviewsAdapter.submitList(res.data?.reviewList)
+                        reviewsAdapter.submitList(res.data?.results)
                     }
                     else -> {}
                 }
@@ -160,8 +146,8 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
             }
         })
 
-        recommendedTvAdapter.setOnClickListener(object: OnAdapterListener<Tv>{
-            override fun onClick(view: View, item: Tv) {
+        recommendedTvAdapter.setOnClickListener(object: OnAdapterListener<TvResponse>{
+            override fun onClick(view: View, item: TvResponse) {
                 val bundle = Bundle().apply {
                     putInt("filmId", item.id ?: 0)
                     putString("type", Constant.TV)
@@ -170,8 +156,8 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
             }
         })
 
-        reviewsAdapter.setOnClickListener(object: OnAdapterListener<Reviews>{
-            override fun onClick(view: View, item: Reviews) {
+        reviewsAdapter.setOnClickListener(object: OnAdapterListener<ReviewsResponse>{
+            override fun onClick(view: View, item: ReviewsResponse) {
                 val uri: Uri = Uri.parse(item.url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context?.startActivity(intent)
@@ -182,7 +168,11 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
             override fun onClick(view: View, item: Videos) {
                 val bundle = Bundle()
                 bundle.putString("key", item.key)
-                changeActivity<DetailActivity>(bundle)
+                Intent(context, YoutubeActivity::class.java)
+                    .also { intent ->
+                        intent.putExtras(bundle)
+                        startActivity(intent)
+                    }
             }
         })
     }

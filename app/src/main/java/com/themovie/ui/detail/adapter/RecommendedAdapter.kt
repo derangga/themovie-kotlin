@@ -7,32 +7,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
+import com.aldebaran.data.network.ApiUrl
+import com.aldebaran.domain.entities.remote.MovieResponse
 import com.themovie.databinding.AdapterRecomendedBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
-import com.themovie.model.db.Movies
-import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_recomended.view.*
 
-class RecommendedAdapter : ListAdapter<Movies, RecommendedAdapter.ViewHolder>(DIFF_CALLBACK) {
+class RecommendedAdapter : ListAdapter<MovieResponse, RecommendedAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnAdapterListener<Movies>
+    private lateinit var onClickAdapterListener: OnAdapterListener<MovieResponse>
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Movies> = object: DiffUtil.ItemCallback<Movies>(){
-            override fun areItemsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<MovieResponse> = object: DiffUtil.ItemCallback<MovieResponse>(){
+            override fun areItemsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+            override fun areContentsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
                 return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
             }
         }
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<Movies>){
+    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<MovieResponse>){
         this.onClickAdapterListener = onClickAdapterListener
     }
 
@@ -48,7 +46,7 @@ class RecommendedAdapter : ListAdapter<Movies, RecommendedAdapter.ViewHolder>(DI
     }
 
     inner class ViewHolder(root: View, val binding: AdapterRecomendedBinding) : RecyclerView.ViewHolder(root){
-        fun bindItem(movies: Movies){
+        fun bindItem(movies: MovieResponse){
             val imgUrl = "${ApiUrl.IMG_POSTER}${movies.posterPath.toString()}"
             binding.recItem.apply {
                 setImage(imgUrl)
