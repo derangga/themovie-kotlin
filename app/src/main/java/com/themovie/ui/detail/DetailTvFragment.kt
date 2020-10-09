@@ -20,6 +20,7 @@ import com.themovie.databinding.FragmentDetailTvBinding
 import com.themovie.helper.*
 import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel
+import com.themovie.ui.youtube.YoutubeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -167,7 +168,11 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
             override fun onClick(view: View, item: Videos) {
                 val bundle = Bundle()
                 bundle.putString("key", item.key)
-                changeActivity<DetailActivity>(bundle)
+                Intent(context, YoutubeActivity::class.java)
+                    .also { intent ->
+                        intent.putExtras(bundle)
+                        startActivity(intent)
+                    }
             }
         })
     }
