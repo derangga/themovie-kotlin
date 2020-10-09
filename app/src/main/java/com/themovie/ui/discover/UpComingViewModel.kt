@@ -1,22 +1,22 @@
 package com.themovie.ui.discover
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.themovie.model.db.Upcoming
-import com.themovie.repos.discover.UpcomingDataSourceBase
-import com.themovie.repos.discover.UpcomingDataSourceFactory
-import com.themovie.restapi.ApiInterface
-import com.themovie.restapi.Result
-import javax.inject.Inject
+import com.aldebaran.data.network.source.UpcomingPagingSource
+import com.aldebaran.data.network.source.UpcomingPagingFactory
+import com.aldebaran.domain.Result
+import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.repository.remote.MovieRemoteSource
 
-class UpComingViewModel @Inject constructor (apiInterface: ApiInterface): ViewModel() {
-    private val upcomingLiveData: LiveData<PagedList<Upcoming>>
-    private val uiList = MediatorLiveData<PagedList<Upcoming>>()
+class UpComingViewModel @ViewModelInject constructor (remote: MovieRemoteSource): ViewModel() {
+    private val upcomingLiveData: LiveData<PagedList<MovieResponse>>
+    private val uiList = MediatorLiveData<PagedList<MovieResponse>>()
     private val upcomingSourceFactory by lazy {
-        UpcomingDataSourceFactory(
+        UpcomingPagingFactory(
             viewModelScope,
-            apiInterface
+            remote
         )
     }
 
@@ -28,7 +28,7 @@ class UpComingViewModel @Inject constructor (apiInterface: ApiInterface): ViewMo
         upcomingLiveData = LivePagedListBuilder(upcomingSourceFactory, pageConfig).build()
     }
 
-    fun getUpcomingData(): MediatorLiveData<PagedList<Upcoming>> {
+    fun getUpcomingData(): MediatorLiveData<PagedList<MovieResponse>> {
         uiList.addSource(upcomingLiveData){
             uiList.value = it
         }
@@ -40,7 +40,7 @@ class UpComingViewModel @Inject constructor (apiInterface: ApiInterface): ViewMo
     }
 
     fun getLoadState(): LiveData<Result.Status> {
-        return Transformations.switchMap(upcomingSourceFactory.getUpcomingDataSource(), UpcomingDataSourceBase::loadState)
+        return Transformations.switchMap(upcomingSourceFactory.getUpcomingDataSource(), UpcomingPagingSource::loadState)
     }
 
     fun retry(){

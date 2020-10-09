@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="review"
-                type="com.themovie.model.online.detail.Reviews" />
+                type="com.aldebaran.domain.entities.remote.ReviewsResponse" />
 
         <variable
                 name="vh"

@@ -7,28 +7,29 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.domain.Result.*
+import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.domain.entities.remote.MovieResponse
 import com.themovie.databinding.AdapterLoadingBinding
 import com.themovie.databinding.AdapterUpcomingBinding
 import com.themovie.helper.OnAdapterListener
-import com.themovie.model.db.Upcoming
-import com.themovie.restapi.Result
 
-class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class UpcomingAdapter: PagedListAdapter<MovieResponse, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
-    private val DATA_VIEW = 1
-    private val LOADING_VIEW = 2
-    private var loadState: Result.Status? = null
+    private var loadState: Status? = null
     private lateinit var context: Context
     private lateinit var onErrorClickListener: OnErrorClickListener
-    private lateinit var onClickAdapterListener: OnAdapterListener<Upcoming>
+    private lateinit var onClickAdapterListener: OnAdapterListener<MovieResponse>
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Upcoming> = object: DiffUtil.ItemCallback<Upcoming>(){
-            override fun areItemsTheSame(oldItem: Upcoming, newItem: Upcoming): Boolean {
+        private const val DATA_VIEW = 1
+        private const val LOADING_VIEW = 2
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<MovieResponse> = object: DiffUtil.ItemCallback<MovieResponse>(){
+            override fun areItemsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Upcoming, newItem: Upcoming): Boolean {
+            override fun areContentsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
                 return oldItem.title == newItem.title &&
                         oldItem.posterPath == newItem.posterPath &&
                         oldItem.backdropPath == newItem.backdropPath
@@ -71,10 +72,10 @@ class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_
     }
 
     private fun hasFooter(): Boolean {
-        return loadState != null && loadState != Result.Status.SUCCESS
+        return loadState != null && loadState != SUCCESS
     }
 
-    fun setLoadState(loadState: Result.Status){
+    fun setLoadState(loadState: Status){
         val previousState = this.loadState
         val previousExtraRow = hasFooter()
         this.loadState = loadState
@@ -91,7 +92,7 @@ class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_
         this.onErrorClickListener = onErrorClickListener
     }
 
-    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<Upcoming>){
+    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<MovieResponse>){
         this.onClickAdapterListener = onClickAdapterListener
     }
 
@@ -100,7 +101,7 @@ class UpcomingAdapter: PagedListAdapter<Upcoming, RecyclerView.ViewHolder>(DIFF_
     }
 
     inner class UpcomingViewHolder(root: View, val binding: AdapterUpcomingBinding) : RecyclerView.ViewHolder(root){
-        fun onUpcomingClick(view: View, data: Upcoming){
+        fun onUpcomingClick(view: View, data: MovieResponse){
             onClickAdapterListener.onClick(view, data)
         }
     }

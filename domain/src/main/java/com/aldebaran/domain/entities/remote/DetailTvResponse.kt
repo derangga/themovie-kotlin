@@ -15,7 +15,7 @@ data class DetailTvResponse(
     @SerializedName("overview") val overview: String? = "",
     @SerializedName("number_of_episodes") val numberOfEpisodes: Int? = 0,
     @SerializedName("number_of_seasons") val numberOfSeasons: Int? = 0,
-    @SerializedName("genres") val genreList: List<GenreEntity>,
+    @SerializedName("genres") val genreList: List<GenreRemote>,
     @SerializedName("seasons") val seasons: List<SeasonTv>
 )
 

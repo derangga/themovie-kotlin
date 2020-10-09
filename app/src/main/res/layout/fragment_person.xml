@@ -7,7 +7,7 @@
     <data>
         <variable
                 name="cast"
-                type="com.themovie.model.online.person.PersonResponse" />
+                type="com.aldebaran.domain.entities.remote.person.PersonResponse" />
         <import type="android.view.View"/>
     </data>
 
@@ -74,7 +74,7 @@
                                     android:layout_marginEnd="@dimen/small_space"
                                     android:transitionName="@string/transition_cast"
                                     android:scaleType="centerCrop"
-                                    app:loadImage="@{cast.profilePict}"/>
+                                    tools:ignore="ContentDescription" />
 
                             <LinearLayout
                                     android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                                         android:layout_marginBottom="20dp"/>
 
                                 <TextView
-                                        android:text="@{cast.birthDate}"
+
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:textColor="@color/colorWhite"/>

@@ -1,33 +1,31 @@
 package com.themovie.ui.detail.viewmodel
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.themovie.model.online.detail.CastResponse
-import com.themovie.model.online.detail.DetailMovieResponse
-import com.themovie.model.online.detail.ReviewResponse
-import com.themovie.model.online.discovermv.MoviesResponse
-import com.themovie.model.online.video.VideoResponse
-import com.themovie.repos.RemoteSource
-import com.themovie.restapi.Result
+import com.aldebaran.domain.entities.remote.*
+import com.aldebaran.domain.Result
+import com.aldebaran.domain.entities.DataList
+import com.aldebaran.domain.repository.remote.MovieRemoteSource
+
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class DetailMovieViewModel @Inject constructor(
-    private val remote: RemoteSource
+class DetailMovieViewModel @ViewModelInject constructor(
+    private val remote: MovieRemoteSource
 ) : ViewModel() {
 
     private val _detailMovieRes by lazy { MutableLiveData<Result<DetailMovieResponse>>() }
     private val _creditRes by lazy { MutableLiveData<Result<CastResponse>>() }
-    private val _recommendationMovieRes by lazy { MutableLiveData<Result<MoviesResponse>>() }
+    private val _recommendationMovieRes by lazy { MutableLiveData<Result<DataList<MovieResponse>>>() }
     private val _trailerRes by lazy { MutableLiveData<Result<VideoResponse>>() }
-    private val _reviewsRes by lazy { MutableLiveData<Result<ReviewResponse>>() }
+    private val _reviewsRes by lazy { MutableLiveData<Result<DataList<ReviewsResponse>>>() }
 
     val detailMovieRes: LiveData<Result<DetailMovieResponse>> get() = _detailMovieRes
     val creditMovieRes: LiveData<Result<CastResponse>> get() = _creditRes
-    val recommendationMovieRes: LiveData<Result<MoviesResponse>> get() = _recommendationMovieRes
+    val recommendationMovieRes: LiveData<Result<DataList<MovieResponse>>> get() = _recommendationMovieRes
     val trailerMovieRes: LiveData<Result<VideoResponse>> get() = _trailerRes
-    val reviewsMovieRes: LiveData<Result<ReviewResponse>> get() = _reviewsRes
+    val reviewsMovieRes: LiveData<Result<DataList<ReviewsResponse>>> get() = _reviewsRes
 
     fun getDetailMovieRequest(filmId: Int){
         viewModelScope.launch {

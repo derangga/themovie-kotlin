@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="genre"
-                type="com.themovie.model.db.Genre" />
+                type="com.aldebaran.domain.entities.local.GenreEntity" />
 
         <variable
                 name="vh"

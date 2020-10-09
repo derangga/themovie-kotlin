@@ -11,14 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
-import com.themovie.di.suggest.SuggestComponent
 import com.themovie.helper.ViewPagerFragment
 import com.themovie.helper.changeActivity
 import com.themovie.helper.gone
 import com.themovie.helper.visible
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.coroutines.delay
 
+@AndroidEntryPoint
 class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
     private lateinit var imm: InputMethodManager
@@ -59,11 +60,6 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
             pagerAdapter.notifyDataSetChanged()
         }
 
-    }
-
-    override fun onDestroy() {
-        getApp().releaseSuggestComponent()
-        super.onDestroy()
     }
 
     private fun showSoftKeyboard(view: View?){
@@ -124,10 +120,6 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
             } else showToastMessage(resources.getString(R.string.suggest_search_1))
             false
         }
-    }
-
-    fun getComponent(): SuggestComponent? {
-        return getApp().getSuggestComponent()
     }
 
     companion object{

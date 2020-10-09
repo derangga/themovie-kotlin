@@ -1,9 +1,10 @@
 package com.aldebaran.data.local.source
 
+import androidx.lifecycle.LiveData
 import com.aldebaran.data.local.dao.GenresDao
+import com.aldebaran.domain.entities.Genre
 import com.aldebaran.domain.entities.local.GenreEntity
 import com.aldebaran.domain.repository.local.GenreLocalSource
-import kotlinx.coroutines.flow.Flow
 
 class GenreLocalSourceImpl(
     private val genresDao: GenresDao
@@ -12,15 +13,19 @@ class GenreLocalSourceImpl(
         genresDao.insertAll(*genre.toTypedArray())
     }
 
+    override suspend fun insertGenre(genre: GenreEntity) {
+        genresDao.insert(genre)
+    }
+
     override suspend fun updateGenre(genre: GenreEntity) {
         genresDao.update(genre)
     }
 
-    override fun getPartOfGenre(): Flow<List<GenreEntity>> {
+    override fun getPartOfGenre(): LiveData<List<GenreEntity>> {
         return genresDao.getPartOfGenre()
     }
 
-    override fun getAllGenre(): List<GenreEntity> {
+    override fun getAllGenre(): LiveData< List<GenreEntity>> {
         return genresDao.getAllGenre()
     }
 

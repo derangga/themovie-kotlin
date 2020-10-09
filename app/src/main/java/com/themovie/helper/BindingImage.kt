@@ -3,8 +3,7 @@ package com.themovie.helper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_video.view.*
+import com.aldebaran.data.network.ApiUrl
 
 @BindingAdapter("loadImage")
 fun loadImage(view: ImageView, imageUrl: String?){

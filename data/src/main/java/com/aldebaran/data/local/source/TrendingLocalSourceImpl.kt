@@ -1,9 +1,9 @@
 package com.aldebaran.data.local.source
 
+import androidx.lifecycle.LiveData
 import com.aldebaran.data.local.dao.TrendingDao
 import com.aldebaran.domain.entities.local.TrendingEntity
 import com.aldebaran.domain.repository.local.TrendingLocalSource
-import kotlinx.coroutines.flow.Flow
 
 class TrendingLocalSourceImpl (
     private val trendingDao: TrendingDao
@@ -12,11 +12,15 @@ class TrendingLocalSourceImpl (
         trendingDao.insertAll(*trending.toTypedArray())
     }
 
+    override suspend fun insertTrendMovie(trending: TrendingEntity) {
+        trendingDao.insert(trending)
+    }
+
     override suspend fun updateTrendingMovie(trending: TrendingEntity) {
         trendingDao.update(trending)
     }
 
-    override fun getTrendMovie(): Flow<List<TrendingEntity>> {
+    override fun getTrendMovie(): LiveData<List<TrendingEntity>> {
         return trendingDao.getTrending()
     }
 

@@ -4,8 +4,9 @@ import android.os.Bundle
 import com.themovie.R
 import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivityMainBinding
-import com.themovie.di.main.MainComponent
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun getLayout(): Int {
@@ -14,9 +15,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
 
-    }
-
-    fun getMainComponent(): MainComponent?{
-        return getApp().getMainComponent()
     }
 }

@@ -1,28 +1,22 @@
 package com.themovie.ui.search
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Movies
-import com.themovie.repos.search.SearchMovieDataSourceBase
-import com.themovie.repos.search.SearchMovieSourceFactory
-import com.themovie.restapi.ApiInterface
-import com.themovie.restapi.Result
-import javax.inject.Inject
+import com.aldebaran.data.network.source.SearchMoviePagingFactory
+import com.aldebaran.data.network.source.SearchMoviePagingSource
+import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.repository.remote.MovieRemoteSource
+import com.aldebaran.domain.Result.Status
 
-class SearchMoviesViewModel @Inject constructor (
-    apiInterface: ApiInterface
+class SearchMoviesViewModel @ViewModelInject constructor (
+    private val remote: MovieRemoteSource
 ): ViewModel() {
 
-    private val searchLiveData: LiveData<PagedList<Movies>>
-    private val uiList = MediatorLiveData<PagedList<Movies>>()
-    private val searchSourceFactory =
-        SearchMovieSourceFactory(
-            viewModelScope,
-            apiInterface,
-            query
-        )
+    private val searchLiveData: LiveData<PagedList<MovieResponse>>
+    private val uiList by lazy { MediatorLiveData<PagedList<MovieResponse>>() }
+    private val searchSourceFactory by lazy { SearchMoviePagingFactory(viewModelScope, remote, query) }
 
     companion object{
         var query = ""
@@ -37,7 +31,7 @@ class SearchMoviesViewModel @Inject constructor (
     }
 
 
-    fun getSearchMovies(): MutableLiveData<PagedList<Movies>>{
+    fun getSearchMovies(): MutableLiveData<PagedList<MovieResponse>>{
         uiList.addSource(searchLiveData){
             uiList.value = it
         }
@@ -48,10 +42,10 @@ class SearchMoviesViewModel @Inject constructor (
         uiList.removeSource(searchLiveData)
     }
 
-    fun getLoadState(): LiveData<Result.Status> {
-        return Transformations.switchMap<SearchMovieDataSourceBase, Result.Status>(
+    fun getLoadState(): LiveData<Status> {
+        return Transformations.switchMap(
             searchSourceFactory.getResultSearch(),
-            SearchMovieDataSourceBase::loadState
+            SearchMoviePagingSource::loadState
         )
     }
 

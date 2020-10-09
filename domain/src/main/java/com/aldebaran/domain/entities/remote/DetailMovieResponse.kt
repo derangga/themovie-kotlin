@@ -13,5 +13,5 @@ data class DetailMovieResponse(
     @SerializedName("release_date") val releaseDate: String? = "",
     @SerializedName("popularity") val popularity: String? = "",
     @SerializedName("vote_count") val voteCount: String? = "",
-    @SerializedName("genres") val genreList: List<GenreEntity>
+    @SerializedName("genres") val genreList: List<GenreRemote>
 )

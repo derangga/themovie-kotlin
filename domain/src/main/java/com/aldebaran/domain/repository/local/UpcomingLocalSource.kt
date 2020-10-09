@@ -1,11 +1,12 @@
 package com.aldebaran.domain.repository.local
 
+import androidx.lifecycle.LiveData
 import com.aldebaran.domain.entities.local.UpcomingEntity
-import kotlinx.coroutines.flow.Flow
 
 interface UpcomingLocalSource {
     suspend fun insertUpcoming(upcoming: List<UpcomingEntity>)
+    suspend fun insertUpcoming(upcoming: UpcomingEntity)
     suspend fun updateUpcoming(upcoming: UpcomingEntity)
-    fun getUpcomingMovie(): Flow<List<UpcomingEntity>>
+    fun getUpcomingMovie(): LiveData<List<UpcomingEntity>>
     suspend fun upcomingRows(): Int
 }

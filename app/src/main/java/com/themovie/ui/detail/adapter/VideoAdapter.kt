@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.domain.entities.remote.Videos
 import com.themovie.databinding.AdapterVideoBinding
 import com.themovie.helper.OnAdapterListener
-import com.themovie.model.online.video.Videos
 
 class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK) {
 

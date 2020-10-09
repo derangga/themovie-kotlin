@@ -5,45 +5,35 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.domain.entities.remote.Credits
+import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.remote.ReviewsResponse
+import com.aldebaran.domain.entities.remote.Videos
 
 import com.themovie.R
 import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailMovieBinding
-import com.themovie.di.detail.DetailViewModelFactory
 import com.themovie.helper.*
-import com.themovie.model.online.detail.Credits
-import com.themovie.model.online.detail.Reviews
-import com.themovie.model.db.Movies
-import com.themovie.model.online.video.Videos
-import com.themovie.restapi.Result
-import com.themovie.restapi.Result.Status.*
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
 import com.themovie.ui.detail.adapter.VideoAdapter
 import com.themovie.ui.detail.viewmodel.DetailMovieViewModel
 import com.themovie.ui.youtube.YoutubeActivity
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-
-/**
- * A simple [Fragment] subclass.
- *
- */
+@AndroidEntryPoint
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
-    
-    @Inject lateinit var factory: DetailViewModelFactory
-    private val viewModel by viewModels<DetailMovieViewModel> { factory }
-    private lateinit var creditsAdapter: CreditsAdapter
-    private lateinit var recommendedAdapter: RecommendedAdapter
-    private lateinit var reviewsAdapter: ReviewsAdapter
-    private lateinit var videoAdapter: VideoAdapter
+
+    private val viewModel by viewModels<DetailMovieViewModel>()
+    private val creditsAdapter by lazy { CreditsAdapter() }
+    private val recommendedAdapter by lazy { RecommendedAdapter() }
+    private val reviewsAdapter by lazy { ReviewsAdapter() }
+    private val videoAdapter by lazy { VideoAdapter() }
     private var filmId = 0
 
     override fun getLayout(): Int {
@@ -51,7 +41,6 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as DetailActivity).getDetailComponent().inject(this)
         arguments?.let {
             filmId = DetailMovieFragmentArgs.fromBundle(it).filmId
         }
@@ -69,7 +58,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     private fun subscribeUI(){
         viewModel.apply {
-            detailMovieRes.observe(viewLifecycleOwner, Observer { res ->
+            detailMovieRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         hideLoading()
@@ -84,7 +73,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                 }
             })
 
-            creditMovieRes.observe(viewLifecycleOwner, Observer { res ->
+            creditMovieRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         if(res.data?.credits.isNullOrEmpty()) binding.dtCastEmpty.visible()
@@ -95,18 +84,18 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                 }
             })
 
-            recommendationMovieRes.observe(viewLifecycleOwner, Observer { res ->
+            recommendationMovieRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
-                        if(res.data?.movies.isNullOrEmpty()) binding.dtRecomEmpty.visible()
+                        if(res.data?.results.isNullOrEmpty()) binding.dtRecomEmpty.visible()
                         else binding.dtRecomEmpty.gone()
-                        recommendedAdapter.submitList(res.data?.movies)
+                        recommendedAdapter.submitList(res.data?.results)
                     }
                     else -> {}
                 }
             })
 
-            trailerMovieRes.observe(viewLifecycleOwner, Observer { res ->
+            trailerMovieRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         if(res.data?.videos.isNullOrEmpty()) binding.videoEmpty.visible()
@@ -117,12 +106,12 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                 }
             })
 
-            reviewsMovieRes.observe(viewLifecycleOwner, Observer { res ->
+            reviewsMovieRes.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
-                        if(res.data?.reviewList.isNullOrEmpty()) binding.dtReviewEmpty.visible()
+                        if(res.data?.results.isNullOrEmpty()) binding.dtReviewEmpty.visible()
                         else binding.dtReviewEmpty.gone()
-                        reviewsAdapter.submitList(res.data?.reviewList)
+                        reviewsAdapter.submitList(res.data?.results)
                     }
                     else -> {}
                 }
@@ -131,11 +120,6 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     }
 
     private fun initRecyclerView(){
-        creditsAdapter = CreditsAdapter()
-        recommendedAdapter = RecommendedAdapter()
-        reviewsAdapter = ReviewsAdapter()
-        videoAdapter = VideoAdapter()
-
         binding.apply {
             dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -159,8 +143,8 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             }
         })
 
-        recommendedAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
-            override fun onClick(view: View, item: Movies) {
+        recommendedAdapter.setOnClickListener(object: OnAdapterListener<MovieResponse>{
+            override fun onClick(view: View, item: MovieResponse) {
                 val bundle = Bundle().apply {
                     putInt("filmId", item.id ?: 0)
                     putString("type", Constant.MOVIE)
@@ -169,8 +153,8 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             }
         })
 
-        reviewsAdapter.setOnClickListener(object: OnAdapterListener<Reviews>{
-            override fun onClick(view: View, item: Reviews) {
+        reviewsAdapter.setOnClickListener(object: OnAdapterListener<ReviewsResponse>{
+            override fun onClick(view: View, item: ReviewsResponse) {
                 val uri: Uri = Uri.parse(item.url)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context?.startActivity(intent)
@@ -195,7 +179,6 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             dtShimmer.visible()
             dtLayout.gone()
         }
-
     }
 
     private fun hideLoading(){
@@ -203,6 +186,5 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
             dtShimmer.gone()
             dtLayout.visible()
         }
-
     }
 }

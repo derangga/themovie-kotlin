@@ -7,6 +7,7 @@ import com.aldebaran.domain.repository.remote.MovieRemoteSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class MoviePagingSource(
@@ -14,6 +15,9 @@ class MoviePagingSource(
     private val remote: MovieRemoteSource,
     private val genre: String
 ): BasePagingDataSource<Int, MovieResponse>() {
+
+    private val calendar by lazy { Calendar.getInstance() }
+
     override fun loadFirstPage(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, MovieResponse>
@@ -38,7 +42,7 @@ class MoviePagingSource(
 
     override fun fetchData(page: Int, callback: (List<MovieResponse>) -> Unit) {
         scope.launch(IO) {
-            val result = remote.getDiscoverMovie(genre, page)
+            val result = remote.getDiscoverMovie(genre, calendar.get(Calendar.YEAR), page)
             when(result.status){
                 SUCCESS -> {
                     updateState(result.status)

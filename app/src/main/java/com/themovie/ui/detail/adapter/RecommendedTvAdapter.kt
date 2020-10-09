@@ -7,30 +7,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.data.network.ApiUrl
+import com.aldebaran.domain.entities.remote.TvResponse
 import com.themovie.databinding.AdapterRecomendedBinding
 import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
-import com.themovie.model.db.Tv
-import com.themovie.restapi.ApiUrl
 
-class RecommendedTvAdapter : ListAdapter<Tv, RecommendedTvAdapter.ViewHolder>(DIFF_CALLBACK) {
+class RecommendedTvAdapter : ListAdapter<TvResponse, RecommendedTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnAdapterListener<Tv>
+    private lateinit var onClickAdapterListener: OnAdapterListener<TvResponse>
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Tv> = object: DiffUtil.ItemCallback<Tv>(){
-            override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<TvResponse> = object: DiffUtil.ItemCallback<TvResponse>(){
+            override fun areItemsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+            override fun areContentsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
                 return oldItem.name == newItem.name && oldItem.backdropPath == newItem.backdropPath
             }
         }
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<Tv>){
+    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<TvResponse>){
         this.onClickAdapterListener = onClickAdapterListener
     }
 
@@ -49,7 +49,7 @@ class RecommendedTvAdapter : ListAdapter<Tv, RecommendedTvAdapter.ViewHolder>(DI
         itemView: View,
         private val binding: AdapterRecomendedBinding
     ) : RecyclerView.ViewHolder(itemView){
-        fun bindItem(tv: Tv){
+        fun bindItem(tv: TvResponse){
             val imgUrl = "${ApiUrl.IMG_POSTER}${tv.posterPath.toString()}"
             binding.recItem.apply {
                 setImage(imgUrl)

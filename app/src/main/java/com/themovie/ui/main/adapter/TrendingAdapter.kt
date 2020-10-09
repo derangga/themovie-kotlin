@@ -9,29 +9,29 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.domain.entities.local.TrendingEntity
 import com.themovie.databinding.ItemHeaderMainBinding
 import com.themovie.helper.OnAdapterListener
-import com.themovie.model.db.Trending
 
-class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
+class TrendingAdapter : ListAdapter<TrendingEntity, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private lateinit var clickListener: OnAdapterListener<Trending>
+    private lateinit var clickListener: OnAdapterListener<TrendingEntity>
     private lateinit var onTouchAdapterListener: OnTouchAdapterListener
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Trending> = object: DiffUtil.ItemCallback<Trending>(){
-            override fun areItemsTheSame(oldItem: Trending, newItem: Trending): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<TrendingEntity> = object: DiffUtil.ItemCallback<TrendingEntity>(){
+            override fun areItemsTheSame(oldItem: TrendingEntity, newItem: TrendingEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Trending, newItem: Trending): Boolean {
+            override fun areContentsTheSame(oldItem: TrendingEntity, newItem: TrendingEntity): Boolean {
                 return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
             }
         }
     }
 
-    fun setOnClickListener(clickListener: OnAdapterListener<Trending>){
+    fun setOnClickListener(clickListener: OnAdapterListener<TrendingEntity>){
         this.clickListener = clickListener
     }
 
@@ -59,7 +59,7 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
     }
 
     inner class ViewHolder(root: View, val binding: ItemHeaderMainBinding) : RecyclerView.ViewHolder(root) {
-        fun trendingClick(view: View, trending: Trending){
+        fun trendingClick(view: View, trending: TrendingEntity){
             clickListener.onClick(view, trending)
         }
     }

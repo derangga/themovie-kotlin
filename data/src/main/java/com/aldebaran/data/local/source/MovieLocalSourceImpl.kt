@@ -1,5 +1,6 @@
 package com.aldebaran.data.local.source
 
+import androidx.lifecycle.LiveData
 import com.aldebaran.data.local.dao.MoviesDao
 import com.aldebaran.domain.entities.local.MovieEntity
 import com.aldebaran.domain.repository.local.MovieLocalSource
@@ -12,11 +13,15 @@ class MovieLocalSourceImpl(
         moviesDao.insertAll(*movies.toTypedArray())
     }
 
+    override suspend fun insertDiscoverMovie(movie: MovieEntity) {
+        moviesDao.insert(movie)
+    }
+
     override suspend fun updateDiscoverMovie(movies: MovieEntity) {
         moviesDao.update(movies)
     }
 
-    override fun getAllDiscoverMovie(): Flow<List<MovieEntity>> {
+    override fun getAllDiscoverMovie(): LiveData<List<MovieEntity>> {
         return moviesDao.getDiscoverMovies()
     }
 
