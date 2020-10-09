@@ -31,16 +31,18 @@ fun <T:ImageView> cacheImage(context: Context, url: String, imageView: T){
         .into(imageView)
 }
 
-fun List<GenreRemote>.concatListGenres(): String {
+fun List<GenreRemote>?.concatListGenres(): String {
     val genre = StringBuilder()
-    for(i in this.indices){
-        if(this.size > 1){
-            if(i != this.size - 1) {
-                genre.append(this[i].name).append(", ")
+    return this?.let {
+        for(i in this.indices){
+            if(this.size > 1){
+                if(i != this.size - 1) {
+                    genre.append(this[i].name).append(", ")
+                } else genre.append(this[i].name)
             } else genre.append(this[i].name)
-        } else genre.append(this[i].name)
-    }
-    return genre.toString()
+        }
+        genre.toString()
+    }.orEmpty()
 }
 
 fun ResponseBody.getErrorMessage(): String {
