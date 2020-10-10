@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.entities.remote.ReviewsResponse
 import com.themovie.databinding.AdapterReviewBinding
-import com.themovie.helper.OnAdapterListener
 
-class ReviewsAdapter : ListAdapter<ReviewsResponse, ReviewsAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var onClickAdapterListener: OnAdapterListener<ReviewsResponse>
+class ReviewsAdapter(
+    private val onItemClick: (ReviewsResponse) -> Unit
+) : ListAdapter<ReviewsResponse, ReviewsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<ReviewsResponse> = object: DiffUtil.ItemCallback<ReviewsResponse>(){
@@ -24,10 +23,6 @@ class ReviewsAdapter : ListAdapter<ReviewsResponse, ReviewsAdapter.ViewHolder>(D
                 return oldItem.author == newItem.author && oldItem.content == newItem.content
             }
         }
-    }
-
-    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<ReviewsResponse>){
-        this.onClickAdapterListener = onClickAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,8 +38,8 @@ class ReviewsAdapter : ListAdapter<ReviewsResponse, ReviewsAdapter.ViewHolder>(D
 
 
     inner class ViewHolder(root: View, val binding: AdapterReviewBinding) : RecyclerView.ViewHolder(root){
-        fun onReviewClick(view: View, data: ReviewsResponse){
-            onClickAdapterListener.onClick(view, data)
+        fun onReviewClick(data: ReviewsResponse){
+            onItemClick.invoke(data)
         }
     }
 }

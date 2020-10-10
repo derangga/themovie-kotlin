@@ -2,8 +2,9 @@ package com.themovie.ui.detail
 
 import android.os.Bundle
 import androidx.navigation.findNavController
+import com.aldebaran.base.BaseActivity
+
 import com.themovie.R
-import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivityDetailBinding
 import com.themovie.helper.Constant
 import dagger.hilt.android.AndroidEntryPoint

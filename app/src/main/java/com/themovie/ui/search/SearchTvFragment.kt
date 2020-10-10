@@ -2,19 +2,17 @@ package com.themovie.ui.search
 
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.aldebaran.base.BaseFragment
 import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentSearchResultBinding
 import com.themovie.helper.Constant
-import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.changeActivity
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +22,7 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefre
 
     private var query: String? = ""
     private val viewModel by viewModels<SearchTvViewModel>()
-    private val mAdapter by lazy { TvAdapter() }
+    private val mAdapter by lazy { TvAdapter(::onTvShowItemClick, ::onLoadMoreRetry) }
 
     override fun getLayout(): Int {
         return R.layout.fragment_search_result
@@ -48,26 +46,9 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefre
     }
 
     private fun setupRecyclerView(){
-        mAdapter.apply {
-            setOnClickAdapter(object: OnAdapterListener<TvResponse> {
-                override fun onClick(view: View, item: TvResponse) {
-                    val bundle = Bundle().apply {
-                        putInt("filmId", item.id ?: 0)
-                        putString("type", Constant.TV)
-                    }
-                    changeActivity<DetailActivity>(bundle)
-                }
-            })
-
-            setOnErrorClickListener(object: TvAdapter.OnErrorClickListener{
-                override fun onClick(view: View?) {
-                    viewModel.retry()
-                }
-            })
-        }
 
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
+            initLinearRecycler(requireContext())
             adapter = mAdapter
         }
     }
@@ -82,5 +63,17 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefre
             getLoadState().observe(this@SearchTvFragment,
                 Observer { mAdapter.setLoadState(it) })
         }
+    }
+
+    private fun onTvShowItemClick(tv: TvResponse) {
+        val bundle = Bundle().apply {
+            putInt("filmId", tv.id ?: 0)
+            putString("type", Constant.TV)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onLoadMoreRetry() {
+        viewModel.retry()
     }
 }

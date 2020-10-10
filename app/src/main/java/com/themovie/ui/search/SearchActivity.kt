@@ -2,11 +2,11 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import android.view.View
+import com.aldebaran.base.BaseActivity
+import com.aldebaran.utils.changeActivity
 import com.themovie.R
-import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
 import com.themovie.helper.ViewPagerFragment
-import com.themovie.helper.changeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

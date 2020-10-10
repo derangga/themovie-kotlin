@@ -4,20 +4,22 @@ package com.themovie.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aldebaran.domain.Result.Status.*
-import com.aldebaran.domain.entities.remote.Credits
-import com.aldebaran.domain.entities.remote.ReviewsResponse
-import com.aldebaran.domain.entities.remote.TvResponse
-import com.aldebaran.domain.entities.remote.Videos
+import com.aldebaran.base.BaseFragment
+import com.aldebaran.domain.entities.remote.*
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.gone
+import com.aldebaran.utils.navigateFragment
+import com.aldebaran.utils.visible
 
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentDetailTvBinding
-import com.themovie.helper.*
+import com.themovie.helper.Constant
+import com.themovie.helper.showNetworkError
+
 import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel
 import com.themovie.ui.youtube.YoutubeActivity
@@ -28,10 +30,10 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
     private val viewModel by viewModels<DetailTvViewModel>()
     private val seasonAdapter by lazy { SeasonAdapter() }
-    private val creditsAdapter by lazy { CreditsAdapter() }
-    private val recommendedTvAdapter by lazy { RecommendedTvAdapter() }
-    private val reviewsAdapter by lazy { ReviewsAdapter() }
-    private val videoAdapter by lazy { VideoAdapter() }
+    private val creditsAdapter by lazy { CreditsAdapter(::onClickCreditItem) }
+    private val recommendedTvAdapter by lazy { RecommendedTvAdapter(::onClickRecommendationItem) }
+    private val reviewsAdapter by lazy { ReviewsAdapter(::onClickReviewItem) }
+    private val videoAdapter by lazy { VideoAdapter(::onClickVideoTrailerItem) }
     private var filmId = 0
 
     override fun getLayout(): Int {
@@ -50,7 +52,6 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
     override fun onMain(savedInstanceState: Bundle?) {
         setupRecycler()
-        adapterOnCLick()
         subscribeUI()
         viewModel.getDetailTvRequest(filmId)
     }
@@ -137,46 +138,6 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
         }
     }
 
-    private fun adapterOnCLick(){
-
-        creditsAdapter.setOnClickListener(object: OnAdapterListener<Credits>{
-            override fun onClick(view: View, item: Credits) {
-                val action = DetailTvFragmentDirections.actionDetailTvFragmentToPersonFragment2(item.id ?: 0)
-                Navigation.findNavController(view).navigate(action)
-            }
-        })
-
-        recommendedTvAdapter.setOnClickListener(object: OnAdapterListener<TvResponse>{
-            override fun onClick(view: View, item: TvResponse) {
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.TV)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
-        reviewsAdapter.setOnClickListener(object: OnAdapterListener<ReviewsResponse>{
-            override fun onClick(view: View, item: ReviewsResponse) {
-                val uri: Uri = Uri.parse(item.url)
-                val intent = Intent(Intent.ACTION_VIEW, uri)
-                context?.startActivity(intent)
-            }
-        })
-
-        videoAdapter.setOnClickAdapter(object: OnAdapterListener<Videos>{
-            override fun onClick(view: View, item: Videos) {
-                val bundle = Bundle()
-                bundle.putString("key", item.key)
-                Intent(context, YoutubeActivity::class.java)
-                    .also { intent ->
-                        intent.putExtras(bundle)
-                        startActivity(intent)
-                    }
-            }
-        })
-    }
-
     private fun showLoading(){
         binding.apply {
             dtShimmer.visible()
@@ -191,4 +152,29 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
         }
     }
 
+    private fun onClickCreditItem(credit: Credits) {
+        val action = DetailTvFragmentDirections.actionDetailTvFragmentToPersonFragment2(credit.id ?: 0)
+        view.navigateFragment { Navigation.findNavController(it).navigate(action) }
+    }
+
+    private fun onClickRecommendationItem(tv: TvResponse) {
+        val bundle = Bundle().apply {
+            putInt("filmId", tv.id ?: 0)
+            putString("type", Constant.TV)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onClickVideoTrailerItem(video: Videos) {
+        val bundle = Bundle().apply {
+            putString("key", video.key)
+        }
+        changeActivity<YoutubeActivity>(bundle)
+    }
+
+    private fun onClickReviewItem(review: ReviewsResponse) {
+        val uri: Uri = Uri.parse(review.url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        requireContext().startActivity(intent)
+    }
 }

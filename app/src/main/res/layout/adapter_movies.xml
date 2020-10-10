@@ -16,7 +16,7 @@
             android:id="@+id/mv_item"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:onClick="@{(v) -> vh.onMovieClick(v, movie)}">
+            android:onClick="@{() -> vh.onMovieClick(movie)}">
 
         <ImageView
                 android:id="@+id/mv_background"

@@ -6,15 +6,14 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.aldebaran.base.BaseFragment
 import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.initLinearRecycler
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.helper.Constant
-import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.changeActivity
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.MovieViewModel
 import com.themovie.ui.discover.adapter.MovieAdapter
@@ -24,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
     private val viewModel by viewModels<MovieViewModel>()
-    private val mAdapter by lazy { MovieAdapter() }
+    private val mAdapter by lazy { MovieAdapter(::onMovieItemClick, ::onLoadMoreRetry) }
     private var destinationBackPress = ""
     private var title = ""
     private var genreId = ""
@@ -87,25 +86,9 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefre
 
     private fun recyclerViewSetup(){
         binding.movieRec.apply {
-            layoutManager = LinearLayoutManager(context)
+            initLinearRecycler(requireContext())
             adapter = mAdapter
         }
-
-        mAdapter.setOnClickAdapter(object: OnAdapterListener<MovieResponse>{
-            override fun onClick(view: View, item: MovieResponse) {
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.MOVIE)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
-        mAdapter.setOnErrorClickListener(object: MovieAdapter.OnErrorClickListener{
-            override fun onClick(view: View?) {
-                viewModel.retry()
-            }
-        })
     }
 
     private fun getDiscoverMovies(){
@@ -119,5 +102,17 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>(), SwipeRefre
                     mAdapter.setLoadState(it)
             })
         }
+    }
+
+    private fun onMovieItemClick(movie: MovieResponse) {
+        val bundle = Bundle().apply {
+            putInt("filmId", movie.id ?: 0)
+            putString("type", Constant.MOVIE)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onLoadMoreRetry() {
+        viewModel.retry()
     }
 }

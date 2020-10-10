@@ -23,7 +23,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            buildConfigField('String', 'API_GATEWAY', '"https://api.themoviedb.org/3/"')
+            buildConfigField('String', 'TOKEN', '"98e5a808562ae58e4db7aecb3a0eda01"')
+            buildConfigField('String', 'YOUTUBE_TOKEN', '"AIzaSyB79JGvfJLIPLy6yLECjghWD3_1FfB1PlQ"')
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 

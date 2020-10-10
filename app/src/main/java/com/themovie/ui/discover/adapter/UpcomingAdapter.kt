@@ -1,6 +1,5 @@
 package com.themovie.ui.discover.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,13 @@ import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.domain.entities.remote.MovieResponse
 import com.themovie.databinding.AdapterLoadingBinding
 import com.themovie.databinding.AdapterUpcomingBinding
-import com.themovie.helper.OnAdapterListener
 
-class UpcomingAdapter: PagedListAdapter<MovieResponse, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class UpcomingAdapter (
+    private val onItemClick: (MovieResponse) -> Unit,
+    private val onItemErrorClick: () -> Unit
+): PagedListAdapter<MovieResponse, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private var loadState: Status? = null
-    private lateinit var context: Context
-    private lateinit var onErrorClickListener: OnErrorClickListener
-    private lateinit var onClickAdapterListener: OnAdapterListener<MovieResponse>
 
     companion object{
         private const val DATA_VIEW = 1
@@ -38,8 +36,7 @@ class UpcomingAdapter: PagedListAdapter<MovieResponse, RecyclerView.ViewHolder>(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        context = parent.context
-        val inflater = LayoutInflater.from(context)
+        val inflater = LayoutInflater.from(parent.context)
         return if(viewType == DATA_VIEW){
             val view = AdapterUpcomingBinding
                 .inflate(inflater, parent, false)
@@ -56,7 +53,7 @@ class UpcomingAdapter: PagedListAdapter<MovieResponse, RecyclerView.ViewHolder>(
             holder.binding.upcoming = getItem(position)
             holder.binding.vh = holder
         }else if(holder is LoadingViewHolder){
-            holder.bindView(loadState, onErrorClickListener)
+            holder.bindView(loadState, onItemErrorClick)
         }
     }
 
@@ -88,21 +85,9 @@ class UpcomingAdapter: PagedListAdapter<MovieResponse, RecyclerView.ViewHolder>(
         }
     }
 
-    fun setOnErrorClickListener(onErrorClickListener: OnErrorClickListener){
-        this.onErrorClickListener = onErrorClickListener
-    }
-
-    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<MovieResponse>){
-        this.onClickAdapterListener = onClickAdapterListener
-    }
-
-    interface OnErrorClickListener {
-        fun onClick(view: View?)
-    }
-
     inner class UpcomingViewHolder(root: View, val binding: AdapterUpcomingBinding) : RecyclerView.ViewHolder(root){
-        fun onUpcomingClick(view: View, data: MovieResponse){
-            onClickAdapterListener.onClick(view, data)
+        fun onUpcomingClick(data: MovieResponse){
+            onItemClick.invoke(data)
         }
     }
 }

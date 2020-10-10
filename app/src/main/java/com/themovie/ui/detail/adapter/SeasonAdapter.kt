@@ -44,9 +44,6 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
             binding.seasonItem.apply {
                 setImage(imgUrl)
                 setTitle(season.name)
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {}
-                })
             }
         }
     }

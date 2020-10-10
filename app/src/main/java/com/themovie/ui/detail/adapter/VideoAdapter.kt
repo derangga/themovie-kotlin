@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.entities.remote.Videos
 import com.themovie.databinding.AdapterVideoBinding
-import com.themovie.helper.OnAdapterListener
 
-class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var listener: OnAdapterListener<Videos>
+class VideoAdapter (
+    private val onItemClick: (Videos) -> Unit
+) : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Videos> = object: DiffUtil.ItemCallback<Videos>(){
@@ -24,10 +23,6 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
                 return oldItem.name == newItem.name&& oldItem.key == newItem.key
             }
         }
-    }
-
-    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<Videos>){
-        this.listener = onClickAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,8 +37,8 @@ class VideoAdapter : ListAdapter<Videos, VideoAdapter.ViewHolder>(DIFF_CALLBACK)
     }
 
     inner class ViewHolder(itemView: View, val binding: AdapterVideoBinding) : RecyclerView.ViewHolder(itemView){
-        fun onVideoTap(view: View, video: Videos){
-            listener.onClick(view, video)
+        fun onVideoTap(video: Videos){
+            onItemClick.invoke(video)
         }
     }
 }
