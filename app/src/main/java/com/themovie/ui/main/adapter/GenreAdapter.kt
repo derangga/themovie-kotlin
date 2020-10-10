@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.entities.local.GenreEntity
 import com.themovie.databinding.AdapterGenreBinding
-import com.themovie.helper.OnAdapterListener
 
-class GenreAdapter : ListAdapter<GenreEntity, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var listener: OnAdapterListener<GenreEntity>
+class GenreAdapter (
+    private val onItemClick: (GenreEntity) -> Unit
+): ListAdapter<GenreEntity, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<GenreEntity> = object: DiffUtil.ItemCallback<GenreEntity>(){
@@ -38,12 +37,8 @@ class GenreAdapter : ListAdapter<GenreEntity, GenreAdapter.ViewHolder>(DIFF_CALL
     }
 
     inner class ViewHolder(root: View, val binding: AdapterGenreBinding) : RecyclerView.ViewHolder(root) {
-        fun genreClick(view: View, genre: GenreEntity){
-            listener.onClick(view, genre)
+        fun genreClick(genre: GenreEntity){
+            onItemClick.invoke(genre)
         }
-    }
-
-    fun setGenreClickListener(listener: OnAdapterListener<GenreEntity>){
-        this.listener = listener
     }
 }

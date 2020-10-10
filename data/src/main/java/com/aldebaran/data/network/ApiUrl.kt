@@ -1,5 +1,7 @@
 package com.aldebaran.data.network
 
+import com.aldebaran.data.BuildConfig
+
 class ApiUrl {
     companion object{
         const val UPCOMING = "movie/upcoming"
@@ -26,7 +28,7 @@ class ApiUrl {
         const val BIOGRAPHY = "person/{person_id}"
         const val SEARCH_MOVIE = "search/movie"
         const val SEARCH_TV = "search/tv"
-
+        const val YOUTUBE_KEY = BuildConfig.YOUTUBE_TOKEN
         const val SORTING = "popularity.desc"
         const val TIMEZONE = "US"
     }

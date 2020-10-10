@@ -22,7 +22,7 @@
             android:clickable="true"
             android:focusable="true"
             android:id="@+id/genre_item"
-            android:onClick="@{(v) -> vh.genreClick(v, genre)}">
+            android:onClick="@{() -> vh.genreClick(genre)}">
 
         <RelativeLayout
                 android:orientation="vertical"

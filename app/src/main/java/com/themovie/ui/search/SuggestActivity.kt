@@ -8,13 +8,13 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.lifecycleScope
+import com.aldebaran.base.BaseActivity
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.gone
+import com.aldebaran.utils.visible
 import com.themovie.R
-import com.themovie.base.BaseActivity
 import com.themovie.databinding.ActivitySearchBinding
 import com.themovie.helper.ViewPagerFragment
-import com.themovie.helper.changeActivity
-import com.themovie.helper.gone
-import com.themovie.helper.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 

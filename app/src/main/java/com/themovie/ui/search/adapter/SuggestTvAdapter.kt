@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.entities.remote.TvResponse
 import com.themovie.databinding.AdapterSuggestBinding
-import com.themovie.helper.OnAdapterListener
 
-class SuggestTvAdapter: ListAdapter<TvResponse, SuggestTvAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var listener: OnAdapterListener<TvResponse>
+class SuggestTvAdapter (
+    private val onItemClick: (TvResponse) -> Unit
+): ListAdapter<TvResponse, SuggestTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<TvResponse> = object: DiffUtil.ItemCallback<TvResponse>(){
@@ -24,10 +23,6 @@ class SuggestTvAdapter: ListAdapter<TvResponse, SuggestTvAdapter.ViewHolder>(DIF
                 return oldItem.name == newItem.name
             }
         }
-    }
-
-    fun setAdapterListener(listener: OnAdapterListener<TvResponse>){
-        this.listener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,7 +38,7 @@ class SuggestTvAdapter: ListAdapter<TvResponse, SuggestTvAdapter.ViewHolder>(DIF
     inner class ViewHolder(itemView: View, private val binding: AdapterSuggestBinding) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: TvResponse) {
             binding.tvSuggest.text = item.name
-            binding.suggest.setOnClickListener { listener.onClick(itemView, item) }
+            binding.suggest.setOnClickListener { onItemClick.invoke(item) }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.themovie.base
+package com.aldebaran.base
 
 import android.os.Bundle
 import android.view.LayoutInflater

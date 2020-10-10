@@ -1,6 +1,5 @@
 package com.themovie.ui.discover.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,13 @@ import com.aldebaran.domain.Result.Status.SUCCESS
 import com.aldebaran.domain.entities.remote.TvResponse
 import com.themovie.databinding.AdapterLoadingBinding
 import com.themovie.databinding.AdapterTvBinding
-import com.themovie.helper.OnAdapterListener
 
-class TvAdapter: PagedListAdapter<TvResponse, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class TvAdapter (
+    private val onItemClick: (TvResponse) -> Unit,
+    private val onItemErrorClick: () -> Unit
+): PagedListAdapter<TvResponse, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private var loadState: Status? = null
-    private lateinit var context: Context
-    private lateinit var onErrorClickListener: OnErrorClickListener
-    private lateinit var onClickAdapterListener: OnAdapterListener<TvResponse>
 
     companion object{
 
@@ -40,8 +38,7 @@ class TvAdapter: PagedListAdapter<TvResponse, RecyclerView.ViewHolder>(DIFF_CALL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        context = parent.context
-        val inflater = LayoutInflater.from(context)
+        val inflater = LayoutInflater.from(parent.context)
         return if(viewType == DATA_VIEW){
             val view = AdapterTvBinding
                 .inflate(inflater, parent, false)
@@ -58,7 +55,7 @@ class TvAdapter: PagedListAdapter<TvResponse, RecyclerView.ViewHolder>(DIFF_CALL
             holder.binding.tv = getItem(position)
             holder.binding.vh = holder
         } else if(holder is LoadingViewHolder){
-            holder.bindView(loadState, onErrorClickListener)
+            holder.bindView(loadState, onItemErrorClick)
         }
     }
 
@@ -90,21 +87,13 @@ class TvAdapter: PagedListAdapter<TvResponse, RecyclerView.ViewHolder>(DIFF_CALL
         }
     }
 
-    fun setOnErrorClickListener(onErrorClickListener: OnErrorClickListener){
-        this.onErrorClickListener = onErrorClickListener
-    }
-
-    fun setOnClickAdapter(onClickAdapterListener: OnAdapterListener<TvResponse>){
-        this.onClickAdapterListener = onClickAdapterListener
-    }
-
     interface OnErrorClickListener {
         fun onClick(view: View?)
     }
 
     inner class TvViewHolder(root: View, val binding: AdapterTvBinding) : RecyclerView.ViewHolder(root) {
-        fun onTvAdapterClick(view: View, tv: TvResponse){
-            onClickAdapterListener.onClick(view, tv)
+        fun onTvAdapterClick(tv: TvResponse){
+            onItemClick.invoke(tv)
         }
     }
 }

@@ -17,7 +17,7 @@
             android:id="@+id/mv_item"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:onClick="@{(v) -> vh.onUpcomingClick(v, upcoming)}">
+            android:onClick="@{() -> vh.onUpcomingClick(upcoming)}">
 
         <ImageView
                 android:id="@+id/mv_background"

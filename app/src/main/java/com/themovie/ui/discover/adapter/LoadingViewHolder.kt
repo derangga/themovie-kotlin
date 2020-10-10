@@ -4,30 +4,16 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.Result
 import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.utils.gone
+import com.aldebaran.utils.visible
 import com.themovie.databinding.AdapterLoadingBinding
-import com.themovie.helper.gone
-import com.themovie.helper.visible
 
 class LoadingViewHolder(root: View, private val binding: AdapterLoadingBinding) : RecyclerView.ViewHolder(root) {
 
-    fun bindView(loadDataState: Result.Status?, onErrorClickListener: MovieAdapter.OnErrorClickListener){
+    fun bindView(loadDataState: Result.Status?, onItemErrorClick: () -> Unit){
         loadHandler(loadDataState)
         binding.txtError.setOnClickListener {
-            onErrorClickListener.onClick(it)
-        }
-    }
-
-    fun bindView(loadDataState: Result.Status?, onErrorClickListener: TvAdapter.OnErrorClickListener){
-        loadHandler(loadDataState)
-        binding.txtError.setOnClickListener {
-            onErrorClickListener.onClick(it)
-        }
-    }
-
-    fun bindView(loadDataState: Result.Status?, onErrorClickListener: UpcomingAdapter.OnErrorClickListener){
-        loadHandler(loadDataState)
-        binding.txtError.setOnClickListener {
-            onErrorClickListener.onClick(it)
+            onItemErrorClick.invoke()
         }
     }
 

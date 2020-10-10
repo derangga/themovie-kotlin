@@ -18,7 +18,7 @@
             android:layout_margin="5dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="1dp"
-            android:onClick="@{(v) -> vh.trendingClick(v, trend)}">
+            android:onClick="@{() -> vh.trendingClick(trend)}">
 
             <RelativeLayout
                 android:layout_width="match_parent"

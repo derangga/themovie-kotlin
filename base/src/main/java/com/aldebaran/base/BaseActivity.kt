@@ -1,11 +1,10 @@
-package com.themovie.base
+package com.aldebaran.base
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.themovie.MyApplication
 import timber.log.Timber
 
 abstract class BaseActivity<B: ViewDataBinding> : AppCompatActivity() {
@@ -32,6 +31,4 @@ abstract class BaseActivity<B: ViewDataBinding> : AppCompatActivity() {
     fun getBundle(): Bundle? {
         return intent.extras
     }
-
-    fun getApp(): MyApplication = (application as MyApplication)
 }

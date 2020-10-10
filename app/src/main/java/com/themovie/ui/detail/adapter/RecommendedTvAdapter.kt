@@ -1,6 +1,5 @@
 package com.themovie.ui.detail.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.data.network.ApiUrl
 import com.aldebaran.domain.entities.remote.TvResponse
 import com.themovie.databinding.AdapterRecomendedBinding
-import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
 
-class RecommendedTvAdapter : ListAdapter<TvResponse, RecommendedTvAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var context: Context
-    private lateinit var onClickAdapterListener: OnAdapterListener<TvResponse>
+class RecommendedTvAdapter(
+    private val onItemClick: (TvResponse) -> Unit
+) : ListAdapter<TvResponse, RecommendedTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<TvResponse> = object: DiffUtil.ItemCallback<TvResponse>(){
@@ -30,14 +27,9 @@ class RecommendedTvAdapter : ListAdapter<TvResponse, RecommendedTvAdapter.ViewHo
         }
     }
 
-    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<TvResponse>){
-        this.onClickAdapterListener = onClickAdapterListener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = AdapterRecomendedBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
-        context = parent.context
         return ViewHolder(view.root, view)
     }
 
@@ -57,7 +49,7 @@ class RecommendedTvAdapter : ListAdapter<TvResponse, RecommendedTvAdapter.ViewHo
                 setRating(tv.voteAverage.orEmpty())
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {
-                        onClickAdapterListener.onClick(itemView, tv)
+                        onItemClick.invoke(tv)
                     }
                 })
             }

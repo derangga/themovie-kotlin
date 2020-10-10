@@ -7,19 +7,19 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import com.aldebaran.base.BaseFragment
 import com.aldebaran.domain.entities.local.GenreEntity
+import com.aldebaran.utils.navigateFragment
 
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentGenresBinding
-import com.themovie.helper.OnAdapterListener
 import com.themovie.ui.main.adapter.GenreAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class GenresFragment : BaseFragment<FragmentGenresBinding>() {
 
-    private val genreAdapter by lazy { GenreAdapter() }
+    private val genreAdapter by lazy { GenreAdapter(::onGenreItemClick) }
     private val viewModel by viewModels<GenreViewModel>()
 
     override fun getLayout(): Int {
@@ -59,19 +59,15 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
             layoutManager = GridLayoutManager(context, 2)
             adapter = genreAdapter
         }
-
-        genreAdapter.setGenreClickListener(object: OnAdapterListener<GenreEntity>{
-            override fun onClick(view: View, item: GenreEntity) {
-                val action = GenresFragmentDirections
-                    .actionGenresFragmentToMovieWithGenreFragment(item.id ?: 0, item.name.orEmpty(), "genreList")
-                Navigation.findNavController(view).navigate(action)
-            }
-        })
     }
 
     private fun getGenreList(){
-        viewModel.genreMovies.observe(viewLifecycleOwner, {
-                genreAdapter.submitList(it)
-            })
+        viewModel.genreMovies.observe(viewLifecycleOwner, { genreAdapter.submitList(it) })
+    }
+
+    private fun onGenreItemClick(genre: GenreEntity) {
+        val action = GenresFragmentDirections
+            .actionGenresFragmentToMovieWithGenreFragment(genre.id ?: 0, genre.name.orEmpty(), "genreList")
+        view?.navigateFragment { Navigation.findNavController(it).navigate(action) }
     }
 }
