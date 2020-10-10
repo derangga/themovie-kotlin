@@ -36,14 +36,13 @@
                         android:id="@+id/detail_img"
                         android:layout_width="match_parent"
                         android:layout_height="280dp"
-                        android:tint="#11000000"
                         android:background="@color/colorWhite"
                         android:scaleType="centerCrop"
                         app:loadImage="@{ApiUrl.IMG_BACK + tv.backdropPath}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"/>
 
                 <View
                         android:layout_width="match_parent"
