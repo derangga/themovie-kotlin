@@ -2,45 +2,34 @@ package com.themovie.ui.discover
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
-import androidx.paging.PagedList
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.aldebaran.base.BaseFragment
+import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentUpcomingBinding
-import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
-import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.changeActivity
-import com.themovie.model.db.Upcoming
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.UpcomingAdapter
-import com.themovie.ui.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_upcoming.*
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * A simple [Fragment] subclass.
- */
+@AndroidEntryPoint
 class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var factory: MainViewModelFactory
-    private val viewModel by viewModels<UpComingViewModel> { factory }
-    private lateinit var mAdapter: UpcomingAdapter
+    private val viewModel by viewModels<UpComingViewModel>()
+    private val mAdapter by lazy { UpcomingAdapter(::onMovieItemClick, ::onLoadMoreRetry) }
 
     override fun getLayout(): Int {
         return R.layout.fragment_upcoming
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@UpcomingFragment
@@ -48,16 +37,16 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLa
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        swipe.setOnRefreshListener(this)
+        binding.swipe.setOnRefreshListener(this)
         binding.header.apply {
             setLogoVisibility(View.GONE)
             setSearchVisibility(View.GONE)
             setBackButtonVisibility(View.VISIBLE)
             setTitleText(resources.getString(R.string.home_title_2))
-            setBackButtonOnClickListener(View.OnClickListener {
+            setBackButtonOnClickListener {
                 val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
-            })
+            }
         }
 
         val callback = object: OnBackPressedCallback(true){
@@ -85,41 +74,32 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>(), SwipeRefreshLa
     }
 
     private fun recyclerViewSetup(){
-        mAdapter = UpcomingAdapter()
-        upcoming_rec.apply {
-            layoutManager = LinearLayoutManager(context)
+        binding.upcomingRec.apply {
+            initLinearRecycler(requireContext())
             adapter = mAdapter
         }
-
-        mAdapter.setOnClickAdapter(object: OnAdapterListener<Upcoming>{
-            override fun onClick(view: View, item: Upcoming) {
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.MOVIE)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
-        mAdapter.setOnErrorClickListener(object: UpcomingAdapter.OnErrorClickListener{
-            override fun onClick(view: View?) {
-                viewModel.retry()
-            }
-        })
     }
 
     private fun getUpcomingMovie(){
         viewModel.apply {
-            getUpcomingData().observe(this@UpcomingFragment,
-                Observer<PagedList<Upcoming>> {
+            getUpcomingData().observe(this@UpcomingFragment, {
                     mAdapter.submitList(it)
-                    swipe.isRefreshing = false
+                    binding.swipe.isRefreshing = false
                 })
 
-            getLoadState().observe(this@UpcomingFragment,
-                Observer{
-                    mAdapter.setLoadState(it)
-                })
+            getLoadState().observe(this@UpcomingFragment, { mAdapter.setLoadState(it) })
         }
+    }
+
+    private fun onMovieItemClick(movie: MovieResponse) {
+        val bundle = Bundle().apply {
+            putInt("filmId", movie.id ?: 0)
+            putString("type", Constant.MOVIE)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onLoadMoreRetry() {
+        viewModel.retry()
     }
 }

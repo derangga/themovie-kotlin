@@ -2,39 +2,35 @@ package com.themovie.ui.search
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.aldebaran.base.BaseFragment
+import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.gone
+import com.aldebaran.utils.initLinearRecycler
+import com.aldebaran.utils.visible
 
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentSuggestBinding
-import com.themovie.di.suggest.SuggestViewModelFactory
 import com.themovie.helper.*
-import com.themovie.model.db.Movies
-import com.themovie.model.online.discovermv.MoviesResponse
-import com.themovie.restapi.Result
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.search.adapter.SuggestMoviesAdapter
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * A simple [Fragment] subclass.
- */
+@AndroidEntryPoint
 class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.MoviesSearchFragmentListener {
 
-    @Inject lateinit var factory: SuggestViewModelFactory
-    private val viewModel by viewModels<SuggestMoviesViewModel> { factory }
-    private lateinit var mAdapter: SuggestMoviesAdapter
+    private val viewModel by viewModels<SuggestMoviesViewModel>()
+    private val mAdapter by lazy { SuggestMoviesAdapter(::onMovieItemClick) }
 
     override fun getLayout(): Int {
         return R.layout.fragment_suggest
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as SuggestActivity).getComponent()?.inject(this)
         binding.lifecycleOwner = this
     }
 
@@ -45,39 +41,36 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
     }
 
     private fun setupRecyclerView(){
-        mAdapter = SuggestMoviesAdapter()
-        mAdapter.setAdapterListener(object: OnAdapterListener<Movies>{
-            override fun onClick(view: View, item: Movies) {
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.MOVIE)
-                }
-                changeActivity<DetailActivity>(bundle)
-                activity?.finish()
-            }
-        })
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
+            initLinearRecycler(requireContext())
             adapter = mAdapter
         }
     }
 
     private fun observeSuggestData(){
-        viewModel.getSuggestMovies().observe(this,
-            Observer<Result<MoviesResponse>>{
-                when(it.status){
-                    Result.Status.LOADING -> {}
-                    Result.Status.SUCCESS -> {
-                        if(binding.recyclerView.visibility == View.GONE)
+        viewModel.getSuggestMovies().observe(this, { res ->
+                when(res.status){
+                    LOADING -> {}
+                    SUCCESS -> {
+                        if(!binding.recyclerView.isVisible)
                             binding.recyclerView.visible()
-                        mAdapter.submitList(it.data?.movies)
+                        mAdapter.submitList(res.data?.results)
                     }
-                    Result.Status.ERROR -> { binding.recyclerView.gone()}
+                    ERROR -> { binding.recyclerView.gone()}
                 }
             })
     }
 
     override fun textChange(text: String) {
         viewModel.fetchSuggestMovie(text)
+    }
+
+    private fun onMovieItemClick(movie: MovieResponse) {
+        val bundle = Bundle().apply {
+            putInt("filmId", movie.id ?: 0)
+            putString("type", Constant.MOVIE)
+        }
+        changeActivity<DetailActivity>(bundle)
+        activity?.finish()
     }
 }

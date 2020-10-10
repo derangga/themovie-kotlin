@@ -1,18 +1,18 @@
 package com.themovie.ui.person
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.themovie.model.online.person.PersonFilmResponse
-import com.themovie.model.online.person.PersonImageResponse
-import com.themovie.model.online.person.PersonResponse
-import com.themovie.repos.RemoteSource
-import com.themovie.restapi.Result
+import com.aldebaran.domain.Result
+import com.aldebaran.domain.entities.remote.person.PersonFilmResponse
+import com.aldebaran.domain.entities.remote.person.PersonImageResponse
+import com.aldebaran.domain.entities.remote.person.PersonResponse
+import com.aldebaran.domain.repository.remote.ArtistRemoteSource
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class PersonViewModel @Inject constructor(
-    private val remote: RemoteSource
+class PersonViewModel @ViewModelInject constructor(
+    private val remote: ArtistRemoteSource
 ) : ViewModel() {
 
     private val _detailPerson by lazy { MutableLiveData<Result<PersonResponse>>() }

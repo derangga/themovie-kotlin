@@ -1,28 +1,22 @@
 package com.themovie.ui.search
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.themovie.helper.LoadDataState
-import com.themovie.model.db.Tv
-import com.themovie.repos.search.SearchTvDataSourceBase
-import com.themovie.repos.search.SearchTvSourceFactory
-import com.themovie.restapi.ApiInterface
-import com.themovie.restapi.Result
-import javax.inject.Inject
+import com.aldebaran.data.network.source.SearchTvPagingFactory
+import com.aldebaran.data.network.source.SearchTvPagingSource
+import com.aldebaran.domain.Result.*
+import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.repository.remote.TvRemoteSource
 
-class SearchTvViewModel @Inject constructor (
-    apiInterface: ApiInterface
+class SearchTvViewModel @ViewModelInject constructor (
+    private val remote: TvRemoteSource
 ): ViewModel() {
 
-    private val searchLiveData: LiveData<PagedList<Tv>>
-    private val uiList = MediatorLiveData<PagedList<Tv>>()
-    private val searchSourceFactory =
-        SearchTvSourceFactory(
-            viewModelScope,
-            apiInterface,
-            query
-        )
+    private val searchLiveData: LiveData<PagedList<TvResponse>>
+    private val uiList by lazy { MediatorLiveData<PagedList<TvResponse>>() }
+    private val searchSourceFactory by lazy { SearchTvPagingFactory(viewModelScope, remote, query) }
 
     companion object{
         var query = ""
@@ -36,7 +30,7 @@ class SearchTvViewModel @Inject constructor (
         searchLiveData = LivePagedListBuilder(searchSourceFactory, pageConfig).build()
     }
 
-    fun getSearchTvResult(): MutableLiveData<PagedList<Tv>>{
+    fun getSearchTvResult(): MutableLiveData<PagedList<TvResponse>>{
         uiList.addSource(searchLiveData){
             uiList.value = it
         }
@@ -47,10 +41,10 @@ class SearchTvViewModel @Inject constructor (
         uiList.removeSource(searchLiveData)
     }
 
-    fun getLoadState(): LiveData<Result.Status>{
-        return Transformations.switchMap<SearchTvDataSourceBase, Result.Status>(
+    fun getLoadState(): LiveData<Status>{
+        return Transformations.switchMap(
                 searchSourceFactory.getResultSearch(),
-                SearchTvDataSourceBase::loadState
+                SearchTvPagingSource::loadState
             )
     }
 

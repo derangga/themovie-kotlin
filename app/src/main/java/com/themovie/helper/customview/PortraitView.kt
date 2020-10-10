@@ -19,7 +19,7 @@ class PortraitView(context: Context,
     constructor(context: Context): this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
 
-    private lateinit var listener: OnClickListener
+    private var listener: OnClickListener? = null
 
     init {
         inflateView()
@@ -64,7 +64,7 @@ class PortraitView(context: Context,
         }
 
         poster_item.setOnClickListener {
-            listener.onClick()
+            listener?.onClick()
         }
     }
 

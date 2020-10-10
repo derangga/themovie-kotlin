@@ -6,16 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.data.network.ApiUrl
+import com.aldebaran.domain.entities.remote.Credits
 import com.themovie.databinding.AdapterCreditsBinding
-import com.themovie.helper.OnAdapterListener
 import com.themovie.helper.customview.PortraitView
-import com.themovie.model.online.detail.Credits
-import com.themovie.restapi.ApiUrl
-import kotlinx.android.synthetic.main.adapter_credits.view.*
 
-class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var onClickAdapterListener: OnAdapterListener<Credits>
+class CreditsAdapter (
+    private val onItemClick: (Credits) -> Unit
+) : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
         val DIFF_CALLBACK: DiffUtil.ItemCallback<Credits> = object: DiffUtil.ItemCallback<Credits>(){
@@ -27,10 +25,6 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
                 return oldItem.name == newItem.name&& oldItem.profilePath == newItem.profilePath
             }
         }
-    }
-
-    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<Credits>){
-        this.onClickAdapterListener = onClickAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -52,7 +46,7 @@ class CreditsAdapter : ListAdapter<Credits, CreditsAdapter.ViewHolder>(DIFF_CALL
                 setImage(imgUrl)
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {
-                        onClickAdapterListener.onClick(itemView, credits)
+                        onItemClick.invoke(credits)
                     }
                 })
             }

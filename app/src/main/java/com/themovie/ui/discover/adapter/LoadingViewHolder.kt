@@ -2,40 +2,27 @@ package com.themovie.ui.discover.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.domain.Result
+import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.utils.gone
+import com.aldebaran.utils.visible
 import com.themovie.databinding.AdapterLoadingBinding
-import com.themovie.helper.gone
-import com.themovie.helper.visible
-import com.themovie.restapi.Result
 
 class LoadingViewHolder(root: View, private val binding: AdapterLoadingBinding) : RecyclerView.ViewHolder(root) {
 
-    fun bindView(loadDataState: Result.Status?, onErrorClickListener: MovieAdapter.OnErrorClickListener){
+    fun bindView(loadDataState: Result.Status?, onItemErrorClick: () -> Unit){
         loadHandler(loadDataState)
         binding.txtError.setOnClickListener {
-            onErrorClickListener.onClick(it)
-        }
-    }
-
-    fun bindView(loadDataState: Result.Status?, onErrorClickListener: TvAdapter.OnErrorClickListener){
-        loadHandler(loadDataState)
-        binding.txtError.setOnClickListener {
-            onErrorClickListener.onClick(it)
-        }
-    }
-
-    fun bindView(loadDataState: Result.Status?, onErrorClickListener: UpcomingAdapter.OnErrorClickListener){
-        loadHandler(loadDataState)
-        binding.txtError.setOnClickListener {
-            onErrorClickListener.onClick(it)
+            onItemErrorClick.invoke()
         }
     }
 
     private fun loadHandler(loadDataState: Result.Status?){
-        if(loadDataState != null && loadDataState == Result.Status.LOADING){
+        if(loadDataState != null && loadDataState == LOADING){
             binding.progressBar.visible()
         } else binding.progressBar.gone()
 
-        if(loadDataState != null && loadDataState == Result.Status.ERROR) {
+        if(loadDataState != null && loadDataState == ERROR) {
             binding.txtError.visible()
         } else binding.txtError.gone()
     }

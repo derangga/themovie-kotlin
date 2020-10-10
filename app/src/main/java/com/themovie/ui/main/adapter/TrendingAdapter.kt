@@ -1,7 +1,6 @@
 package com.themovie.ui.main.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -9,41 +8,29 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.domain.entities.local.TrendingEntity
 import com.themovie.databinding.ItemHeaderMainBinding
-import com.themovie.helper.OnAdapterListener
-import com.themovie.model.db.Trending
 
-class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var context: Context
-    private lateinit var clickListener: OnAdapterListener<Trending>
-    private lateinit var onTouchAdapterListener: OnTouchAdapterListener
+class TrendingAdapter (
+    private val onItemClick: (TrendingEntity) -> Unit,
+    private val onItemTouch: (motionEvent: MotionEvent?) -> Unit
+) : ListAdapter<TrendingEntity, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Trending> = object: DiffUtil.ItemCallback<Trending>(){
-            override fun areItemsTheSame(oldItem: Trending, newItem: Trending): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<TrendingEntity> = object: DiffUtil.ItemCallback<TrendingEntity>(){
+            override fun areItemsTheSame(oldItem: TrendingEntity, newItem: TrendingEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Trending, newItem: Trending): Boolean {
+            override fun areContentsTheSame(oldItem: TrendingEntity, newItem: TrendingEntity): Boolean {
                 return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
             }
         }
     }
 
-    fun setOnClickListener(clickListener: OnAdapterListener<Trending>){
-        this.clickListener = clickListener
-    }
-
-    fun setOnTouchListener(onTouchAdapterListener: OnTouchAdapterListener){
-        this.onTouchAdapterListener = onTouchAdapterListener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        context = parent.context
-
         val view = ItemHeaderMainBinding
-            .inflate(LayoutInflater.from(context), parent, false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(view.root, view)
     }
@@ -52,19 +39,15 @@ class TrendingAdapter : ListAdapter<Trending, TrendingAdapter.ViewHolder>(DIFF_C
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.trend = getItem(position)
         holder.binding.vh = holder
-        holder.binding.vCard.setOnTouchListener { v, event ->
-            onTouchAdapterListener.onTouchItem(v, event)
+        holder.binding.vCard.setOnTouchListener { _ , event ->
+            onItemTouch.invoke(event)
             false
         }
     }
 
     inner class ViewHolder(root: View, val binding: ItemHeaderMainBinding) : RecyclerView.ViewHolder(root) {
-        fun trendingClick(view: View, trending: Trending){
-            clickListener.onClick(view, trending)
+        fun trendingClick(trending: TrendingEntity){
+            onItemClick.invoke(trending)
         }
-    }
-
-    interface OnTouchAdapterListener {
-        fun onTouchItem(view: View?, motionEvent: MotionEvent?)
     }
 }

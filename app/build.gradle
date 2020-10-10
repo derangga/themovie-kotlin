@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
 
@@ -38,17 +39,11 @@ android {
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
-            buildConfigField('String', 'GATEWAY', '"https://api.themoviedb.org/3/"')
-            buildConfigField('String', 'TOKEN', '"98e5a808562ae58e4db7aecb3a0eda01"')
-            buildConfigField('String', 'YT', '"AIzaSyAf0F79CPI0aXg2lQFSUBnMNL7hUGpNprE"')
         }
 
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField('String', 'GATEWAY', '"https://api.themoviedb.org/3/"')
-            buildConfigField('String', 'TOKEN', '"98e5a808562ae58e4db7aecb3a0eda01"')
-            buildConfigField('String', 'YT', '"AIzaSyAf0F79CPI0aXg2lQFSUBnMNL7hUGpNprE"')
         }
     }
 
@@ -71,6 +66,13 @@ android {
     }
 
     packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
@@ -84,7 +86,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-
+    implementation project(':base')
+    implementation project(':domain')
+    implementation project(':data')
     rootProject.appDependencies.each {
         add(it.configuration, it.dependency, it.options)
     }
