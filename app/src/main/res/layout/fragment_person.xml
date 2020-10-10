@@ -7,8 +7,9 @@
     <data>
         <variable
                 name="cast"
-                type="com.themovie.model.online.person.PersonResponse" />
+                type="com.aldebaran.domain.entities.remote.person.PersonResponse" />
         <import type="android.view.View"/>
+        <import type="com.aldebaran.data.network.ApiUrl"/>
     </data>
 
     <!-- TODO: Update blank fragment layout -->
@@ -74,7 +75,8 @@
                                     android:layout_marginEnd="@dimen/small_space"
                                     android:transitionName="@string/transition_cast"
                                     android:scaleType="centerCrop"
-                                    app:loadImage="@{cast.profilePict}"/>
+                                    app:loadImage="@{ApiUrl.IMG_POSTER + cast.profilePath}"
+                                    tools:ignore="ContentDescription" />
 
                             <LinearLayout
                                     android:layout_width="match_parent"
@@ -90,10 +92,11 @@
                                         android:layout_marginBottom="20dp"/>
 
                                 <TextView
-                                        android:text="@{cast.birthDate}"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/colorWhite"/>
+                                        android:textColor="@color/colorWhite"
+                                        app:birthDate="@{cast.birthday}"
+                                        app:birthPlace="@{cast.placeOfBirth}"/>
 
                             </LinearLayout>
 

@@ -2,43 +2,42 @@ package com.themovie.ui.main
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import com.aldebaran.base.BaseFragment
 
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentHomeBinding
-import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.*
-import com.themovie.model.db.*
-import com.themovie.restapi.Result.Status.*
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.main.adapter.*
-import java.util.*
-import javax.inject.Inject
+import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.domain.entities.local.*
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.gone
+import com.aldebaran.utils.navigateFragment
+import com.aldebaran.utils.visible
 
-/**
- * A simple [Fragment] subclass.
- */
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+
+@AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-    @Inject lateinit var factory: MainViewModelFactory
-    @Inject lateinit var upcomingAdapter: UpcomingAdapter
-    @Inject lateinit var trendingAdapter: TrendingAdapter
-    @Inject lateinit var genreAdapter: GenreAdapter
-    @Inject lateinit var discoverTvAdapter: DiscoverTvAdapter
-    @Inject lateinit var discoverMovieAdapter: DiscoverMovieAdapter
+    private val trendingAdapter by lazy { TrendingAdapter(::onTrendingMovieClick, ::onTrendingItemTouch) }
+    private val upcomingAdapter by lazy { UpcomingAdapter(::onUpcomingMovieItemClick) }
+    private val genreAdapter by lazy { GenreAdapter(::onGenreItemClick) }
+    private val discoverTvAdapter by lazy { DiscoverTvAdapter(::onDiscoverTvItemClick) }
+    private val discoverMovieAdapter by lazy { DiscoverMovieAdapter(::onDiscoverMovieItemClick) }
 
     private var timer: Timer? = null
-    private val homeViewModel by viewModels<HomeViewModel> { factory }
+    private val homeViewModel by viewModels<HomeViewModel>()
     private var isSliding: Boolean = false
     private var isFirstTouch: Boolean = true
 
@@ -51,7 +50,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = homeViewModel
             lifecycleOwner = this@HomeFragment
@@ -120,66 +118,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun onClick(){
-        trendingAdapter.setOnClickListener(object: OnAdapterListener<Trending>{
-            override fun onClick(view: View, item: Trending) {
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.MOVIE)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
-        trendingAdapter.setOnTouchListener(object: TrendingAdapter.OnTouchAdapterListener{
-            override fun onTouchItem(view: View?, motionEvent: MotionEvent?) {
-                if(motionEvent?.action == MotionEvent.ACTION_DOWN && isFirstTouch){
-                    isFirstTouch = false
-                    stopSliding()
-                }
-            }
-        })
-
-        upcomingAdapter.setOnClickListener(object: OnAdapterListener<Upcoming>{
-            override fun onClick(view: View, item: Upcoming) {
-                stopSliding()
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.MOVIE)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
-        genreAdapter.setGenreClickListener(object: OnAdapterListener<Genre>{
-            override fun onClick(view: View, item: Genre) {
-                val action = HomeFragmentDirections
-                    .actionHomeFragmentToMovieWithGenreFragment(item.id ?: 0, item.name.orEmpty())
-                Navigation.findNavController(view).navigate(action)
-            }
-        })
-
-        discoverTvAdapter.setOnClickListener(object: OnAdapterListener<Tv>{
-            override fun onClick(view: View, item: Tv) {
-                stopSliding()
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.TV)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
-        discoverMovieAdapter.setOnClickListener(object: OnAdapterListener<Movies>{
-            override fun onClick(view: View, item: Movies) {
-                stopSliding()
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.MOVIE)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
         binding.apply {
             seeUpco.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToUpcomingFragment()
@@ -205,7 +143,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun subscribeUI(){
         homeViewModel.apply {
-            trendingMovies.observe(viewLifecycleOwner, Observer { res ->
+            trendingMovies.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         hideLoading()
@@ -222,7 +160,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 }
             })
 
-            upcomingMovies.observe(viewLifecycleOwner, Observer { res ->
+            upcomingMovies.observe(viewLifecycleOwner, { res ->
                  when(res.status){
                      SUCCESS -> {
                          upcomingAdapter.submitList(res.data)
@@ -231,7 +169,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                  }
             })
 
-            genreMovies.observe( viewLifecycleOwner, Observer { res ->
+            genreMovies.observe( viewLifecycleOwner, { res ->
                  when(res.status){
                      SUCCESS -> {
                          genreAdapter.submitList(res.data)
@@ -240,7 +178,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                  }
             })
 
-            discoverTv.observe(viewLifecycleOwner, Observer { res ->
+            discoverTv.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         discoverTvAdapter.submitList(res.data)
@@ -249,7 +187,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 }
             })
 
-            discoverMovies.observe(viewLifecycleOwner, Observer { res ->
+            discoverMovies.observe(viewLifecycleOwner, { res ->
                 when(res.status){
                     SUCCESS -> {
                         discoverMovieAdapter.submitList(res.data)
@@ -289,6 +227,54 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             timer?.cancel()
             timer = null
         }
+    }
+
+    private fun onTrendingMovieClick(movie: TrendingEntity) {
+        val bundle = Bundle().apply {
+            putInt("filmId", movie.id ?: 0)
+            putString("type", Constant.MOVIE)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onTrendingItemTouch (motionEvent: MotionEvent?) {
+        if (motionEvent?.action == MotionEvent.ACTION_DOWN && isFirstTouch) {
+            isFirstTouch = false
+            stopSliding()
+        }
+    }
+
+    private fun onUpcomingMovieItemClick(movie: UpcomingEntity) {
+        stopSliding()
+        val bundle = Bundle().apply {
+            putInt("filmId", movie.id ?: 0)
+            putString("type", Constant.MOVIE)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onGenreItemClick(genre: GenreEntity) {
+        val action = HomeFragmentDirections
+            .actionHomeFragmentToMovieWithGenreFragment(genre.id ?: 0, genre.name.orEmpty())
+        view?.navigateFragment { Navigation.findNavController(it).navigate(action) }
+    }
+
+    private fun onDiscoverTvItemClick(tv: TvEntity) {
+        stopSliding()
+        val bundle = Bundle().apply {
+            putInt("filmId", tv.id ?: 0)
+            putString("type", Constant.TV)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onDiscoverMovieItemClick (movie: MovieEntity) {
+        stopSliding()
+        val bundle = Bundle().apply {
+            putInt("filmId", movie.id ?: 0)
+            putString("type", Constant.MOVIE)
+        }
+        changeActivity<DetailActivity>(bundle)
     }
 
     inner class SliderTimer : TimerTask() {

@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="tv"
-                type="com.themovie.model.db.Tv" />
+                type="com.aldebaran.domain.entities.remote.TvResponse" />
 
         <variable
                 name="vh"
@@ -15,7 +15,7 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:onClick="@{(v) -> vh.onTvAdapterClick(v, tv)}">
+            android:onClick="@{() -> vh.onTvAdapterClick(tv)}">
 
         <ImageView
                 android:id="@+id/tv_background"

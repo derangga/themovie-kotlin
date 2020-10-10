@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.data.network.ApiUrl
+import com.aldebaran.domain.entities.remote.SeasonTv
 import com.themovie.databinding.AdapterSeasonBinding
 import com.themovie.helper.customview.PortraitView
-import com.themovie.model.online.detail.SeasonTv
-import com.themovie.restapi.ApiUrl
 
 class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -44,9 +44,6 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
             binding.seasonItem.apply {
                 setImage(imgUrl)
                 setTitle(season.name)
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {}
-                })
             }
         }
     }

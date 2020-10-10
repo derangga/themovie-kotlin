@@ -1,52 +1,44 @@
 package com.themovie.ui.search.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.themovie.R
-import com.themovie.helper.OnAdapterListener
-import com.themovie.model.db.Tv
-import kotlinx.android.synthetic.main.adapter_suggest.view.*
+import com.aldebaran.domain.entities.remote.TvResponse
+import com.themovie.databinding.AdapterSuggestBinding
 
-class SuggestTvAdapter: ListAdapter<Tv, SuggestTvAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var context: Context
-    private lateinit var listener: OnAdapterListener<Tv>
+class SuggestTvAdapter (
+    private val onItemClick: (TvResponse) -> Unit
+): ListAdapter<TvResponse, SuggestTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Tv> = object: DiffUtil.ItemCallback<Tv>(){
-            override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<TvResponse> = object: DiffUtil.ItemCallback<TvResponse>(){
+            override fun areItemsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+            override fun areContentsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
                 return oldItem.name == newItem.name
             }
         }
     }
 
-    fun setAdapterListener(listener: OnAdapterListener<Tv>){
-        this.listener = listener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_suggest, parent, false)
-        context = parent.context
-        return ViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        val view = AdapterSuggestBinding.inflate(inflater, parent, false)
+        return ViewHolder(view.root, view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(getItem(position))
+        holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(item: Tv){
-            itemView.tv_suggest.text = item.name
-            itemView.setOnClickListener { listener.onClick(itemView, item) }
+    inner class ViewHolder(itemView: View, private val binding: AdapterSuggestBinding) : RecyclerView.ViewHolder(itemView) {
+        fun bind(item: TvResponse) {
+            binding.tvSuggest.text = item.name
+            binding.suggest.setOnClickListener { onItemClick.invoke(item) }
         }
     }
 }

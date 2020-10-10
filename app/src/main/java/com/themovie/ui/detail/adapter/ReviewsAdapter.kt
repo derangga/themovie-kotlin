@@ -6,28 +6,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.domain.entities.remote.ReviewsResponse
 import com.themovie.databinding.AdapterReviewBinding
-import com.themovie.helper.OnAdapterListener
-import com.themovie.model.online.detail.Reviews
 
-class ReviewsAdapter : ListAdapter<Reviews, ReviewsAdapter.ViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var onClickAdapterListener: OnAdapterListener<Reviews>
+class ReviewsAdapter(
+    private val onItemClick: (ReviewsResponse) -> Unit
+) : ListAdapter<ReviewsResponse, ReviewsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Reviews> = object: DiffUtil.ItemCallback<Reviews>(){
-            override fun areItemsTheSame(oldItem: Reviews, newItem: Reviews): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<ReviewsResponse> = object: DiffUtil.ItemCallback<ReviewsResponse>(){
+            override fun areItemsTheSame(oldItem: ReviewsResponse, newItem: ReviewsResponse): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Reviews, newItem: Reviews): Boolean {
+            override fun areContentsTheSame(oldItem: ReviewsResponse, newItem: ReviewsResponse): Boolean {
                 return oldItem.author == newItem.author && oldItem.content == newItem.content
             }
         }
-    }
-
-    fun setOnClickListener(onClickAdapterListener: OnAdapterListener<Reviews>){
-        this.onClickAdapterListener = onClickAdapterListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,8 +38,8 @@ class ReviewsAdapter : ListAdapter<Reviews, ReviewsAdapter.ViewHolder>(DIFF_CALL
 
 
     inner class ViewHolder(root: View, val binding: AdapterReviewBinding) : RecyclerView.ViewHolder(root){
-        fun onReviewClick(view: View, data: Reviews){
-            onClickAdapterListener.onClick(view, data)
+        fun onReviewClick(data: ReviewsResponse){
+            onItemClick.invoke(data)
         }
     }
 }

@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="upcoming"
-                type="com.themovie.model.db.Upcoming" />
+                type="com.aldebaran.domain.entities.remote.MovieResponse" />
 
         <variable
                 name="vh"
@@ -17,7 +17,7 @@
             android:id="@+id/mv_item"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:onClick="@{(v) -> vh.onUpcomingClick(v, upcoming)}">
+            android:onClick="@{() -> vh.onUpcomingClick(upcoming)}">
 
         <ImageView
                 android:id="@+id/mv_background"

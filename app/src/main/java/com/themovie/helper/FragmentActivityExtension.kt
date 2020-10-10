@@ -8,18 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.themovie.ui.bottomsheet.NoInternetBottomSheet
 
-fun View.visible(){
-    this.visibility = View.VISIBLE
-}
-
-fun View.gone(){
-    this.visibility = View.GONE
-}
-
-fun View.invisible(){
-    this.visibility = View.INVISIBLE
-}
-
 fun Fragment.showNetworkError(hideRetry: Boolean, action: () -> Unit){
     val bottom = NoInternetBottomSheet(hideRetry)
     bottom.setListener(object: NoInternetBottomSheet.ButtonListener{
@@ -32,30 +20,4 @@ fun Fragment.showNetworkError(hideRetry: Boolean, action: () -> Unit){
         }
     })
     bottom.show(childFragmentManager, "")
-}
-
-inline fun <reified T: AppCompatActivity> AppCompatActivity.changeActivity(){
-    Intent(this, T::class.java)
-        .also { startActivity(it) }
-}
-
-inline fun <reified T: AppCompatActivity> AppCompatActivity.changeActivity(bundle: Bundle){
-    Intent(this, T::class.java)
-        .also { intent ->
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
-}
-
-inline fun <reified T: AppCompatActivity> Fragment.changeActivity(){
-    Intent(context, T::class.java)
-        .also { startActivity(it) }
-}
-
-inline fun <reified T: AppCompatActivity> Fragment.changeActivity(bundle: Bundle){
-    Intent(context, T::class.java)
-        .also { intent ->
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
 }

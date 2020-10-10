@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="review"
-                type="com.themovie.model.online.detail.Reviews" />
+                type="com.aldebaran.domain.entities.remote.ReviewsResponse" />
 
         <variable
                 name="vh"
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 app:cardBackgroundColor="@color/colorPrimaryDark"
-                android:onClick="@{(v) -> vh.onReviewClick(v, review)}">
+                android:onClick="@{() -> vh.onReviewClick(review)}">
 
             <LinearLayout
                     android:layout_width="match_parent"

@@ -2,46 +2,35 @@ package com.themovie.ui.discover
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
-import androidx.paging.PagedList
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.aldebaran.base.BaseFragment
+import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.utils.changeActivity
+import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
-import com.themovie.base.BaseFragment
 import com.themovie.databinding.FragmentTvBinding
-import com.themovie.di.main.MainViewModelFactory
 import com.themovie.helper.Constant
-import com.themovie.helper.OnAdapterListener
-import com.themovie.helper.changeActivity
-import com.themovie.model.db.Tv
 import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.discover.adapter.TvAdapter
-import com.themovie.ui.main.MainActivity
 import com.themovie.ui.search.SuggestActivity
-import kotlinx.android.synthetic.main.fragment_tv.*
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * A simple [Fragment] subclass.
- */
+@AndroidEntryPoint
 class TvFragment : BaseFragment<FragmentTvBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject lateinit var factory: MainViewModelFactory
-    private lateinit var tvAdapter: TvAdapter
-    private val viewModel by viewModels<TvViewModel> { factory }
+    private val tvAdapter by lazy { TvAdapter(::onTvShowItemClick, ::onLoadMoreRetry) }
+    private val viewModel by viewModels<TvViewModel>()
 
     override fun getLayout(): Int {
         return R.layout.fragment_tv
     }
 
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
-        (activity as MainActivity).getMainComponent()?.inject(this)
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@TvFragment
@@ -49,16 +38,16 @@ class TvFragment : BaseFragment<FragmentTvBinding>(), SwipeRefreshLayout.OnRefre
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        swipe.setOnRefreshListener(this)
+        binding.swipe.setOnRefreshListener(this)
         binding.header.apply {
             setLogoVisibility(View.GONE)
             setTitleText(resources.getString(R.string.home_title_4))
             setBackButtonVisibility(View.VISIBLE)
-            setBackButtonOnClickListener(View.OnClickListener {
+            setBackButtonOnClickListener {
                 val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
                 Navigation.findNavController(it).navigate(action)
-            })
-            setSearchButtonOnClickListener(View.OnClickListener { changeActivity<SuggestActivity>() })
+            }
+            setSearchButtonOnClickListener { changeActivity<SuggestActivity>() }
         }
 
 
@@ -87,41 +76,34 @@ class TvFragment : BaseFragment<FragmentTvBinding>(), SwipeRefreshLayout.OnRefre
     }
 
     private fun recyclerViewSetup(){
-        tvAdapter = TvAdapter()
-        tv_rec.apply {
-            layoutManager = LinearLayoutManager(context)
+        binding.tvRec.apply {
+            initLinearRecycler(requireContext())
             adapter = tvAdapter
         }
-
-        tvAdapter.setOnClickAdapter(object: OnAdapterListener<Tv>{
-            override fun onClick(view: View, item: Tv) {
-                val bundle = Bundle().apply {
-                    putInt("filmId", item.id ?: 0)
-                    putString("type", Constant.TV)
-                }
-                changeActivity<DetailActivity>(bundle)
-            }
-        })
-
-        tvAdapter.setOnErrorClickListener(object: TvAdapter.OnErrorClickListener{
-            override fun onClick(view: View?) {
-                viewModel.retry()
-            }
-        })
     }
 
     private fun getDiscoverTv(){
         viewModel.apply {
-            getTvLiveData().observe(this@TvFragment,
-                Observer<PagedList<Tv>>{
+            getTvLiveData().observe(this@TvFragment, {
                     tvAdapter.submitList(it)
-                    swipe.isRefreshing = false
+                    binding.swipe.isRefreshing = false
                 })
 
-            getLoadState().observe(this@TvFragment,
-                Observer {
+            getLoadState().observe(this@TvFragment, {
                     tvAdapter.setLoadState(it)
                 })
         }
+    }
+
+    private fun onTvShowItemClick(tv: TvResponse) {
+        val bundle = Bundle().apply {
+            putInt("filmId", tv.id ?: 0)
+            putString("type", Constant.TV)
+        }
+        changeActivity<DetailActivity>(bundle)
+    }
+
+    private fun onLoadMoreRetry() {
+        viewModel.retry()
     }
 }
