@@ -1,17 +1,21 @@
-package com.themovie.ui.bottomsheet
+package com.aldebaran.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.aldebaran.core.databinding.BottomSheetNetworkBinding
 import com.aldebaran.utils.gone
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.themovie.databinding.BottomSheetNetworkBinding
 
-class NoInternetBottomSheet(private val hideRetry: Boolean): BottomSheetDialogFragment() {
+class NoInternetBottomSheet(
+    private val onRetryEvent: () -> Unit,
+    private val onSettingEvent: () -> Unit,
+    private val hideRetry: Boolean = false,
+    private val cancelable: Boolean = false
+): BottomSheetDialogFragment() {
 
-    private lateinit var binding:BottomSheetNetworkBinding
-    private var listener: ButtonListener? = null
+    private lateinit var binding: BottomSheetNetworkBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,42 +24,24 @@ class NoInternetBottomSheet(private val hideRetry: Boolean): BottomSheetDialogFr
     ): View? {
         binding = BottomSheetNetworkBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+        isCancelable = cancelable
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.apply {
             btnClose.setOnClickListener { dismiss() }
             btnRetry.setOnClickListener {
                 dismiss()
-                listener?.onRetry()
+                onRetryEvent.invoke()
             }
             btnSetting.setOnClickListener {
                 dismiss()
-                listener?.onSetting()
+                onSettingEvent.invoke()
             }
+
             if(hideRetry) binding.btnRetry.gone()
-
         }
-    }
-
-    fun setListener(listener: ButtonListener) {
-        this.listener = listener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    fun hideRetryButton(){
-        binding.btnRetry.gone()
-    }
-
-    interface ButtonListener{
-        fun onRetry()
-        fun onSetting()
     }
 }

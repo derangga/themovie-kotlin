@@ -1,11 +1,11 @@
 package com.themovie.ui.search
 
-
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.aldebaran.base.BaseFragment
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.TvResponse
 import com.aldebaran.utils.changeActivity
 import com.aldebaran.utils.initLinearRecycler
@@ -14,15 +14,18 @@ import com.themovie.R
 import com.themovie.databinding.FragmentSearchResultBinding
 import com.themovie.helper.Constant
 import com.themovie.ui.detail.DetailActivity
+import com.themovie.ui.discover.adapter.LoadingStateAdapter
 import com.themovie.ui.discover.adapter.TvAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefreshLayout.OnRefreshListener {
+class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>() {
 
     private var query: String? = ""
     private val viewModel by viewModels<SearchTvViewModel>()
-    private val mAdapter by lazy { TvAdapter(::onTvShowItemClick, ::onLoadMoreRetry) }
+    private val mAdapter by lazy { TvAdapter(::onTvShowItemClick) }
 
     override fun getLayout(): Int {
         return R.layout.fragment_search_result
@@ -31,37 +34,36 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefre
     override fun onCreateViewSetup(savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
         query = getBundle()?.getString("query")
-        SearchTvViewModel.query = query.orEmpty()
-
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        binding.swipe.setOnRefreshListener(this)
         setupRecyclerView()
-        getSearchResult()
+        observePaging()
     }
 
-    override fun onRefresh() {
-        viewModel.refresh()
-    }
-
-    private fun setupRecyclerView(){
-
-        binding.recyclerView.apply {
-            initLinearRecycler(requireContext())
-            adapter = mAdapter
+    private fun observePaging() {
+        val query = getBundle()?.getString("query").orEmpty()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getDiscoverTvPaging(query).collectLatest {
+                mAdapter.submitData(it)
+            }
         }
     }
 
-    private fun getSearchResult(){
-        viewModel.apply {
-            getSearchTvResult().observe(this@SearchTvFragment, {
-                    mAdapter.submitList(it)
-                    binding.swipe.isRefreshing = false
-                })
+    private fun setupRecyclerView(){
+        binding.recyclerView.initLinearRecycler(requireContext())
+        binding.recyclerView.adapter = mAdapter.withLoadStateHeaderAndFooter(
+            header = LoadingStateAdapter { mAdapter.retry() },
+            footer = LoadingStateAdapter { mAdapter.retry() }
+        )
 
-            getLoadState().observe(this@SearchTvFragment,
-                Observer { mAdapter.setLoadState(it) })
+        mAdapter.addLoadStateListener { loadState ->
+            binding.recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+            binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+
+            if (loadState.source.refresh is LoadState.Error) {
+                networkErrorDialog.show(childFragmentManager, "")
+            }
         }
     }
 
@@ -73,7 +75,7 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>(), SwipeRefre
         changeActivity<DetailActivity>(bundle)
     }
 
-    private fun onLoadMoreRetry() {
-        viewModel.retry()
+    override fun delegateRetryEventDialog() {
+        mAdapter.retry()
     }
 }

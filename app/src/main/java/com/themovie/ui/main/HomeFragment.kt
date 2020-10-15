@@ -10,7 +10,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.aldebaran.base.BaseFragment
+import com.aldebaran.core.BaseFragment
 
 import com.themovie.R
 import com.themovie.databinding.FragmentHomeBinding

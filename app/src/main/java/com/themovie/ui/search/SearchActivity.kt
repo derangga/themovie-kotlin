@@ -2,7 +2,7 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import android.view.View
-import com.aldebaran.base.BaseActivity
+import com.aldebaran.core.BaseActivity
 import com.aldebaran.utils.changeActivity
 import com.themovie.R
 import com.themovie.databinding.ActivitySearchBinding
@@ -12,14 +12,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SearchActivity : BaseActivity<ActivitySearchBinding>() {
 
-    private var query: String? = ""
-
     override fun getLayout(): Int {
         return R.layout.activity_search
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        query = getBundle()?.getString("query")
+
         initTab()
 
         binding.apply {
@@ -29,6 +27,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
     }
 
     private fun initTab(){
+        val query = getBundle()?.getString("query")
+
         binding.apply {
             tabLayout.apply {
                 visibility = View.VISIBLE

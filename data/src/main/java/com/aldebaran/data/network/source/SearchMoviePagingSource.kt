@@ -1,52 +1,30 @@
 package com.aldebaran.data.network.source
 
+import androidx.paging.PagingSource
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.domain.entities.remote.MovieResponse
-import com.aldebaran.domain.repository.remote.BasePagingDataSource
 import com.aldebaran.domain.repository.remote.MovieRemoteSource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 
 class SearchMoviePagingSource(
-    private val scope: CoroutineScope,
     private val remote: MovieRemoteSource,
     private val query: String = ""
-): BasePagingDataSource<Int, MovieResponse>() {
-    override fun loadFirstPage(
-        params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, MovieResponse>
-    ) {
-        updateState(LOADING)
-        retry = { loadInitial(params, callback) }
-        fetchData(1){
-            callback.onResult(it.toMutableList(), null, 2)
+): PagingSource<Int, MovieResponse>() {
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResponse> {
+        val page = params.key ?: STARTING_PAGE
+        val result = remote.searchMovie(query, page)
+
+        return when (result.status) {
+            SUCCESS -> { LoadResult.Page(
+                data = result.data?.results.orEmpty(),
+                prevKey = if (page == STARTING_PAGE) null else page -1,
+                nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
+            )}
+            else -> { LoadResult.Error(Exception(result.message)) }
         }
     }
 
-    override fun loadNextPage(params: LoadParams<Int>, callback: LoadCallback<Int, MovieResponse>) {
-        if(params.key <= pageSize){
-            updateState(LOADING)
-            retry = { loadNextPage(params, callback) }
-            fetchData(params.key){
-                key = params.key + 1
-                callback.onResult(it.toMutableList(), key)
-            }
-        }
-    }
-
-    override fun fetchData(page: Int, callback: (List<MovieResponse>) -> Unit) {
-        scope.launch(IO) {
-            val result = remote.searchMovie(query, page)
-            when(result.status){
-                SUCCESS -> {
-                    updateState(result.status)
-                    pageSize = result.data?.totalPages ?: 0
-                    callback(result.data?.results.orEmpty())
-                }
-                ERROR -> updateState(result.status)
-                LOADING -> {}
-            }
-        }
+    companion object {
+        private const val STARTING_PAGE = 1
     }
 }

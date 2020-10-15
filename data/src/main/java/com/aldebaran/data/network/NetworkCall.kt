@@ -2,8 +2,10 @@ package com.aldebaran.data.network
 
 import com.aldebaran.domain.Result
 import okhttp3.ResponseBody
+import okio.IOException
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.HttpException
 import retrofit2.Response
 
 suspend fun <T> safeCallApi(call: suspend () -> Response<T>): Result<T> {
@@ -14,8 +16,10 @@ suspend fun <T> safeCallApi(call: suspend () -> Response<T>): Result<T> {
             Result.success(body)
         }
         else Result.error("Error ${response.code()}: ${response.errorBody()?.getErrorMessage()}")
-    } catch (e: Exception) {
-        Result.error(e.message ?: e.toString())
+    } catch (e: IOException) {
+        Result.error("Network Failure")
+    }  catch (e: Exception) {
+        Result.error(e.message.toString())
     }
 }
 

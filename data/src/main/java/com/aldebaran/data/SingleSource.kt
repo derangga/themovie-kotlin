@@ -24,3 +24,4 @@ fun <T, A> resultLiveData(databaseQuery: () -> LiveData<T>,
             emitSource(source)
         }
     }
+

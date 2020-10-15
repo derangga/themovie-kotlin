@@ -2,10 +2,9 @@ package com.themovie.ui.search
 
 
 import android.os.Bundle
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import com.aldebaran.base.BaseFragment
+import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.MovieResponse
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.utils.changeActivity
