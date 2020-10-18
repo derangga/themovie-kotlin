@@ -16,10 +16,10 @@ import com.aldebaran.domain.repository.local.TvLocalSource
 import com.aldebaran.domain.repository.remote.TvRemoteSource
 import kotlinx.coroutines.flow.Flow
 
-class TvRepository (
+class TvRepository(
     private val local: TvLocalSource,
     private val remote: TvRemoteSource
-): Repository.TvRepos {
+) : Repository.TvRepos {
 
     override fun getTvFromLocalOrRemote(): LiveData<Result<List<TvEntity>>> {
         return resultLiveData(
@@ -27,8 +27,9 @@ class TvRepository (
             networkCall = { remote.getDiscoverTv(1) },
             saveCallResult = { res ->
                 val rows = local.tvRows()
-                if(rows == 0) {
-                    res.results.forEach { local.insertDiscoverTv(it.toTvEntity()) }
+                if (rows == 0) {
+                    res.results.map { it.toTvEntity() }
+                        .also { local.insertDiscoverTv(it) }
                 } else {
                     res.results.forEachIndexed { key, tv ->
                         local.updateDiscoverTv(tv.toTvEntity(key + 1))

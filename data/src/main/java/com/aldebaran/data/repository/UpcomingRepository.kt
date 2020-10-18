@@ -15,10 +15,10 @@ import com.aldebaran.domain.repository.local.UpcomingLocalSource
 import com.aldebaran.domain.repository.remote.MovieRemoteSource
 import kotlinx.coroutines.flow.Flow
 
-class UpcomingRepository (
+class UpcomingRepository(
     private val local: UpcomingLocalSource,
     private val remote: MovieRemoteSource
-): Repository.UpcomingRepos {
+) : Repository.UpcomingRepos {
 
     override fun getUpcomingFromLocalOrRemote(): LiveData<Result<List<UpcomingEntity>>> {
         return resultLiveData(
@@ -26,8 +26,9 @@ class UpcomingRepository (
             networkCall = { remote.getUpcomingMovie(1) },
             saveCallResult = { res ->
                 val rows = local.upcomingRows()
-                if(rows == 0) {
-                    res.results.forEach { local.insertUpcoming(it.toUpcomingEntity()) }
+                if (rows == 0) {
+                    res.results.map { it.toUpcomingEntity() }
+                        .also { local.insertUpcoming(it) }
                 } else {
                     res.results.forEachIndexed { key, upcoming ->
                         local.updateUpcoming(upcoming.toUpcomingEntity(key + 1))

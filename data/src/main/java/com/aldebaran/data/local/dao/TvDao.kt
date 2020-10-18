@@ -7,7 +7,7 @@ import com.aldebaran.domain.entities.local.TvEntity
 @Dao
 interface TvDao: BaseDao<TvEntity> {
     @Query("select * from tbl_tv")
-    fun getDiscoverTv(): LiveData<List<TvEntity>>
+    fun streamDiscoverTv(): LiveData<List<TvEntity>>
 
     @Query("select count(*) from tbl_tv")
     suspend fun countRows(): Int

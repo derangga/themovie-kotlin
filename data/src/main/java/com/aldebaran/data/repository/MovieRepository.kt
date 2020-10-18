@@ -8,7 +8,6 @@ import com.aldebaran.data.network.source.MoviePagingSource
 import com.aldebaran.data.network.source.SearchMoviePagingSource
 import com.aldebaran.data.resultLiveData
 import com.aldebaran.domain.Result
-import com.aldebaran.domain.entities.Movie
 import com.aldebaran.domain.entities.local.MovieEntity
 import com.aldebaran.domain.entities.remote.MovieResponse
 import com.aldebaran.domain.entities.toMovieEntity
@@ -21,23 +20,23 @@ import java.util.*
 class MovieRepository(
     private val local: MovieLocalSource,
     private val remote: MovieRemoteSource
-): Repository.MovieRepos {
+) : Repository.MovieRepos {
 
     private val calendar by lazy { Calendar.getInstance() }
 
     override fun getDIscoverMovieFromLocalOrRemote(): LiveData<Result<List<MovieEntity>>> {
         return resultLiveData(
-            databaseQuery = { local.getAllDiscoverMovie() },
+            databaseQuery = { local.streamAllDiscoverMovie() },
             networkCall = { remote.getDiscoverMovie("", calendar.get(Calendar.YEAR), 1) },
             saveCallResult = { res ->
                 val rows = local.movieRows()
-                if(rows == 0) {
-                    res.results.forEach { local.insertDiscoverMovie(it.toMovieEntity()) }
+                if (rows == 0) {
+                    res.results.map { it.toMovieEntity() }
+                        .also { local.insertDiscoverMovie(it) }
                 } else {
                     res.results.forEachIndexed { key, data ->
                         local.updateDiscoverMovie(data.toMovieEntity(key + 1))
                     }
-
                 }
             })
     }

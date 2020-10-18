@@ -8,10 +8,10 @@ import com.aldebaran.domain.entities.local.GenreEntity
 interface GenresDao: BaseDao<GenreEntity> {
 
     @Query("select * from tbl_genre order by name asc limit 4")
-    fun getPartOfGenre(): LiveData<List<GenreEntity>>
+    fun streamPartOfGenre(): LiveData<List<GenreEntity>>
 
     @Query("select * from tbl_genre order by name")
-    fun getAllGenre(): LiveData<List<GenreEntity>>
+    fun streamAllGenre(): LiveData<List<GenreEntity>>
 
     @Query("select count(*) from tbl_genre")
     suspend fun countRows(): Int

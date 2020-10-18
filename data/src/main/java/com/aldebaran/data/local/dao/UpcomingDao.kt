@@ -7,7 +7,7 @@ import com.aldebaran.domain.entities.local.UpcomingEntity
 @Dao
 interface UpcomingDao: BaseDao<UpcomingEntity> {
     @Query("select * from tbl_upcoming")
-    fun getUpcomingMovie(): LiveData<List<UpcomingEntity>>
+    fun streamUpcomingMovie(): LiveData<List<UpcomingEntity>>
 
     @Query("select count(*) from tbl_upcoming")
     suspend fun countRows(): Int

@@ -44,7 +44,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
         observeDiscoverMovie()
     }
 
-    private fun setupUIComponent(){
+    private fun setupUIComponent() {
         binding.header.apply {
             setLogoVisibility(View.GONE)
             setBackButtonVisibility(View.VISIBLE)
@@ -58,7 +58,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
         }
 
 
-        val callback = object: OnBackPressedCallback(true){
+        val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
                 Navigation.findNavController(view!!).navigate(action)
@@ -75,7 +75,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
         }
     }
 
-    private fun recyclerViewSetup(){
+    private fun recyclerViewSetup() {
         binding.movieRec.initLinearRecycler(requireContext())
         binding.movieRec.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },

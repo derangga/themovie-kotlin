@@ -7,7 +7,7 @@ import com.aldebaran.domain.repository.local.UpcomingLocalSource
 
 class UpcomingLocalSourceImpl(
     private val upcomingDao: UpcomingDao
-): UpcomingLocalSource {
+) : UpcomingLocalSource {
     override suspend fun insertUpcoming(upcoming: List<UpcomingEntity>) {
         upcomingDao.insertAll(*upcoming.toTypedArray())
     }
@@ -21,7 +21,7 @@ class UpcomingLocalSourceImpl(
     }
 
     override fun getUpcomingMovie(): LiveData<List<UpcomingEntity>> {
-        return upcomingDao.getUpcomingMovie()
+        return upcomingDao.streamUpcomingMovie()
     }
 
     override suspend fun upcomingRows(): Int {
