@@ -27,5 +27,5 @@ class HomeViewModel @ViewModelInject constructor (
         get() = tvRepos.getTvFromLocalOrRemote()
 
     val discoverMovies: LiveData<Result<List<MovieEntity>>>
-        get() = movieRepos.getDIscoverMovieFromLocalOrRemote()
+        get() = movieRepos.getDiscoverMovieFromLocalOrRemote()
 }

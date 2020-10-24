@@ -4,7 +4,7 @@ package com.themovie.ui.search
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import com.aldebaran.base.BaseFragment
+import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.TvResponse
 
 import com.themovie.R

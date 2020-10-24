@@ -12,13 +12,12 @@ import com.aldebaran.domain.entities.remote.Credits
 import com.aldebaran.domain.entities.remote.MovieResponse
 import com.aldebaran.domain.entities.remote.ReviewsResponse
 import com.aldebaran.domain.entities.remote.Videos
-import com.aldebaran.base.BaseFragment
+import com.aldebaran.core.BaseFragment
 import com.aldebaran.utils.*
 
 import com.themovie.R
 import com.themovie.databinding.FragmentDetailMovieBinding
 import com.themovie.helper.Constant
-import com.themovie.helper.showNetworkError
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter
@@ -35,6 +34,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
     private val recommendedAdapter by lazy { RecommendedAdapter(::onClickRecommendationItem) }
     private val reviewsAdapter by lazy { ReviewsAdapter(::onClickReviewItem) }
     private val videoAdapter by lazy { VideoAdapter(::onClickVideoTrailerItem) }
+
     private var filmId = 0
 
     override fun getLayout(): Int {
@@ -65,9 +65,7 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
                         binding.movies = res?.data
                     }
                     ERROR -> {
-                        showNetworkError(false){
-                            viewModel.getDetailMovieRequest(filmId)
-                        }
+                        networkErrorDialog.show(childFragmentManager, "")
                     }
                     LOADING -> { showLoading() }
                 }
@@ -171,5 +169,9 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
         val uri: Uri = Uri.parse(review.url)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         requireContext().startActivity(intent)
+    }
+
+    override fun delegateRetryEventDialog() {
+        viewModel.getDetailMovieRequest(filmId)
     }
 }

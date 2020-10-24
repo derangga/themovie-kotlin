@@ -4,6 +4,7 @@ import com.aldebaran.data.BuildConfig
 import com.aldebaran.data.network.ApiUrl
 import com.aldebaran.data.network.safeCallApi
 import com.aldebaran.data.network.service.TvServices
+import com.aldebaran.domain.Constant
 import com.aldebaran.domain.Result
 import com.aldebaran.domain.entities.DataList
 import com.aldebaran.domain.entities.remote.*
@@ -16,7 +17,7 @@ class TvRemoteSourceImpl(
         page: Int
     ): Result<DataList<TvResponse>> {
         return safeCallApi {
-            tvServices.getDiscoverTv(BuildConfig.TOKEN, ApiUrl.SORTING, ApiUrl.TIMEZONE, page)
+            tvServices.getDiscoverTv(BuildConfig.TOKEN, Constant.SORTING, Constant.TIMEZONE, page)
         }
     }
 

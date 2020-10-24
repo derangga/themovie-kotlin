@@ -7,7 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import com.aldebaran.base.BaseFragment
+import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.local.GenreEntity
 import com.aldebaran.utils.navigateFragment
 

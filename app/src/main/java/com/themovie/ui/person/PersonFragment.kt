@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.aldebaran.base.BaseFragment
+import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.domain.entities.remote.person.Filmography
 import com.aldebaran.utils.*
@@ -66,11 +66,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
                         hideLoading()
                         binding.cast = res?.data
                     }
-                    ERROR -> {
-                        showNetworkError(false){
-                            viewModel.getDetailPersonRequest(personId)
-                        }
-                    }
+                    ERROR -> { networkErrorDialog.show(childFragmentManager, "") }
                     LOADING -> { showLoading() }
                 }
             })
@@ -119,5 +115,9 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
             putString("type", Constant.MOVIE)
         }
         changeActivity<DetailActivity>(bundle)
+    }
+
+    override fun delegateRetryEventDialog() {
+        viewModel.getDetailPersonRequest(personId)
     }
 }

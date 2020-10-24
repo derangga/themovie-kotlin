@@ -8,7 +8,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.lifecycleScope
-import com.aldebaran.base.BaseActivity
+import com.aldebaran.core.BaseActivity
 import com.aldebaran.utils.changeActivity
 import com.aldebaran.utils.gone
 import com.aldebaran.utils.visible
@@ -31,10 +31,6 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         initTab()
         binding.hSearch.requestFocus()
-        binding.hSearch.setOnClickListener {
-            hideSoftKeyboard(findViewById(android.R.id.content))
-            onBackPressed()
-        }
 
         binding.hBack.setOnClickListener { onBackPressed() }
 

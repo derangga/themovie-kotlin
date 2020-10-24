@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class MovieLocalSourceImpl(
     private val moviesDao: MoviesDao
-): MovieLocalSource {
+) : MovieLocalSource {
     override suspend fun insertDiscoverMovie(movies: List<MovieEntity>) {
         moviesDao.insertAll(*movies.toTypedArray())
     }
@@ -21,7 +21,11 @@ class MovieLocalSourceImpl(
         moviesDao.update(movies)
     }
 
-    override fun getAllDiscoverMovie(): LiveData<List<MovieEntity>> {
+    override fun streamAllDiscoverMovie(): LiveData<List<MovieEntity>> {
+        return moviesDao.streamDiscoverMovies()
+    }
+
+    override suspend fun getAllDiscoverMovie(): List<MovieEntity> {
         return moviesDao.getDiscoverMovies()
     }
 
