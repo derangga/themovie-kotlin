@@ -23,7 +23,7 @@ ext {
     hiltViewModelInjectorVersion = '1.0.0-alpha02'
 
     // android paging
-    pagingVersion = '2.1.2'
+    pagingVersion = '3.0.0-alpha07'
 
     // image cache
     glideVersion = '4.11.0'

@@ -7,13 +7,11 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.Result.Status.*
-import com.aldebaran.base.BaseFragment
+import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.*
-import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.gone
-import com.aldebaran.utils.navigateFragment
-import com.aldebaran.utils.visible
+import com.aldebaran.utils.*
 
 import com.themovie.R
 import com.themovie.databinding.FragmentDetailTvBinding
@@ -59,11 +57,11 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
     private fun setupRecycler(){
 
         binding.apply {
-            dtSeasonList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            dtCastList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            dtRecomList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            dtReviewList.layoutManager = LinearLayoutManager(context)
-            dtVideoList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dtSeasonList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
+            dtCastList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
+            dtRecomList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
+            dtVideoList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
+            dtReviewList.initLinearRecycler(requireContext())
 
             dtSeasonList.adapter = seasonAdapter
             dtCastList.adapter = creditsAdapter
@@ -83,11 +81,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
                         binding.tv = res?.data
                         seasonAdapter.submitList(res?.data?.seasons)
                     }
-                    ERROR -> {
-                        showNetworkError(false){
-                            viewModel.getDetailTvRequest(filmId)
-                        }
-                    }
+                    ERROR -> { networkErrorDialog.show(childFragmentManager, "") }
                     LOADING -> { showLoading() }
                 }
             })
@@ -176,5 +170,9 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
         val uri: Uri = Uri.parse(review.url)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         requireContext().startActivity(intent)
+    }
+
+    override fun delegateRetryEventDialog() {
+        viewModel.getDetailTvRequest(filmId)
     }
 }

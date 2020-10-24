@@ -5,9 +5,9 @@ import com.aldebaran.data.local.dao.TrendingDao
 import com.aldebaran.domain.entities.local.TrendingEntity
 import com.aldebaran.domain.repository.local.TrendingLocalSource
 
-class TrendingLocalSourceImpl (
+class TrendingLocalSourceImpl(
     private val trendingDao: TrendingDao
-): TrendingLocalSource {
+) : TrendingLocalSource {
     override suspend fun insertTrendMovie(trending: List<TrendingEntity>) {
         trendingDao.insertAll(*trending.toTypedArray())
     }
@@ -21,7 +21,7 @@ class TrendingLocalSourceImpl (
     }
 
     override fun getTrendMovie(): LiveData<List<TrendingEntity>> {
-        return trendingDao.getTrending()
+        return trendingDao.streamTrending()
     }
 
     override suspend fun trendingMovieRows(): Int {

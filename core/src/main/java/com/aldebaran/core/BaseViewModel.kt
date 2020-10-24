@@ -1,4 +1,4 @@
-package com.aldebaran.base
+package com.aldebaran.core
 
 import androidx.lifecycle.ViewModel
 import timber.log.Timber

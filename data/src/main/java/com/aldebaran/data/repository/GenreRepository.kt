@@ -10,20 +10,20 @@ import com.aldebaran.domain.repository.Repository
 import com.aldebaran.domain.repository.local.GenreLocalSource
 import com.aldebaran.domain.repository.remote.MovieRemoteSource
 
-class GenreRepository (
+class GenreRepository(
     private val local: GenreLocalSource,
     private val remote: MovieRemoteSource
-): Repository.GenreRepos {
-    override fun getGenreFromLocalOrRemote() : LiveData<Result<List<GenreEntity>>> {
+) : Repository.GenreRepos {
+    override fun getGenreFromLocalOrRemote(): LiveData<Result<List<GenreEntity>>> {
         return resultLiveData(
             databaseQuery = { local.getPartOfGenre() },
             networkCall = { remote.getGenreMovie() },
             saveCallResult = { res ->
                 val rows = local.genreRows()
-                if(rows == 0) {
-                    res.genres.forEach { local.insertGenre(it.toGenreEntity()) }
-                }
-                else {
+                if (rows == 0) {
+                    res.genres.map { it.toGenreEntity() }
+                        .also { local.insertGenre(it) }
+                } else {
                     res.genres.forEachIndexed { key, genre ->
                         local.updateGenre(genre.toGenreEntity(key + 1))
                     }

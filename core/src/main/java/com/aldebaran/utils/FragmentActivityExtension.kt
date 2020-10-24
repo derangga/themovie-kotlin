@@ -7,27 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
 inline fun <reified T: Activity> AppCompatActivity.changeActivity(){
-    Intent(this, T::class.java)
-        .also { startActivity(it) }
+    val intent = Intent(this, T::class.java)
+    startActivity(intent)
 }
 
 inline fun <reified T: Activity> AppCompatActivity.changeActivity(bundle: Bundle){
-    Intent(this, T::class.java)
-        .also { intent ->
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
+    val intent = Intent(this, T::class.java)
+    intent.putExtras(bundle)
+    startActivity(intent)
 }
 
 inline fun <reified T: Activity> Fragment.changeActivity(){
-    Intent(requireContext(), T::class.java)
-        .also { startActivity(it) }
+    val intent = Intent(requireContext(), T::class.java)
+    startActivity(intent)
 }
 
 inline fun <reified T: Activity> Fragment.changeActivity(bundle: Bundle){
-    Intent(requireContext(), T::class.java)
-        .also { intent ->
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
+    val intent = Intent(requireContext(), T::class.java)
+    intent.putExtras(bundle)
+    startActivity(intent)
 }

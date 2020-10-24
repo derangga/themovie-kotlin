@@ -5,7 +5,7 @@ import androidx.paging.PageKeyedDataSource
 import com.aldebaran.domain.Result
 import kotlinx.coroutines.CoroutineExceptionHandler
 
-abstract class BasePagingDataSource<V, T>: PageKeyedDataSource<V, T>() {
+abstract class BasePagingDataSource<V: Any, T: Any>: PageKeyedDataSource<V, T>() {
 
     val loadState: MutableLiveData<Result.Status> = MutableLiveData()
     protected var pageSize: Int = 0

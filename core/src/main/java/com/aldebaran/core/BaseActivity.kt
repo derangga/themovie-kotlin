@@ -1,4 +1,4 @@
-package com.aldebaran.base
+package com.aldebaran.core
 
 import android.os.Bundle
 import android.widget.Toast

@@ -7,6 +7,7 @@ interface MovieLocalSource{
     suspend fun insertDiscoverMovie(movies: List<MovieEntity>)
     suspend fun insertDiscoverMovie(movie: MovieEntity)
     suspend fun updateDiscoverMovie(movies: MovieEntity)
-    fun getAllDiscoverMovie(): LiveData<List<MovieEntity>>
+    fun streamAllDiscoverMovie(): LiveData<List<MovieEntity>>
+    suspend fun getAllDiscoverMovie(): List<MovieEntity>
     suspend fun movieRows(): Int
 }

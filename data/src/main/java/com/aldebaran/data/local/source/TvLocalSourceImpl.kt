@@ -7,7 +7,7 @@ import com.aldebaran.domain.repository.local.TvLocalSource
 
 class TvLocalSourceImpl(
     private val tvDao: TvDao
-): TvLocalSource {
+) : TvLocalSource {
     override suspend fun insertDiscoverTv(tv: List<TvEntity>) {
         tvDao.insertAll(*tv.toTypedArray())
     }
@@ -21,7 +21,7 @@ class TvLocalSourceImpl(
     }
 
     override fun getDiscoverTv(): LiveData<List<TvEntity>> {
-        return tvDao.getDiscoverTv()
+        return tvDao.streamDiscoverTv()
     }
 
     override suspend fun tvRows(): Int {

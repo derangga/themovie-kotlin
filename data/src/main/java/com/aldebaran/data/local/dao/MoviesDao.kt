@@ -7,7 +7,10 @@ import com.aldebaran.domain.entities.local.MovieEntity
 @Dao
 interface MoviesDao: BaseDao<MovieEntity> {
     @Query("select * from tbl_movies")
-    fun getDiscoverMovies(): LiveData<List<MovieEntity>>
+    fun streamDiscoverMovies(): LiveData<List<MovieEntity>>
+
+    @Query("select * from tbl_movies")
+    suspend fun getDiscoverMovies(): List<MovieEntity>
 
     @Query("select count(*) from tbl_movies")
     suspend fun countRows(): Int
