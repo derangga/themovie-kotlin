@@ -48,7 +48,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     testImplementation 'junit:junit:4.12'
 
-    rootProject.baseDependencies.each {
+    rootProject.coreDependencies.each {
         add(it.configuration, it.dependency, it.options)
     }
 }

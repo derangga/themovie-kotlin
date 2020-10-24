@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.core.BaseFragment
@@ -16,7 +15,6 @@ import com.aldebaran.utils.*
 import com.themovie.R
 import com.themovie.databinding.FragmentDetailTvBinding
 import com.themovie.helper.Constant
-import com.themovie.helper.showNetworkError
 
 import com.themovie.ui.detail.adapter.*
 import com.themovie.ui.detail.viewmodel.DetailTvViewModel

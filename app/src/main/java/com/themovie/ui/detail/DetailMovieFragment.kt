@@ -18,8 +18,6 @@ import com.aldebaran.utils.*
 import com.themovie.R
 import com.themovie.databinding.FragmentDetailMovieBinding
 import com.themovie.helper.Constant
-import com.themovie.helper.showNetworkError
-import com.aldebaran.dialog.NoInternetBottomSheet
 import com.themovie.ui.detail.adapter.CreditsAdapter
 import com.themovie.ui.detail.adapter.RecommendedAdapter
 import com.themovie.ui.detail.adapter.ReviewsAdapter

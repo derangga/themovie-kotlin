@@ -60,7 +60,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         onClick()
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                activity?.finishAffinity()
+                requireActivity().finishAffinity()
             }}
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         subscribeUI()
