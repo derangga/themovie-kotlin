@@ -22,11 +22,11 @@ class GenreLocalSourceImpl(
     }
 
     override fun getPartOfGenre(): LiveData<List<GenreEntity>> {
-        return genresDao.getPartOfGenre()
+        return genresDao.streamPartOfGenre()
     }
 
     override fun getAllGenre(): LiveData< List<GenreEntity>> {
-        return genresDao.getAllGenre()
+        return genresDao.streamAllGenre()
     }
 
     override suspend fun genreRows(): Int {

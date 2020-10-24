@@ -8,9 +8,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.aldebaran.base.BaseFragment
+import androidx.recyclerview.widget.RecyclerView
+import com.aldebaran.core.BaseFragment
 
 import com.themovie.R
 import com.themovie.databinding.FragmentHomeBinding
@@ -19,10 +19,7 @@ import com.themovie.ui.detail.DetailActivity
 import com.themovie.ui.main.adapter.*
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.domain.entities.local.*
-import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.gone
-import com.aldebaran.utils.navigateFragment
-import com.aldebaran.utils.visible
+import com.aldebaran.utils.*
 
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -63,7 +60,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         onClick()
         val callback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                activity?.finishAffinity()
+                requireActivity().finishAffinity()
             }}
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         subscribeUI()
@@ -83,12 +80,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun recyclerViewSetup(){
         binding.apply {
             homePopular.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
                 adapter = trendingAdapter
             }
 
             homeUpcoming.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
                 adapter = upcomingAdapter
             }
 
@@ -98,12 +95,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             homeTv.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
                 adapter = discoverTvAdapter
             }
 
             homeMovies.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
                 adapter = discoverMovieAdapter
             }
 
@@ -152,7 +149,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     }
                     ERROR -> {
                         hideLoading()
-                        showNetworkError(true){}
+                        networkErrorDialog.hideRetry()
+                        networkErrorDialog.show(childFragmentManager, "")
                     }
                     LOADING -> {
                         showLoading()
@@ -216,7 +214,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         if(!isSliding){
             isSliding = true
             timer = Timer().apply {
-                scheduleAtFixedRate(SliderTimer(), 5000, 5000)
+                scheduleAtFixedRate(SliderTimer(), 0, 5000)
             }
         }
     }
@@ -279,7 +277,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     inner class SliderTimer : TimerTask() {
         override fun run() {
-            activity?.runOnUiThread {
+            requireActivity().runOnUiThread {
                 if(currentPosition < sizeOfHeader - 1){
                     currentPosition++
                     currentPosition.let {

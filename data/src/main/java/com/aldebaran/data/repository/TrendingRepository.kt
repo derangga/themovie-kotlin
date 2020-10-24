@@ -22,7 +22,8 @@ class TrendingRepository (
             saveCallResult = { res ->
                 val rows = local.trendingMovieRows()
                 if(rows == 0) {
-                    res.results.forEach { local.insertTrendMovie(it.toTrendingEntity()) }
+                    res.results.map { it.toTrendingEntity() }
+                        .also { local.insertTrendMovie(it) }
                 } else {
                     res.results.forEachIndexed { key, trending ->
                         local.updateTrendingMovie(trending.toTrendingEntity(key + 1))

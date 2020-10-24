@@ -3,26 +3,18 @@ package com.themovie.ui.discover.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.aldebaran.domain.Result.*
-import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.domain.entities.remote.MovieResponse
-import com.themovie.databinding.AdapterLoadingBinding
 import com.themovie.databinding.AdapterUpcomingBinding
 
 class UpcomingAdapter (
-    private val onItemClick: (MovieResponse) -> Unit,
-    private val onItemErrorClick: () -> Unit
-): PagedListAdapter<MovieResponse, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
-
-    private var loadState: Status? = null
+    private val onItemClick: (MovieResponse) -> Unit
+): PagingDataAdapter<MovieResponse, UpcomingAdapter.UpcomingViewHolder>(COMPARATOR) {
 
     companion object{
-        private const val DATA_VIEW = 1
-        private const val LOADING_VIEW = 2
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<MovieResponse> = object: DiffUtil.ItemCallback<MovieResponse>(){
+        val COMPARATOR: DiffUtil.ItemCallback<MovieResponse> = object: DiffUtil.ItemCallback<MovieResponse>(){
             override fun areItemsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
                 return oldItem.id == newItem.id
             }
@@ -35,54 +27,16 @@ class UpcomingAdapter (
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpcomingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return if(viewType == DATA_VIEW){
-            val view = AdapterUpcomingBinding
-                .inflate(inflater, parent, false)
-            UpcomingViewHolder(view.root, view)
-        } else {
-            val view = AdapterLoadingBinding
-                .inflate(inflater, parent, false)
-            LoadingViewHolder(view.root, view)
-        }
+        val view = AdapterUpcomingBinding
+            .inflate(inflater, parent, false)
+        return UpcomingViewHolder(view.root, view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is UpcomingViewHolder){
-            holder.binding.upcoming = getItem(position)
-            holder.binding.vh = holder
-        }else if(holder is LoadingViewHolder){
-            holder.bindView(loadState, onItemErrorClick)
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if(hasFooter() && position == itemCount - 1) LOADING_VIEW
-        else DATA_VIEW
-    }
-
-    override fun getItemCount(): Int {
-        return if(hasFooter()) super.getItemCount() + 1
-        else super.getItemCount()
-
-    }
-
-    private fun hasFooter(): Boolean {
-        return loadState != null && loadState != SUCCESS
-    }
-
-    fun setLoadState(loadState: Status){
-        val previousState = this.loadState
-        val previousExtraRow = hasFooter()
-        this.loadState = loadState
-        val newExtraRow = hasFooter()
-        if(previousExtraRow != newExtraRow){
-            if(previousExtraRow) notifyItemRemoved(super.getItemCount())
-            else notifyItemInserted(super.getItemCount())
-        } else if (newExtraRow && previousState != loadState){
-            notifyItemChanged(itemCount - 1)
-        }
+    override fun onBindViewHolder(holder: UpcomingViewHolder, position: Int) {
+        holder.binding.vh = holder
+        holder.binding.upcoming = getItem(position)
     }
 
     inner class UpcomingViewHolder(root: View, val binding: AdapterUpcomingBinding) : RecyclerView.ViewHolder(root){

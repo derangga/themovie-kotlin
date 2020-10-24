@@ -5,8 +5,8 @@ ext {
     androidBuildToolsVersion = "30.0.2"
     androidMinSdkVersion = 21
     androidTargetSdkVersion = 30
-    androidVersionCode = 2
-    androidVersionName = "1.0.1"
+    androidVersionCode = 3
+    androidVersionName = "1.0.2"
 
     // android lib
     androidxVersion = '1.1.0'
@@ -23,7 +23,7 @@ ext {
     hiltViewModelInjectorVersion = '1.0.0-alpha02'
 
     // android paging
-    pagingVersion = '2.1.2'
+    pagingVersion = '3.0.0-alpha07'
 
     // image cache
     glideVersion = '4.11.0'
@@ -151,7 +151,7 @@ ext {
             robolectric:            [group: 'org.robolectric', name: 'robolectric', version: robolectricVersion],
     ]
 
-    baseDependencies = [
+    coreDependencies = [
             [configuration: "implementation", dependency: loggingLibs.timber],
 
             [configuration: "implementation", dependency: jetPackLibs.androidViewModel],
@@ -235,6 +235,7 @@ ext {
             [configuration: "implementation", dependency: networkLibs.okHttpLogging],
             [configuration: "implementation", dependency: networkLibs.gsonConverter],
 
+            [configuration: "implementation", dependency: jetPackLibs.androidPaging],
             [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
             [configuration: "implementation", dependency: jetPackLibs.roomExtension],
 
@@ -256,6 +257,12 @@ ext {
     domainDependencies = [
             [configuration: "api", dependency: coroutines.coroutines],
             [configuration: "implementation", dependency: jetPackLibs.androidPaging],
+            [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
+            [configuration: "implementation", dependency: jetPackLibs.roomExtension],
+
+            [configuration: "kapt", dependency: jetPackLibs.roomProcessor],
+
+            [configuration: "implementation", dependency: networkLibs.gsonConverter],
 
             [configuration: "implementation", dependency: loggingLibs.timber],
     ]
