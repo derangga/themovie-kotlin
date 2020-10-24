@@ -15,7 +15,7 @@ interface Repository {
     }
 
     interface MovieRepos {
-        fun getDIscoverMovieFromLocalOrRemote(): LiveData<Result<List<MovieEntity>>>
+        fun getDiscoverMovieFromLocalOrRemote(): LiveData<Result<List<MovieEntity>>>
         fun getDiscoverMoviePaging(genre: String): Flow<PagingData<MovieResponse>>
         fun searchMoovie(query: String): Flow<PagingData<MovieResponse>>
     }

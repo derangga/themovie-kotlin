@@ -24,7 +24,7 @@ class MovieRepository(
 
     private val calendar by lazy { Calendar.getInstance() }
 
-    override fun getDIscoverMovieFromLocalOrRemote(): LiveData<Result<List<MovieEntity>>> {
+    override fun getDiscoverMovieFromLocalOrRemote(): LiveData<Result<List<MovieEntity>>> {
         return resultLiveData(
             databaseQuery = { local.streamAllDiscoverMovie() },
             networkCall = { remote.getDiscoverMovie("", calendar.get(Calendar.YEAR), 1) },

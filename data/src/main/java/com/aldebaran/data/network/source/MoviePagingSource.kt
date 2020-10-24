@@ -10,7 +10,7 @@ import java.util.*
 class MoviePagingSource(
     private val remote: MovieRemoteSource,
     private val genre: String
-): PagingSource<Int, MovieResponse>() {
+) : PagingSource<Int, MovieResponse>() {
 
     private val calendar by lazy { Calendar.getInstance() }
 
@@ -18,13 +18,17 @@ class MoviePagingSource(
         val page = params.key ?: STARTING_PAGE
         val result = remote.getDiscoverMovie(genre, calendar.get(Calendar.YEAR), page)
 
-        return when(result.status) {
-            SUCCESS -> { LoadResult.Page(
-                data = result.data?.results.orEmpty(),
-                prevKey = if (page == STARTING_PAGE) null else page -1,
-                nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
-            )}
-            else -> { LoadResult.Error(Exception(result.message)) }
+        return when (result.status) {
+            SUCCESS -> {
+                LoadResult.Page(
+                    data = result.data?.results.orEmpty(),
+                    prevKey = if (page == STARTING_PAGE) null else page - 1,
+                    nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
+                )
+            }
+            else -> {
+                LoadResult.Error(Exception(result.message))
+            }
         }
     }
 

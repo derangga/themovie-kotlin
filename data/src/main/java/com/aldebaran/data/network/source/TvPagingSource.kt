@@ -7,7 +7,7 @@ import com.aldebaran.domain.repository.remote.TvRemoteSource
 
 class TvPagingSource(
     private val remote: TvRemoteSource
-): PagingSource<Int, TvResponse> () {
+) : PagingSource<Int, TvResponse>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TvResponse> {
         val page = params.key ?: STARTING_PAGE
@@ -21,7 +21,9 @@ class TvPagingSource(
                     nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
                 )
             }
-            else -> { LoadResult.Error(Exception(result.message)) }
+            else -> {
+                LoadResult.Error(Exception(result.message))
+            }
         }
     }
 

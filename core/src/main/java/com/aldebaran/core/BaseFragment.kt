@@ -51,9 +51,9 @@ abstract class BaseFragment<B: ViewDataBinding> : Fragment() {
         return this.arguments
     }
 
-    open protected fun delegateRetryEventDialog() {}
+    protected open fun delegateRetryEventDialog() {}
 
-    open protected fun delegateOpenSetting() {
+    protected open fun delegateOpenSetting() {
         startActivity(Intent(Settings.ACTION_SETTINGS))
     }
 }

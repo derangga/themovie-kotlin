@@ -8,19 +8,23 @@ import com.aldebaran.domain.repository.remote.MovieRemoteSource
 class SearchMoviePagingSource(
     private val remote: MovieRemoteSource,
     private val query: String = ""
-): PagingSource<Int, MovieResponse>() {
+) : PagingSource<Int, MovieResponse>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResponse> {
         val page = params.key ?: STARTING_PAGE
         val result = remote.searchMovie(query, page)
 
         return when (result.status) {
-            SUCCESS -> { LoadResult.Page(
-                data = result.data?.results.orEmpty(),
-                prevKey = if (page == STARTING_PAGE) null else page -1,
-                nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
-            )}
-            else -> { LoadResult.Error(Exception(result.message)) }
+            SUCCESS -> {
+                LoadResult.Page(
+                    data = result.data?.results.orEmpty(),
+                    prevKey = if (page == STARTING_PAGE) null else page - 1,
+                    nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
+                )
+            }
+            else -> {
+                LoadResult.Error(Exception(result.message))
+            }
         }
     }
 

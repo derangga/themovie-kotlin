@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class NoInternetBottomSheet(
     private val onRetryEvent: () -> Unit,
     private val onSettingEvent: () -> Unit,
-    private val hideRetry: Boolean = false,
+    private var hideRetry: Boolean = false,
     private val cancelable: Boolean = false
 ): BottomSheetDialogFragment() {
 
@@ -43,5 +43,9 @@ class NoInternetBottomSheet(
 
             if(hideRetry) binding.btnRetry.gone()
         }
+    }
+
+    fun hideRetry() {
+        hideRetry = true
     }
 }

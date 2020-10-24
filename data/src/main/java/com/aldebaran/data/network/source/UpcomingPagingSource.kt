@@ -7,7 +7,7 @@ import com.aldebaran.domain.repository.remote.MovieRemoteSource
 
 class UpcomingPagingSource(
     private val remote: MovieRemoteSource
-): PagingSource<Int, MovieResponse>() {
+) : PagingSource<Int, MovieResponse>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResponse> {
         val page = params.key ?: STARTING_PAGE
@@ -21,7 +21,9 @@ class UpcomingPagingSource(
                     nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
                 )
             }
-            else -> { LoadResult.Error(Exception(result.message)) }
+            else -> {
+                LoadResult.Error(Exception(result.message))
+            }
         }
     }
 
