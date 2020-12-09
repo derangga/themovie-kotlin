@@ -53,14 +53,7 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
     }
 
     private fun setupRecycler(){
-
         binding.apply {
-            dtSeasonList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-            dtCastList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-            dtRecomList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-            dtVideoList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-            dtReviewList.initLinearRecycler(requireContext())
-
             dtSeasonList.adapter = seasonAdapter
             dtCastList.adapter = creditsAdapter
             dtRecomList.adapter = recommendedTvAdapter

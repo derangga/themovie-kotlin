@@ -10,6 +10,7 @@
                 type="com.aldebaran.domain.entities.remote.person.PersonResponse" />
         <import type="android.view.View"/>
         <import type="com.aldebaran.data.network.ApiUrl"/>
+        <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
 
     <!-- TODO: Update blank fragment layout -->
@@ -150,7 +151,12 @@
                                 android:id="@+id/cast_photos"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/extra_small_space">
+                                android:layout_marginBottom="@dimen/extra_small_space"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 
@@ -201,7 +207,12 @@
                                 android:id="@+id/cast_film"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/extra_small_space">
+                                android:layout_marginBottom="@dimen/extra_small_space"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 

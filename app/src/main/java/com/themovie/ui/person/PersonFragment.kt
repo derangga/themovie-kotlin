@@ -3,7 +3,6 @@ package com.themovie.ui.person
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.domain.entities.remote.person.Filmography
@@ -46,15 +45,8 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     private fun setupRecycler(){
         binding.apply{
-            castFilm.apply {
-                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-                adapter = personFilmAdapter
-            }
-
-            castPhotos.apply {
-                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-                adapter = personImageAdapter
-            }
+            castFilm.adapter = personFilmAdapter
+            castPhotos.adapter = personImageAdapter
         }
     }
 

@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.domain.entities.remote.Credits
 import com.aldebaran.domain.entities.remote.MovieResponse
@@ -119,11 +118,6 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     private fun initRecyclerView(){
         binding.apply {
-            dtCastList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-            dtRecomList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-            dtVideoList.initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-            dtReviewList.initLinearRecycler(requireContext())
-
             dtCastList.adapter = creditsAdapter
             dtRecomList.adapter = recommendedAdapter
             dtReviewList.adapter = reviewsAdapter

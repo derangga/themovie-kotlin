@@ -9,6 +9,7 @@
         <import type="android.view.View"/>
         <import type="com.aldebaran.data.network.ApiUrl"/>
         <import type="com.themovie.helper.ExtensionKt"/>
+        <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -238,7 +239,12 @@
                                 android:id="@+id/dt_seasonList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 
@@ -282,7 +288,12 @@
                                 android:id="@+id/dt_castList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/smallest_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 
@@ -335,7 +346,12 @@
                                 android:id="@+id/dt_video_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"/>
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}"/>
 
                         <TextView
                                 android:id="@+id/video_empty"
@@ -386,7 +402,12 @@
                                 android:id="@+id/dt_recom_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 
@@ -439,7 +460,11 @@
                         <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/dt_reviewList"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{false}"
+                                app:setOrientation="@{RecyclerView.VERTICAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 

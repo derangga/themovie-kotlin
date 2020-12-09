@@ -1,9 +1,6 @@
 package com.themovie.ui.genres
 
-
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
@@ -14,7 +11,6 @@ import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.MovieResponse
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 import com.themovie.R
 import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.helper.Constant
@@ -88,7 +84,6 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>() {
     }
 
     private fun recyclerViewSetup(){
-        binding.movieRec.initLinearRecycler(requireContext())
         binding.movieRec.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }

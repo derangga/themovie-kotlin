@@ -11,6 +11,7 @@
         <import type="android.view.View"/>
         <import type="com.aldebaran.data.network.ApiUrl"/>
         <import type="com.themovie.helper.ExtensionKt"/>
+        <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -43,7 +44,8 @@
                         app:loadImage="@{ApiUrl.IMG_BACK + movies.backdropPath}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                 <View
                         android:layout_width="match_parent"
@@ -241,7 +243,12 @@
                                 android:id="@+id/dt_castList"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"/>
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}"/>
 
                         <TextView
                                 android:id="@+id/dt_cast_empty"
@@ -292,7 +299,12 @@
                                 android:id="@+id/dt_video_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"/>
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}"/>
 
                         <TextView
                                 android:id="@+id/video_empty"
@@ -343,7 +355,12 @@
                                 android:id="@+id/dt_recom_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 
@@ -396,7 +413,11 @@
                         <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/dt_reviewList"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/smallest_space}"
+                                app:firstItemSpacing="@{false}"
+                                app:setOrientation="@{RecyclerView.VERTICAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 

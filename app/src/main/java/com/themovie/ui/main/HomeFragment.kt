@@ -7,9 +7,7 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.core.BaseFragment
 
 import com.themovie.R
@@ -79,30 +77,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun recyclerViewSetup(){
         binding.apply {
-            homePopular.apply {
-                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-                adapter = trendingAdapter
-            }
-
-            homeUpcoming.apply {
-                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-                adapter = upcomingAdapter
-            }
-
-            homeGenre.apply {
-                layoutManager = GridLayoutManager(context, 2)
-                adapter = genreAdapter
-            }
-
-            homeTv.apply {
-                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-                adapter = discoverTvAdapter
-            }
-
-            homeMovies.apply {
-                initLinearRecycler(requireContext(), RecyclerView.HORIZONTAL)
-                adapter = discoverMovieAdapter
-            }
+            homePopular.adapter = trendingAdapter
+            homeUpcoming.adapter = upcomingAdapter
+            homeGenre.adapter = genreAdapter
+            homeTv.adapter = discoverTvAdapter
+            homeMovies.adapter = discoverMovieAdapter
 
             val pagerSnapHelper = PagerSnapHelper()
             homePopular.let {

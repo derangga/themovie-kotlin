@@ -8,7 +8,6 @@ import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.TvResponse
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
 import com.themovie.databinding.FragmentSearchResultBinding
@@ -51,7 +50,6 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>() {
     }
 
     private fun setupRecyclerView(){
-        binding.recyclerView.initLinearRecycler(requireContext())
         binding.recyclerView.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }

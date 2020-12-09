@@ -55,10 +55,7 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
     }
 
     private fun setupRecycler(){
-        binding.genreList.apply {
-            layoutManager = GridLayoutManager(context, 2)
-            adapter = genreAdapter
-        }
+        binding.genreList.adapter = genreAdapter
     }
 
     private fun getGenreList(){

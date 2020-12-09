@@ -9,6 +9,7 @@
                 name="vm"
                 type="com.themovie.ui.main.HomeViewModel" />
         <import type="android.view.View"/>
+        <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
 
     <RelativeLayout
@@ -58,8 +59,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="190dp"
                             android:layout_marginTop="@dimen/small_space"
-                            android:clipToPadding="false"
-                            android:foregroundGravity="center">
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:setItemSpacing="@{@dimen/small_space}"
+                            app:firstItemSpacing="@{true}"
+                            app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                     </androidx.recyclerview.widget.RecyclerView>
 
@@ -117,10 +121,15 @@
 
                             <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/home_upcoming"
-                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_marginTop="@dimen/small_space"
                                     android:layout_below="@id/header_2"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    app:setItemSpacing="@{@dimen/extra_small_space}"
+                                    app:firstItemSpacing="@{true}"
+                                    app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                             </androidx.recyclerview.widget.RecyclerView>
 
@@ -172,13 +181,15 @@
 
                             <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/home_genre"
-                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_marginTop="@dimen/small_space"
                                     android:layout_below="@id/header_3"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/small_space"
                                     android:layout_marginEnd="@dimen/small_space"
-                                    android:clipToPadding="false">
+                                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                                    app:spanCount="2"
+                                    app:gridSize="@{2}">
 
                             </androidx.recyclerview.widget.RecyclerView>
 
@@ -231,9 +242,14 @@
                             <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/home_tv"
                                     android:layout_below="@id/header_4"
-                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_marginTop="@dimen/small_space"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    app:setItemSpacing="@{@dimen/extra_small_space}"
+                                    app:firstItemSpacing="@{true}"
+                                    app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                             </androidx.recyclerview.widget.RecyclerView>
 
@@ -286,9 +302,14 @@
                             <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/home_movies"
                                     android:layout_below="@id/header_5"
-                                    android:layout_marginTop="@dimen/extra_small_space"
+                                    android:layout_marginTop="@dimen/small_space"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    app:setItemSpacing="@{@dimen/extra_small_space}"
+                                    app:firstItemSpacing="@{true}"
+                                    app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                             </androidx.recyclerview.widget.RecyclerView>
 

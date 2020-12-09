@@ -11,7 +11,6 @@ import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.MovieResponse
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
 import com.themovie.databinding.FragmentUpcomingBinding
@@ -74,7 +73,6 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>() {
     }
 
     private fun recyclerViewSetup(){
-        binding.upcomingRec.initLinearRecycler(requireContext())
         binding.upcomingRec.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }

@@ -11,7 +11,6 @@ import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.remote.TvResponse
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
 import com.themovie.databinding.FragmentTvBinding
@@ -75,7 +74,6 @@ class TvFragment : BaseFragment<FragmentTvBinding>() {
     }
 
     private fun recyclerViewSetup(){
-        binding.tvRec.initLinearRecycler(requireContext())
         binding.tvRec.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }

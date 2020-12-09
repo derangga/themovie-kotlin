@@ -12,7 +12,6 @@ import com.themovie.databinding.FragmentSuggestBinding
 import com.aldebaran.domain.Result.Status.*
 import com.aldebaran.utils.changeActivity
 import com.aldebaran.utils.gone
-import com.aldebaran.utils.initLinearRecycler
 import com.aldebaran.utils.visible
 import com.themovie.helper.*
 import com.themovie.ui.detail.DetailActivity
@@ -40,10 +39,8 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
     }
 
     private fun setupRecyclerView(){
-        binding.recyclerView.apply {
-            initLinearRecycler(requireContext())
-            adapter = mAdapter
-        }
+        binding.recyclerView.adapter = mAdapter
+
     }
 
     private fun observeSuggestData(){
