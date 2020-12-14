@@ -2,11 +2,9 @@ package com.themovie.ui.discover
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.ui.Movie
@@ -49,21 +47,11 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
             setBackButtonVisibility(View.VISIBLE)
             setTitleText(resources.getString(R.string.home_title_5))
             setBackButtonOnClickListener {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(it).navigate(action)
+                activity?.onBackPressed()
             }
 
             setSearchButtonOnClickListener { changeActivity<SuggestActivity>() }
         }
-
-
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun observeDiscoverMovie() {

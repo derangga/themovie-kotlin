@@ -1,12 +1,9 @@
 package com.themovie.ui.main
 
-
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -60,11 +57,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.header.setSearchVisibility(View.GONE)
         recyclerViewSetup()
         onClick()
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                requireActivity().finishAffinity()
-            }}
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         subscribeUI()
     }
 

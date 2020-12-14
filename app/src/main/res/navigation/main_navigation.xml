@@ -9,13 +9,7 @@
             android:id="@+id/upcomingFragment"
             android:name="com.themovie.ui.discover.UpcomingFragment"
             android:label="fragment_upcoming"
-            tools:layout="@layout/fragment_upcoming" >
-        <action
-                android:id="@+id/action_upcomingFragment_to_homeFragment"
-                app:destination="@id/homeFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
-    </fragment>
+            tools:layout="@layout/fragment_upcoming" />
     <fragment
             android:id="@+id/homeFragment"
             android:name="com.themovie.ui.main.HomeFragment"
@@ -24,27 +18,37 @@
                 android:id="@+id/action_homeFragment_to_upcomingFragment"
                 app:destination="@id/upcomingFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_fade_enter"
+                app:popExitAnim="@anim/fragment_fade_exit" />
         <action
                 android:id="@+id/action_homeFragment_to_genresFragment"
                 app:destination="@id/genresFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_fade_enter"
+                app:popExitAnim="@anim/fragment_fade_exit" />
         <action
                 android:id="@+id/action_homeFragment_to_tvFragment"
                 app:destination="@id/tvFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_fade_enter"
+                app:popExitAnim="@anim/fragment_fade_exit" />
         <action
                 android:id="@+id/action_homeFragment_to_moviesFragment"
                 app:destination="@id/moviesFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_fade_enter"
+                app:popExitAnim="@anim/fragment_fade_exit" />
         <action
                 android:id="@+id/action_homeFragment_to_movieWithGenreFragment"
                 app:destination="@id/movieWithGenreFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_fade_enter"
+                app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
             android:id="@+id/genresFragment"
@@ -52,53 +56,28 @@
             android:label="fragment_genres"
             tools:layout="@layout/fragment_genres" >
         <action
-                android:id="@+id/action_genresFragment_to_homeFragment"
-                app:destination="@id/homeFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
-        <action
                 android:id="@+id/action_genresFragment_to_movieWithGenreFragment"
                 app:destination="@id/movieWithGenreFragment"
                 app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_fade_enter"
+                app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
             android:id="@+id/tvFragment"
             android:name="com.themovie.ui.discover.TvFragment"
             android:label="fragment_tv"
-            tools:layout="@layout/fragment_tv" >
-        <action
-                android:id="@+id/action_tvFragment_to_homeFragment"
-                app:destination="@id/homeFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
-    </fragment>
+            tools:layout="@layout/fragment_tv" />
     <fragment
             android:id="@+id/moviesFragment"
             android:name="com.themovie.ui.discover.MoviesFragment"
             android:label="fragment_movies"
-            tools:layout="@layout/fragment_movies" >
-        <action
-                android:id="@+id/action_moviesFragment_to_homeFragment"
-                app:destination="@id/homeFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
-    </fragment>
+            tools:layout="@layout/fragment_movies" />
     <fragment
             android:id="@+id/movieWithGenreFragment"
             android:name="com.themovie.ui.genres.MovieWithGenreFragment"
             android:label="MovieWithGenreFragment" >
-        <action
-                android:id="@+id/action_movieWithGenreFragment_to_genresFragment"
-                app:destination="@id/genresFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
 
-        <action
-                android:id="@+id/action_movieWithGenreFragment_to_homeFragment"
-                app:destination="@id/homeFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
         <argument
                 android:name="genreId"
                 app:argType="integer"

@@ -2,11 +2,9 @@ package com.themovie.ui.discover
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.ui.Movie
@@ -58,18 +56,9 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>() {
             setBackButtonVisibility(View.VISIBLE)
             setTitleText(resources.getString(R.string.home_title_2))
             setBackButtonOnClickListener {
-                val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
-                Navigation.findNavController(it).navigate(action)
+                activity?.onBackPressed()
             }
         }
-
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                val action = UpcomingFragmentDirections.actionUpcomingFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun recyclerViewSetup(){

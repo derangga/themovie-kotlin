@@ -2,11 +2,9 @@ package com.themovie.ui.genres
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.ui.Movie
@@ -54,25 +52,15 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>() {
     }
 
     private fun setupUIComponent() {
-        val action = if(destinationBackPress == "home"){
-            MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToHomeFragment()
-        } else MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToGenresFragment()
-
         binding.header.apply {
             setLogoVisibility(View.GONE)
             setBackButtonVisibility(View.VISIBLE)
             setSearchVisibility(View.GONE)
             setTitleText("Genres: $title")
             setBackButtonOnClickListener {
-                Navigation.findNavController(it).navigate(action)
+                activity?.onBackPressed()
             }
         }
-
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() { Navigation.findNavController(view!!).navigate(action) }
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun observeDiscoverMovie() {
