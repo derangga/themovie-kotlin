@@ -6,20 +6,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.aldebaran.domain.entities.local.GenreEntity
+import com.aldebaran.domain.entities.ui.Genre
 import com.themovie.databinding.AdapterGenreBinding
 
 class GenreAdapter (
-    private val onItemClick: (GenreEntity) -> Unit
-): ListAdapter<GenreEntity, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: (Genre) -> Unit
+): ListAdapter<Genre, GenreAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<GenreEntity> = object: DiffUtil.ItemCallback<GenreEntity>(){
-            override fun areItemsTheSame(oldItem: GenreEntity, newItem: GenreEntity): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Genre> = object: DiffUtil.ItemCallback<Genre>(){
+            override fun areItemsTheSame(oldItem: Genre, newItem: Genre): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: GenreEntity, newItem: GenreEntity): Boolean {
+            override fun areContentsTheSame(oldItem: Genre, newItem: Genre): Boolean {
                 return oldItem.name == newItem.name
             }
         }
@@ -37,7 +37,7 @@ class GenreAdapter (
     }
 
     inner class ViewHolder(root: View, val binding: AdapterGenreBinding) : RecyclerView.ViewHolder(root) {
-        fun genreClick(genre: GenreEntity){
+        fun genreClick(genre: Genre){
             onItemClick.invoke(genre)
         }
     }

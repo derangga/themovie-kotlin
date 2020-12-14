@@ -1,7 +1,7 @@
 package com.aldebaran.data.network.service
 
 import com.aldebaran.data.network.ApiUrl
-import com.aldebaran.domain.entities.DataList
+import com.aldebaran.domain.entities.ResponseParser
 import com.aldebaran.domain.entities.remote.*
 import retrofit2.Response
 import retrofit2.http.GET
@@ -15,7 +15,7 @@ interface TvServices {
         @Query("sort_by") sort_by: String,
         @Query("timezone") timezone: String,
         @Query("page") page: Int
-    ) : Response<DataList<TvResponse>>
+    ) : Response<ResponseParser<TvResponse>>
 
     @GET(ApiUrl.DETAIL_TV)
     suspend fun getTvDetail(
@@ -28,14 +28,14 @@ interface TvServices {
         @Path("tv_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
-    ) : Response<DataList<TvResponse>>
+    ) : Response<ResponseParser<TvResponse>>
 
     @GET(ApiUrl.REVIEWS_TV)
     suspend fun getReviewsTV(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
-    ) : Response<DataList<ReviewsResponse>>
+    ) : Response<ResponseParser<ReviewsResponse>>
 
     @GET(ApiUrl.CREDITS_TV)
     suspend fun getCreditsTv(
@@ -47,12 +47,12 @@ interface TvServices {
     suspend fun getTrailerTv(
         @Path("tv_id") tv_id: Int,
         @Query("api_key") api_key: String
-    ) : Response<VideoResponse>
+    ) : Response<VideosResponse>
 
     @GET(ApiUrl.SEARCH_TV)
     suspend fun getSearchTv(
         @Query("api_key") api_key: String,
         @Query("query") query: String,
         @Query("page") page: Int
-    ) : Response<DataList<TvResponse>>
+    ) : Response<ResponseParser<TvResponse>>
 }

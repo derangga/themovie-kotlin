@@ -34,11 +34,12 @@
 
                 <include
                         android:id="@+id/shimmer_home"
-                        layout="@layout/shimmer_content_main"/>
+                        layout="@layout/shimmer_content_main"
+                        app:loading="@{vm.loading}"/>
 
                 <LinearLayout
                         android:id="@+id/home_layout"
-                        android:visibility="gone"
+                        android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

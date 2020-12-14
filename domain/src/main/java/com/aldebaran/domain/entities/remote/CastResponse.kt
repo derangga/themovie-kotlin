@@ -3,10 +3,10 @@ package com.aldebaran.domain.entities.remote
 import com.google.gson.annotations.SerializedName
 
 data class CastResponse(
-    @SerializedName("cast") val credits: List<Credits>
+    @SerializedName("cast") val credits: List<CreditsResponse>
 )
 
-data class Credits(
+data class CreditsResponse(
     @SerializedName("id") val id: Int? = 0,
     @SerializedName("name") val name: String? = "",
     @SerializedName("character") val character: String? = "",

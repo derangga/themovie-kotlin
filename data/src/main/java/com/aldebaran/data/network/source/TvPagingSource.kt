@@ -1,29 +1,28 @@
 package com.aldebaran.data.network.source
 
 import androidx.paging.PagingSource
-import com.aldebaran.domain.Result.Status.*
-import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.entities.ui.Tv
 import com.aldebaran.domain.repository.remote.TvRemoteSource
+import com.aldebaran.network.Result
 
 class TvPagingSource(
     private val remote: TvRemoteSource
-) : PagingSource<Int, TvResponse>() {
+) : PagingSource<Int, Tv>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TvResponse> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Tv> {
         val page = params.key ?: STARTING_PAGE
         val result = remote.getDiscoverTv(page)
 
-        return when (result.status) {
-            SUCCESS -> {
+        return when (result) {
+            is Result.Success -> {
                 LoadResult.Page(
-                    data = result.data?.results.orEmpty(),
+                    data = result.data,
                     prevKey = if (page == STARTING_PAGE) null else page - 1,
-                    nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
+                    nextKey = if (result.data.isEmpty()) null else page + 1
                 )
             }
-            else -> {
-                LoadResult.Error(Exception(result.message))
-            }
+            is Result.Error -> LoadResult.Error(result.exception)
+
         }
     }
 

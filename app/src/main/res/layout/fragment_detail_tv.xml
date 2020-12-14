@@ -5,7 +5,10 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="tv" type="com.aldebaran.domain.entities.remote.DetailTvResponse"/>
+        <variable name="tv" type="com.aldebaran.domain.entities.ui.DetailTv"/>
+        <variable
+                name="vm"
+                type="com.themovie.ui.detail.viewmodel.DetailTvViewModel" />
         <import type="android.view.View"/>
         <import type="com.aldebaran.data.network.ApiUrl"/>
         <import type="com.themovie.helper.ExtensionKt"/>
@@ -25,13 +28,14 @@
 
             <include
                     android:id="@+id/dt_shimmer"
-                    layout="@layout/shimmer_content_main"/>
+                    layout="@layout/shimmer_content_main"
+                    app:loading="@{vm.loading}"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/dt_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone">
+                    android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}">
 
                 <ImageView
                         android:id="@+id/detail_img"

@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.entities.ui.Tv
 import com.aldebaran.utils.changeActivity
 
 import com.themovie.R
@@ -89,9 +89,9 @@ class TvFragment : BaseFragment<FragmentTvBinding>() {
         }
     }
 
-    private fun onTvShowItemClick(tv: TvResponse) {
+    private fun onTvShowItemClick(tv: Tv) {
         val bundle = Bundle().apply {
-            putInt("filmId", tv.id ?: 0)
+            putInt("filmId", tv.id)
             putString("type", Constant.TV)
         }
         changeActivity<DetailActivity>(bundle)

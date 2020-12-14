@@ -1,29 +1,27 @@
 package com.aldebaran.data.network.source
 
 import androidx.paging.PagingSource
-import com.aldebaran.domain.Result.Status.*
-import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.ui.Movie
 import com.aldebaran.domain.repository.remote.MovieRemoteSource
+import com.aldebaran.network.Result
 
 class UpcomingPagingSource(
     private val remote: MovieRemoteSource
-) : PagingSource<Int, MovieResponse>() {
+) : PagingSource<Int, Movie>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResponse> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
         val page = params.key ?: STARTING_PAGE
         val result = remote.getUpcomingMovie(page)
 
-        return when (result.status) {
-            SUCCESS -> {
+        return when (result) {
+            is Result.Success -> {
                 LoadResult.Page(
-                    data = result.data?.results.orEmpty(),
+                    data = result.data,
                     prevKey = if (page == STARTING_PAGE) null else page - 1,
-                    nextKey = if (result.data?.results.isNullOrEmpty()) null else page + 1
+                    nextKey = if (result.data.isEmpty()) null else page + 1
                 )
             }
-            else -> {
-                LoadResult.Error(Exception(result.message))
-            }
+            is Result.Error -> LoadResult.Error(result.exception)
         }
     }
 

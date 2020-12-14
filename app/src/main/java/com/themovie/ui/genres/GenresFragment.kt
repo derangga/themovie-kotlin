@@ -9,6 +9,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.local.GenreEntity
+import com.aldebaran.domain.entities.ui.Genre
 import com.aldebaran.utils.navigateFragment
 
 import com.themovie.R
@@ -62,9 +63,9 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
         viewModel.genreMovies.observe(viewLifecycleOwner, { genreAdapter.submitList(it) })
     }
 
-    private fun onGenreItemClick(genre: GenreEntity) {
+    private fun onGenreItemClick(genre: Genre) {
         val action = GenresFragmentDirections
-            .actionGenresFragmentToMovieWithGenreFragment(genre.id ?: 0, genre.name.orEmpty(), "genreList")
+            .actionGenresFragmentToMovieWithGenreFragment(genre.id, genre.name, "genreList")
         view?.navigateFragment { Navigation.findNavController(it).navigate(action) }
     }
 }

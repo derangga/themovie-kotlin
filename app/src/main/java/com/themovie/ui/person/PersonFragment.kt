@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.Result.Status.*
-import com.aldebaran.domain.entities.remote.person.Filmography
+import com.aldebaran.domain.entities.ui.ArtistFilm
+import com.aldebaran.event.EventObserver
 import com.aldebaran.utils.*
 
 import com.themovie.R
@@ -17,8 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
-    private val personFilmAdapter by lazy { PersonFilmAdapter(::onPersonFIlmItemClick) }
-    private val personImageAdapter by lazy { PersonImageAdapter() }
+    private val artistFilmAdapter by lazy { PersonFilmAdapter(::onPersonFIlmItemClick) }
+    private val artistPictAdapter by lazy { PersonImageAdapter() }
     private val viewModel by viewModels<PersonViewModel>()
     private var personId = 0
 
@@ -31,9 +31,8 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
             personId = PersonFragmentArgs.fromBundle(it).personId
         }
 
-        binding.apply {
-            lifecycleOwner = this@PersonFragment
-        }
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
@@ -45,65 +44,24 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
 
     private fun setupRecycler(){
         binding.apply{
-            castFilm.adapter = personFilmAdapter
-            castPhotos.adapter = personImageAdapter
+            castFilm.adapter = artistFilmAdapter
+            castPhotos.adapter = artistPictAdapter
         }
     }
 
     private fun subscribeUI(){
-        viewModel.apply {
-            detailPerson.observe(viewLifecycleOwner, { res ->
-                when(res.status){
-                    SUCCESS -> {
-                        hideLoading()
-                        binding.cast = res?.data
-                    }
-                    ERROR -> { networkErrorDialog.show(childFragmentManager, "") }
-                    LOADING -> { showLoading() }
-                }
-            })
-
-            personFilm.observe(viewLifecycleOwner, { res ->
-                when(res.status){
-                    SUCCESS -> {
-                        personFilmAdapter.submitList(res.data?.filmographies)
-                    }
-                    else -> {}
-                }
-            })
-
-            personPict.observe(viewLifecycleOwner, { res ->
-                when(res.status){
-                    SUCCESS -> {
-                        if(res.data?.imageList.isNullOrEmpty()){
-                            binding.castImgEmpty.visible()
-                            binding.castPhotos.gone()
-                        }
-                        personImageAdapter.setImageList(res?.data?.imageList)
-                    }
-                    else -> {}
-                }
-            })
-        }
+        viewModel.eventError.observe(viewLifecycleOwner, EventObserver {
+            if (it) networkErrorDialog.show(childFragmentManager, "")
+        })
+        
+        viewModel.artist.observe(viewLifecycleOwner, { binding.cast = it })
+        viewModel.artistPict.observe(viewLifecycleOwner, { artistPictAdapter.submitList(it) })
+        viewModel.artistFilm.observe(viewLifecycleOwner, { artistFilmAdapter.submitList(it) })
     }
-
-    private fun showLoading(){
-        binding.apply {
-            shimmerPerson.visible()
-            personLayout.invisible()
-        }
-    }
-
-    private fun hideLoading(){
-        binding.apply {
-            shimmerPerson.gone()
-            personLayout.visible()
-        }
-    }
-
-    private fun onPersonFIlmItemClick(movie: Filmography) {
+    
+    private fun onPersonFIlmItemClick(movie: ArtistFilm) {
         val bundle = Bundle().apply {
-            putInt("filmId", movie.id ?: 0)
+            putInt("filmId", movie.id)
             putString("type", Constant.MOVIE)
         }
         changeActivity<DetailActivity>(bundle)

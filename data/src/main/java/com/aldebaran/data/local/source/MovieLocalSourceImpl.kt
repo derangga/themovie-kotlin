@@ -1,36 +1,44 @@
 package com.aldebaran.data.local.source
 
-import androidx.lifecycle.LiveData
 import com.aldebaran.data.local.dao.MoviesDao
 import com.aldebaran.domain.entities.local.MovieEntity
 import com.aldebaran.domain.repository.local.MovieLocalSource
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class MovieLocalSourceImpl(
     private val moviesDao: MoviesDao
 ) : MovieLocalSource {
-    override suspend fun insertDiscoverMovie(movies: List<MovieEntity>) {
-        moviesDao.insertAll(*movies.toTypedArray())
+    override suspend fun insertAll(data: List<MovieEntity>) {
+        withContext(IO) { moviesDao.insertAll(*data.toTypedArray()) }
     }
 
-    override suspend fun insertDiscoverMovie(movie: MovieEntity) {
-        moviesDao.insert(movie)
+    override suspend fun insert(data: MovieEntity) {
+        withContext(IO) { moviesDao.insert(data) }
     }
 
-    override suspend fun updateDiscoverMovie(movies: MovieEntity) {
-        moviesDao.update(movies)
+    override suspend fun update(data: MovieEntity) {
+        withContext(IO) { moviesDao.update(data) }
     }
 
-    override fun streamAllDiscoverMovie(): LiveData<List<MovieEntity>> {
+    override suspend fun deleteAll() {
+        withContext(IO) { moviesDao.deleteAllMovie() }
+    }
+
+    override suspend fun delete(data: MovieEntity) {
+        withContext(IO) { moviesDao.delete(data) }
+    }
+
+    override suspend fun getAll(): List<MovieEntity> {
+        return withContext(IO) { moviesDao.getDiscoverMovies() }
+    }
+
+    override fun streamAll(): Flow<List<MovieEntity>> {
         return moviesDao.streamDiscoverMovies()
     }
 
-    override suspend fun getAllDiscoverMovie(): List<MovieEntity> {
-        return moviesDao.getDiscoverMovies()
+    override suspend fun isNotEmpty(): Boolean {
+        return withContext(IO) { moviesDao.countRows() > 0 }
     }
-
-    override suspend fun movieRows(): Int {
-        return moviesDao.countRows()
-    }
-
 }

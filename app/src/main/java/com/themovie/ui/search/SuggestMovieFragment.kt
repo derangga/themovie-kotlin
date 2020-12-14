@@ -2,14 +2,10 @@ package com.themovie.ui.search
 
 
 import android.os.Bundle
-import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.MovieResponse
-import com.aldebaran.domain.Result.Status.*
+import com.aldebaran.domain.entities.ui.Movie
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.gone
-import com.aldebaran.utils.visible
 
 import com.themovie.R
 import com.themovie.databinding.FragmentSuggestBinding
@@ -21,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.MoviesSearchFragmentListener {
 
-    private val viewModel by viewModels<SuggestMoviesViewModel>()
+    private val viewModel by activityViewModels<SuggestViewModel>()
     private val mAdapter by lazy { SuggestMoviesAdapter(::onMovieItemClick) }
 
     override fun getLayout(): Int {
@@ -44,26 +40,18 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
     }
 
     private fun observeSuggestData(){
-        viewModel.getSuggestMovies().observe(this, { res ->
-                when(res.status){
-                    LOADING -> {}
-                    SUCCESS -> {
-                        if(!binding.recyclerView.isVisible)
-                            binding.recyclerView.visible()
-                        mAdapter.submitList(res.data?.results)
-                    }
-                    ERROR -> { binding.recyclerView.gone()}
-                }
-            })
+        viewModel.movieSearch.observe(viewLifecycleOwner, {
+            mAdapter.submitList(it)
+        })
     }
 
     override fun textChange(text: String) {
         viewModel.fetchSuggestMovie(text)
     }
 
-    private fun onMovieItemClick(movie: MovieResponse) {
+    private fun onMovieItemClick(movie: Movie) {
         val bundle = Bundle().apply {
-            putInt("filmId", movie.id ?: 0)
+            putInt("filmId", movie.id)
             putString("type", Constant.MOVIE)
         }
         changeActivity<DetailActivity>(bundle)

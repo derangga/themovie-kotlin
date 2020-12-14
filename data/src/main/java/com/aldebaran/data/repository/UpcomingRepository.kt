@@ -1,47 +1,45 @@
 package com.aldebaran.data.repository
 
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.aldebaran.data.network.source.UpcomingPagingSource
-import com.aldebaran.data.resultLiveData
-import com.aldebaran.domain.Result
-import com.aldebaran.domain.entities.local.UpcomingEntity
-import com.aldebaran.domain.entities.remote.MovieResponse
-import com.aldebaran.domain.entities.toUpcomingEntity
+import com.aldebaran.data.resultFlowData
+import com.aldebaran.domain.entities.mapper.toMovie
+import com.aldebaran.domain.entities.mapper.toTrendingEntity
+import com.aldebaran.domain.entities.mapper.toUpcomingEntity
+import com.aldebaran.domain.entities.ui.Movie
 import com.aldebaran.domain.repository.Repository
 import com.aldebaran.domain.repository.local.UpcomingLocalSource
 import com.aldebaran.domain.repository.remote.MovieRemoteSource
+import com.aldebaran.network.Result
 import kotlinx.coroutines.flow.Flow
 
 class UpcomingRepository(
-    private val local: UpcomingLocalSource,
-    private val remote: MovieRemoteSource
+    private val localSource: UpcomingLocalSource,
+    private val remoteSource: MovieRemoteSource
 ) : Repository.UpcomingRepos {
 
-    override fun getUpcomingFromLocalOrRemote(): LiveData<Result<List<UpcomingEntity>>> {
-        return resultLiveData(
-            databaseQuery = { local.getUpcomingMovie() },
-            networkCall = { remote.getUpcomingMovie(1) },
-            saveCallResult = { res ->
-                val rows = local.upcomingRows()
-                if (rows == 0) {
-                    res.results.map { it.toUpcomingEntity() }
-                        .also { local.insertUpcoming(it) }
+    override fun getUpcomingFromLocalOrRemote(): Flow<Result<List<Movie>>> {
+        return resultFlowData(
+            localSource = { localSource.getAll().map { it.toMovie() } },
+            remoteSource = { remoteSource.getUpcomingMovie(1) },
+            saveData = { body ->
+                if (localSource.isNotEmpty()) {
+                    body.forEachIndexed { index, movie -> localSource.update(movie.toUpcomingEntity(index)) }
                 } else {
-                    res.results.forEachIndexed { key, upcoming ->
-                        local.updateUpcoming(upcoming.toUpcomingEntity(key + 1))
-                    }
+                    val entity = body.map { it.toUpcomingEntity() }
+                    localSource.insertAll(entity)
                 }
+                localSource.getAll().map { it.toMovie() }
             }
         )
     }
 
-    override fun getUpcomingMoviePaging(): Flow<PagingData<MovieResponse>> {
+    override fun getUpcomingMoviePaging(): Flow<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(pageSize = 1, enablePlaceholders = false),
-            pagingSourceFactory = { UpcomingPagingSource(remote) }
+            pagingSourceFactory = { UpcomingPagingSource(remoteSource) }
         ).flow
     }
 }

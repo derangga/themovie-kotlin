@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.ui.Movie
 import com.aldebaran.utils.changeActivity
 
 import com.themovie.R
@@ -88,9 +88,9 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>() {
         }
     }
 
-    private fun onMovieItemClick(movie: MovieResponse) {
+    private fun onMovieItemClick(movie: Movie) {
         val bundle = Bundle().apply {
-            putInt("filmId", movie.id ?: 0)
+            putInt("filmId", movie.id)
             putString("type", Constant.MOVIE)
         }
         changeActivity<DetailActivity>(bundle)

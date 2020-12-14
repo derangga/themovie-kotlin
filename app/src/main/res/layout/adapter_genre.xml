@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="genre"
-                type="com.aldebaran.domain.entities.local.GenreEntity" />
+                type="com.aldebaran.domain.entities.ui.Genre" />
 
         <variable
                 name="vh"

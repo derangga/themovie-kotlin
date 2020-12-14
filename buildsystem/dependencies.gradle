@@ -158,6 +158,12 @@ ext {
             [configuration: "implementation", dependency: jetPackLibs.androidLiveData],
             [configuration: "kapt", dependency: jetPackLibs.archProcessor],
 
+            [configuration: "implementation", dependency: networkLibs.okHttp],
+            [configuration: "implementation", dependency: networkLibs.okHttpLogging],
+            [configuration: "implementation", dependency: networkLibs.gsonConverter],
+
+            [configuration: "implementation", dependency: coroutines.coroutines],
+
             [configuration: "implementation", dependency: androidLibs.meterialComponent],
     ]
 

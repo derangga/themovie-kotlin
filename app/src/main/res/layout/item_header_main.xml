@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="trend"
-                type="com.aldebaran.domain.entities.local.TrendingEntity" />
+                type="com.aldebaran.domain.entities.ui.Movie" />
         <variable
                 name="vh"
                 type="com.themovie.ui.main.adapter.TrendingAdapter.ViewHolder" />

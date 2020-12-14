@@ -7,21 +7,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.data.network.ApiUrl
-import com.aldebaran.domain.entities.remote.person.Filmography
+import com.aldebaran.domain.entities.ui.ArtistFilm
 import com.themovie.databinding.AdapterRecomendedBinding
 import com.themovie.helper.customview.PortraitView
 
 class PersonFilmAdapter(
-    private val onItemClick: (Filmography) -> Unit
-) : ListAdapter<Filmography, PersonFilmAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: (ArtistFilm) -> Unit
+) : ListAdapter<ArtistFilm, PersonFilmAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<Filmography> = object: DiffUtil.ItemCallback<Filmography>(){
-            override fun areItemsTheSame(oldItem: Filmography, newItem: Filmography): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<ArtistFilm> = object: DiffUtil.ItemCallback<ArtistFilm>(){
+            override fun areItemsTheSame(oldItem: ArtistFilm, newItem: ArtistFilm): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Filmography, newItem: Filmography): Boolean {
+            override fun areContentsTheSame(oldItem: ArtistFilm, newItem: ArtistFilm): Boolean {
                 return oldItem.title == newItem.title && oldItem.posterPath == newItem.posterPath
             }
         }
@@ -38,12 +38,12 @@ class PersonFilmAdapter(
     }
 
     inner class ViewHolder(itemView: View, private val binding: AdapterRecomendedBinding) : RecyclerView.ViewHolder(itemView){
-        fun bindItem(item: Filmography){
-            val imgUrl = "${ApiUrl.IMG_POSTER}${item.posterPath.toString()}"
+        fun bindItem(item: ArtistFilm){
+            val imgUrl = "${ApiUrl.IMG_POSTER}${item.posterPath}"
             binding.recItem.apply {
                 setImage(imgUrl)
-                setTitle(item.title.orEmpty())
-                setRating(item.rating.orEmpty())
+                setTitle(item.title)
+                setRating(item.rating)
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {
                         onItemClick.invoke(item)
