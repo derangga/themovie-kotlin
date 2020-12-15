@@ -78,171 +78,139 @@
                             app:ci_drawable_unselected="@drawable/unselected_indicator"
                             app:ci_gravity="start"/>
 
-                    <androidx.cardview.widget.CardView
-                            android:layout_marginTop="@dimen/medium_space"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:cardBackgroundColor="@color/colorPrimary">
+                            android:paddingTop="@dimen/medium_space"
+                            android:paddingBottom="@dimen/medium_space"
+                            android:layout_marginBottom="@dimen/medium_space"
+                            android:background="@color/colorPrimary">
 
-                        <RelativeLayout
+                        <TextView
+                                android:id="@+id/title_upcoming"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:text="@string/title_main_2"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginStart="@dimen/medium_space"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                                android:id="@+id/see_upcoming"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_main_5"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/colorAccent"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="@dimen/medium_space"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/home_upcoming"
+                                android:layout_marginTop="@dimen/small_space"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/medium_space">
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}"
+                                app:layout_constraintTop_toBottomOf="@id/title_upcoming">
 
-                            <LinearLayout
-                                    android:id="@+id/header_2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:paddingTop="@dimen/extra_small_space"
-                                    android:paddingStart="@dimen/medium_space"
-                                    android:paddingEnd="@dimen/medium_space">
+                        </androidx.recyclerview.widget.RecyclerView>
 
-                                <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="wrap_content"
-                                        android:textStyle="bold"
-                                        android:textSize="18sp"
-                                        android:text="@string/title_main_2"
-                                        android:textColor="@color/colorWhite"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <TextView
-                                        android:id="@+id/see_upco"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="0.5"
-                                        android:gravity="end"
-                                        android:text="@string/title_main_5"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorAccent"
-                                        android:textStyle="bold" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:paddingTop="@dimen/medium_space"
+                            android:paddingBottom="@dimen/medium_space"
+                            android:layout_marginBottom="@dimen/medium_space">
 
-                            </LinearLayout>
+                        <TextView
+                                android:id="@+id/title_genre"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:text="@string/home_title_3"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginStart="@dimen/medium_space"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"/>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/home_upcoming"
-                                    android:layout_marginTop="@dimen/small_space"
-                                    android:layout_below="@id/header_2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                    app:setItemSpacing="@{@dimen/extra_small_space}"
-                                    app:firstItemSpacing="@{true}"
-                                    app:setOrientation="@{RecyclerView.HORIZONTAL}">
+                        <TextView
+                                android:id="@+id/see_genre"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_main_5"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/colorAccent"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="@dimen/medium_space"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"/>
 
-                            </androidx.recyclerview.widget.RecyclerView>
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/home_genre"
+                                android:layout_marginTop="@dimen/small_space"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/small_space"
+                                android:layout_marginEnd="@dimen/small_space"
+                                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                                app:spanCount="2"
+                                app:gridSize="@{2}"
+                                app:layout_constraintTop_toBottomOf="@id/title_genre">
 
-                        </RelativeLayout>
+                        </androidx.recyclerview.widget.RecyclerView>
 
-                    </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.cardview.widget.CardView
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/medium_space"
                             android:layout_marginTop="@dimen/small_space"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:cardBackgroundColor="@color/colorPrimary">
+                            android:paddingTop="@dimen/medium_space"
+                            android:paddingBottom="@dimen/medium_space"
+                            android:background="@color/colorPrimary">
 
-                        <RelativeLayout
-                                android:layout_width="match_parent"
+                        <TextView
+                                android:id="@+id/title_discover_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/medium_space">
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:text="@string/home_title_4"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginStart="@dimen/medium_space"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"/>
 
-                            <LinearLayout
-                                    android:id="@+id/header_3"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:paddingTop="@dimen/extra_small_space"
-                                    android:paddingStart="@dimen/medium_space"
-                                    android:paddingEnd="@dimen/medium_space">
-
-                                <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="wrap_content"
-                                        android:textStyle="bold"
-                                        android:textSize="18sp"
-                                        android:text="@string/home_title_3"
-                                        android:textColor="@color/colorWhite"/>
-
-                                <TextView
-                                        android:id="@+id/see_genre"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="0.5"
-                                        android:gravity="end"
-                                        android:text="@string/title_main_5"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorAccent"
-                                        android:textStyle="bold" />
-
-                            </LinearLayout>
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/home_genre"
-                                    android:layout_marginTop="@dimen/small_space"
-                                    android:layout_below="@id/header_3"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/small_space"
-                                    android:layout_marginEnd="@dimen/small_space"
-                                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                                    app:spanCount="2"
-                                    app:gridSize="@{2}">
-
-                            </androidx.recyclerview.widget.RecyclerView>
-
-                        </RelativeLayout>
-
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                            android:layout_marginTop="@dimen/small_space"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:cardBackgroundColor="@color/colorPrimary">
-
-                        <RelativeLayout
-                                android:layout_width="match_parent"
+                        <TextView
+                                android:id="@+id/see_tv"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/medium_space">
-
-                            <LinearLayout
-                                    android:id="@+id/header_4"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:paddingTop="@dimen/extra_small_space"
-                                    android:paddingStart="@dimen/medium_space"
-                                    android:paddingEnd="@dimen/medium_space">
-
-                                <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="wrap_content"
-                                        android:textStyle="bold"
-                                        android:textSize="18sp"
-                                        android:text="@string/home_title_4"
-                                        android:textColor="@color/colorWhite"/>
-
-                                <TextView
-                                        android:id="@+id/see_tv"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="0.5"
-                                        android:gravity="end"
-                                        android:text="@string/title_main_5"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorAccent"
-                                        android:textStyle="bold" />
-
-                            </LinearLayout>
+                                android:gravity="end"
+                                android:text="@string/title_main_5"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/colorAccent"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="@dimen/medium_space"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"/>
 
                             <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/home_tv"
-                                    android:layout_below="@id/header_4"
                                     android:layout_marginTop="@dimen/small_space"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -250,73 +218,61 @@
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                     app:setItemSpacing="@{@dimen/extra_small_space}"
                                     app:firstItemSpacing="@{true}"
-                                    app:setOrientation="@{RecyclerView.HORIZONTAL}">
+                                    app:setOrientation="@{RecyclerView.HORIZONTAL}"
+                                    app:layout_constraintTop_toBottomOf="@id/title_discover_tv">
 
                             </androidx.recyclerview.widget.RecyclerView>
 
-                        </RelativeLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                            android:layout_marginTop="@dimen/small_space"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:cardBackgroundColor="@color/colorPrimary">
+                            android:layout_marginBottom="@dimen/medium_space"
+                            android:paddingTop="@dimen/medium_space"
+                            android:paddingBottom="@dimen/medium_space"
+                            android:background="@color/colorPrimary">
 
-                        <RelativeLayout
+                        <TextView
+                                android:id="@+id/title_discover_movie"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:text="@string/home_title_5"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginStart="@dimen/medium_space"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                                android:id="@+id/see_movies"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/title_main_5"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/colorAccent"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="@dimen/medium_space"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/home_movies"
+                                android:layout_marginTop="@dimen/small_space"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/medium_space">
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}"
+                                app:layout_constraintTop_toBottomOf="@id/title_discover_movie">
 
-                            <LinearLayout
-                                    android:id="@+id/header_5"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:paddingTop="@dimen/extra_small_space"
-                                    android:paddingStart="@dimen/medium_space"
-                                    android:paddingEnd="@dimen/medium_space">
+                        </androidx.recyclerview.widget.RecyclerView>
 
-                                <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="wrap_content"
-                                        android:textStyle="bold"
-                                        android:textSize="18sp"
-                                        android:text="@string/home_title_5"
-                                        android:textColor="@color/colorWhite"/>
-
-                                <TextView
-                                        android:id="@+id/see_movies"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="0.5"
-                                        android:gravity="end"
-                                        android:text="@string/title_main_5"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorAccent"
-                                        android:textStyle="bold" />
-
-                            </LinearLayout>
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/home_movies"
-                                    android:layout_below="@id/header_5"
-                                    android:layout_marginTop="@dimen/small_space"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                    app:setItemSpacing="@{@dimen/extra_small_space}"
-                                    app:firstItemSpacing="@{true}"
-                                    app:setOrientation="@{RecyclerView.HORIZONTAL}">
-
-                            </androidx.recyclerview.widget.RecyclerView>
-
-                        </RelativeLayout>
-
-                    </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 

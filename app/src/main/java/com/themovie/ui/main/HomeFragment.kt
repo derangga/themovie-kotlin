@@ -91,7 +91,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun onClick(){
         binding.apply {
-            seeUpco.setOnClickListener {
+            seeUpcoming.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToUpcomingFragment()
                 Navigation.findNavController(it).navigate(action)
             }
