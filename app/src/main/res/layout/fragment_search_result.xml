@@ -4,6 +4,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".ui.search.SearchTvFragment">
 
+    <data>
+        <import type="androidx.recyclerview.widget.RecyclerView"/>
+    </data>
+
     <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -13,7 +17,8 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <ProgressBar
                 android:id="@+id/progress_bar"

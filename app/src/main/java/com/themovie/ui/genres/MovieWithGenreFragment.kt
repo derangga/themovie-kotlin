@@ -1,20 +1,14 @@
 package com.themovie.ui.genres
 
-
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.ui.Movie
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 import com.themovie.R
 import com.themovie.databinding.FragmentMoviesBinding
 import com.themovie.helper.Constant
@@ -58,25 +52,15 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>() {
     }
 
     private fun setupUIComponent() {
-        val action = if(destinationBackPress == "home"){
-            MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToHomeFragment()
-        } else MovieWithGenreFragmentDirections.actionMovieWithGenreFragmentToGenresFragment()
-
         binding.header.apply {
             setLogoVisibility(View.GONE)
             setBackButtonVisibility(View.VISIBLE)
             setSearchVisibility(View.GONE)
             setTitleText("Genres: $title")
             setBackButtonOnClickListener {
-                Navigation.findNavController(it).navigate(action)
+                activity?.onBackPressed()
             }
         }
-
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() { Navigation.findNavController(view!!).navigate(action) }
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun observeDiscoverMovie() {
@@ -88,7 +72,6 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>() {
     }
 
     private fun recyclerViewSetup(){
-        binding.movieRec.initLinearRecycler(requireContext())
         binding.movieRec.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }
@@ -104,9 +87,9 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>() {
         }
     }
 
-    private fun onMovieItemClick(movie: MovieResponse) {
+    private fun onMovieItemClick(movie: Movie) {
         val bundle = Bundle().apply {
-            putInt("filmId", movie.id ?: 0)
+            putInt("filmId", movie.id)
             putString("type", Constant.MOVIE)
         }
         changeActivity<DetailActivity>(bundle)

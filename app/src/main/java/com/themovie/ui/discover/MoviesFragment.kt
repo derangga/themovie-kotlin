@@ -2,16 +2,13 @@ package com.themovie.ui.discover
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.ui.Movie
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
 import com.themovie.databinding.FragmentMoviesBinding
@@ -50,21 +47,11 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
             setBackButtonVisibility(View.VISIBLE)
             setTitleText(resources.getString(R.string.home_title_5))
             setBackButtonOnClickListener {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(it).navigate(action)
+                activity?.onBackPressed()
             }
 
             setSearchButtonOnClickListener { changeActivity<SuggestActivity>() }
         }
-
-
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun observeDiscoverMovie() {
@@ -76,7 +63,6 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
     }
 
     private fun recyclerViewSetup() {
-        binding.movieRec.initLinearRecycler(requireContext())
         binding.movieRec.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }
@@ -91,9 +77,9 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
         }
     }
 
-    private fun onMovieItemClick(movie: MovieResponse) {
+    private fun onMovieItemClick(movie: Movie) {
         val bundle = Bundle().apply {
-            putInt("filmId", movie.id ?: 0)
+            putInt("filmId", movie.id)
             putString("type", Constant.MOVIE)
         }
         changeActivity<DetailActivity>(bundle)

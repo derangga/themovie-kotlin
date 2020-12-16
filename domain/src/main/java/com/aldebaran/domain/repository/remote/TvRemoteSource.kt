@@ -1,22 +1,21 @@
 package com.aldebaran.domain.repository.remote
 
-import com.aldebaran.domain.Result
-import com.aldebaran.domain.entities.DataList
-import com.aldebaran.domain.entities.remote.*
+import com.aldebaran.network.Result
+import com.aldebaran.domain.entities.ui.*
 
 interface TvRemoteSource {
 
-    suspend fun getDiscoverTv(page: Int): Result<DataList<TvResponse>>
+    suspend fun getDiscoverTv(page: Int): Result<List<Tv>>
 
-    suspend fun getDetailTv(tvId: Int): Result<DetailTvResponse>
+    suspend fun getDetailTv(tvId: Int): Result<DetailTv>
 
-    suspend fun getRecommendationTv(tvId: Int): Result<DataList<TvResponse>>
+    suspend fun getRecommendationTv(tvId: Int): Result<List<Tv>>
 
-    suspend fun getReviewTv(tvId: Int, page: Int): Result<DataList<ReviewsResponse>>
+    suspend fun getReviewTv(tvId: Int, page: Int): Result<List<Review>>
 
-    suspend fun getCreditsTv(tvId: Int): Result<CastResponse>
+    suspend fun getCreditsTv(tvId: Int): Result<List<Credit>>
 
-    suspend fun getTrailerTv(tvId: Int): Result<VideoResponse>
+    suspend fun getTrailerTv(tvId: Int): Result<List<Video>>
 
-    suspend fun searchTv(query: String, page: Int): Result<DataList<TvResponse>>
+    suspend fun searchTv(query: String, page: Int): Result<List<Tv>>
 }

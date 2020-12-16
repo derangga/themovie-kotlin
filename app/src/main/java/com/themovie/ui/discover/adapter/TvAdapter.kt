@@ -6,20 +6,20 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.entities.ui.Tv
 import com.themovie.databinding.AdapterTvBinding
 
 class TvAdapter (
-    private val onItemClick: (TvResponse) -> Unit
-): PagingDataAdapter<TvResponse, TvAdapter.TvViewHolder>(COMPARATOR) {
+    private val onItemClick: (Tv) -> Unit
+): PagingDataAdapter<Tv, TvAdapter.TvViewHolder>(COMPARATOR) {
 
     companion object{
-        val COMPARATOR: DiffUtil.ItemCallback<TvResponse> = object: DiffUtil.ItemCallback<TvResponse>(){
-            override fun areItemsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
+        val COMPARATOR: DiffUtil.ItemCallback<Tv> = object: DiffUtil.ItemCallback<Tv>(){
+            override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
+            override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
                 return oldItem == newItem
             }
         }
@@ -38,7 +38,7 @@ class TvAdapter (
     }
 
     inner class TvViewHolder(root: View, val binding: AdapterTvBinding) : RecyclerView.ViewHolder(root) {
-        fun onTvAdapterClick(tv: TvResponse){
+        fun onTvAdapterClick(tv: Tv){
             onItemClick.invoke(tv)
         }
     }

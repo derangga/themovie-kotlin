@@ -11,13 +11,10 @@ import com.themovie.R
 import com.themovie.helper.cacheImage
 import kotlinx.android.synthetic.main.adapter_portrait.view.*
 
-class PortraitView(context: Context,
+class PortraitView @JvmOverloads constructor (context: Context,
                    attrs: AttributeSet? = null,
                    defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr), CompoundView {
-
-    constructor(context: Context): this(context, null, 0)
-    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
 
     private var listener: OnClickListener? = null
 

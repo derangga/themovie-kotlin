@@ -2,13 +2,12 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.ui.Movie
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
 import com.themovie.databinding.FragmentSearchResultBinding
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>() {
 
-    private val viewModel by viewModels<SearchMoviesViewModel>()
+    private val viewModel by activityViewModels<SearchViewModel>()
     private val mAdapter by lazy { MovieAdapter(::onMovieItemClick) }
 
     override fun getLayout(): Int {
@@ -50,7 +49,6 @@ class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>() {
     }
 
     private fun setupRecyclerView(){
-        binding.recyclerView.initLinearRecycler(requireContext())
         binding.recyclerView.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }
@@ -66,9 +64,9 @@ class SearchMovieFragment : BaseFragment<FragmentSearchResultBinding>() {
         }
     }
 
-    private fun onMovieItemClick(movie: MovieResponse) {
+    private fun onMovieItemClick(movie: Movie) {
         val bundle = Bundle().apply {
-            putInt("filmId", movie.id ?: 0)
+            putInt("filmId", movie.id)
             putString("type", Constant.MOVIE)
         }
         changeActivity<DetailActivity>(bundle)

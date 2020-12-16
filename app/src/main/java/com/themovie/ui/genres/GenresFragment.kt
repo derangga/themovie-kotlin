@@ -3,12 +3,10 @@ package com.themovie.ui.genres
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.GridLayoutManager
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.local.GenreEntity
+import com.aldebaran.domain.entities.ui.Genre
 import com.aldebaran.utils.navigateFragment
 
 import com.themovie.R
@@ -36,38 +34,28 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
     override fun onMain(savedInstanceState: Bundle?) {
         setupRecycler()
         getGenreList()
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                val action = GenresFragmentDirections.actionGenresFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }}
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         binding.header.apply {
             setLogoVisibility(View.GONE)
             setTitleText(resources.getString(R.string.home_title_3))
             setBackButtonVisibility(View.VISIBLE)
             setSearchVisibility(View.GONE)
             setBackButtonOnClickListener {
-                val action = GenresFragmentDirections.actionGenresFragmentToHomeFragment()
-                Navigation.findNavController(it).navigate(action)
+                activity?.onBackPressed()
             }
         }
     }
 
     private fun setupRecycler(){
-        binding.genreList.apply {
-            layoutManager = GridLayoutManager(context, 2)
-            adapter = genreAdapter
-        }
+        binding.genreList.adapter = genreAdapter
     }
 
     private fun getGenreList(){
         viewModel.genreMovies.observe(viewLifecycleOwner, { genreAdapter.submitList(it) })
     }
 
-    private fun onGenreItemClick(genre: GenreEntity) {
+    private fun onGenreItemClick(genre: Genre) {
         val action = GenresFragmentDirections
-            .actionGenresFragmentToMovieWithGenreFragment(genre.id ?: 0, genre.name.orEmpty(), "genreList")
+            .actionGenresFragmentToMovieWithGenreFragment(genre.id, genre.name, "genreList")
         view?.navigateFragment { Navigation.findNavController(it).navigate(action) }
     }
 }

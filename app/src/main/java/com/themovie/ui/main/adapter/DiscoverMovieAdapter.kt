@@ -7,21 +7,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.data.network.ApiUrl
-import com.aldebaran.domain.entities.local.MovieEntity
+import com.aldebaran.domain.entities.ui.Movie
 import com.themovie.databinding.AdapterPortraitMovieBinding
 import com.themovie.helper.customview.PortraitView
 
 class DiscoverMovieAdapter (
-    private val onItemClick: (MovieEntity) -> Unit
-) : ListAdapter<MovieEntity, DiscoverMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: (Movie) -> Unit
+) : ListAdapter<Movie, DiscoverMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<MovieEntity> = object: DiffUtil.ItemCallback<MovieEntity>(){
-            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Movie> = object: DiffUtil.ItemCallback<Movie>(){
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.title == newItem.title && oldItem.posterPath == newItem.posterPath
             }
         }
@@ -39,12 +39,12 @@ class DiscoverMovieAdapter (
     }
 
     inner class ViewHolder(root: View, val binding: AdapterPortraitMovieBinding) : RecyclerView.ViewHolder(root){
-        fun bindItem(movies: MovieEntity){
+        fun bindItem(movies: Movie){
             val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
             binding.movieItem.apply {
                 setImage(imgPoster)
-                setTitle(movies.title.orEmpty())
-                setRating(movies.voteAverage.orEmpty())
+                setTitle(movies.title)
+                setRating(movies.voteAverage)
                 setOnClickListener(object : PortraitView.OnClickListener{
                     override fun onClick() {
                         onItemClick.invoke(movies)

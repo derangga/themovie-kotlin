@@ -2,16 +2,13 @@ package com.themovie.ui.discover
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.entities.ui.Tv
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
 import com.themovie.databinding.FragmentTvBinding
@@ -50,20 +47,10 @@ class TvFragment : BaseFragment<FragmentTvBinding>() {
             setTitleText(resources.getString(R.string.home_title_4))
             setBackButtonVisibility(View.VISIBLE)
             setBackButtonOnClickListener {
-                val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
-                Navigation.findNavController(it).navigate(action)
+                activity?.onBackPressed()
             }
             setSearchButtonOnClickListener { changeActivity<SuggestActivity>() }
         }
-
-
-        val callback = object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                val action = TvFragmentDirections.actionTvFragmentToHomeFragment()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun observeDiscoverTv() {
@@ -75,7 +62,6 @@ class TvFragment : BaseFragment<FragmentTvBinding>() {
     }
 
     private fun recyclerViewSetup(){
-        binding.tvRec.initLinearRecycler(requireContext())
         binding.tvRec.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }
@@ -91,9 +77,9 @@ class TvFragment : BaseFragment<FragmentTvBinding>() {
         }
     }
 
-    private fun onTvShowItemClick(tv: TvResponse) {
+    private fun onTvShowItemClick(tv: Tv) {
         val bundle = Bundle().apply {
-            putInt("filmId", tv.id ?: 0)
+            putInt("filmId", tv.id)
             putString("type", Constant.TV)
         }
         changeActivity<DetailActivity>(bundle)

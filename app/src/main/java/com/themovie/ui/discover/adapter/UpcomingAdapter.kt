@@ -6,20 +6,20 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.ui.Movie
 import com.themovie.databinding.AdapterUpcomingBinding
 
 class UpcomingAdapter (
-    private val onItemClick: (MovieResponse) -> Unit
-): PagingDataAdapter<MovieResponse, UpcomingAdapter.UpcomingViewHolder>(COMPARATOR) {
+    private val onItemClick: (Movie) -> Unit
+): PagingDataAdapter<Movie, UpcomingAdapter.UpcomingViewHolder>(COMPARATOR) {
 
     companion object{
-        val COMPARATOR: DiffUtil.ItemCallback<MovieResponse> = object: DiffUtil.ItemCallback<MovieResponse>(){
-            override fun areItemsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
+        val COMPARATOR: DiffUtil.ItemCallback<Movie> = object: DiffUtil.ItemCallback<Movie>(){
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.title == newItem.title &&
                         oldItem.posterPath == newItem.posterPath &&
                         oldItem.backdropPath == newItem.backdropPath
@@ -40,7 +40,7 @@ class UpcomingAdapter (
     }
 
     inner class UpcomingViewHolder(root: View, val binding: AdapterUpcomingBinding) : RecyclerView.ViewHolder(root){
-        fun onUpcomingClick(data: MovieResponse){
+        fun onUpcomingClick(data: Movie){
             onItemClick.invoke(data)
         }
     }

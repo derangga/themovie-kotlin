@@ -1,40 +1,43 @@
 package com.themovie.ui.person
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.data.network.ApiUrl
-import com.aldebaran.domain.entities.remote.person.PersonImage
-import com.themovie.R
+import com.aldebaran.domain.entities.ui.ArtistPict
+import com.themovie.databinding.AdapterProfilePictBinding
 import com.themovie.helper.cacheImage
 import kotlinx.android.synthetic.main.adapter_profile_pict.view.*
 
-class PersonImageAdapter: RecyclerView.Adapter<PersonImageAdapter.ViewHolder>() {
+class PersonImageAdapter: ListAdapter<ArtistPict, PersonImageAdapter.ViewHolder>(comparator) {
 
-    private lateinit var context: Context
-    private var imageList: List<PersonImage>? = null
+    companion object {
+        private val comparator = object: DiffUtil.ItemCallback<ArtistPict>() {
+            override fun areItemsTheSame(oldItem: ArtistPict, newItem: ArtistPict): Boolean {
+                return oldItem == newItem
+            }
 
-    fun setImageList(imageList: List<PersonImage>?){
-        this.imageList = imageList
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: ArtistPict, newItem: ArtistPict): Boolean {
+                return oldItem.filePath == newItem.filePath
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_profile_pict, parent, false)
-        context = parent.context
-        return ViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = AdapterProfilePictBinding
+            .inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val imageUrl = "${ApiUrl.IMG_BACK}${imageList?.get(position)?.filePath}"
-        cacheImage(context, imageUrl, holder.itemView.photo)
+        val imageUrl = getItem(position)?.let { pict ->
+            "${ApiUrl.IMG_BACK}${pict.filePath}"
+        }.orEmpty()
+        cacheImage(holder.binding.photo.context, imageUrl, holder.itemView.photo)
     }
 
-    override fun getItemCount(): Int {
-        return imageList?.size ?: 0
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(val binding: AdapterProfilePictBinding) : RecyclerView.ViewHolder(binding.root)
 }

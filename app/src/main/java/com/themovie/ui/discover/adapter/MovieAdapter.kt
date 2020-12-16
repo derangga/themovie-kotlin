@@ -6,22 +6,22 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.aldebaran.domain.entities.remote.MovieResponse
+import com.aldebaran.domain.entities.ui.Movie
 import com.themovie.databinding.AdapterMoviesBinding
 
 class MovieAdapter (
-    private val onItemClick: (MovieResponse) -> Unit
-): PagingDataAdapter<MovieResponse, MovieAdapter.MovieViewHolder>(COMPARATOR) {
+    private val onItemClick: (Movie) -> Unit
+): PagingDataAdapter<Movie, MovieAdapter.MovieViewHolder>(COMPARATOR) {
 
     companion object {
-        private val COMPARATOR = object: DiffUtil.ItemCallback<MovieResponse>() {
-            override fun areItemsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
+        private val COMPARATOR = object: DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(
-                oldItem: MovieResponse,
-                newItem: MovieResponse
+                oldItem: Movie,
+                newItem: Movie
             ): Boolean {
                 return oldItem == newItem
             }
@@ -44,7 +44,7 @@ class MovieAdapter (
         itemView: View,
         val binding: AdapterMoviesBinding
     ) : RecyclerView.ViewHolder(itemView) {
-        fun onMovieClick (element: MovieResponse) {
+        fun onMovieClick (element: Movie) {
             onItemClick.invoke(element)
         }
     }

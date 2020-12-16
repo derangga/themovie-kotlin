@@ -1,7 +1,7 @@
 package com.aldebaran.data.network.service
 
 import com.aldebaran.data.network.ApiUrl
-import com.aldebaran.domain.entities.DataList
+import com.aldebaran.domain.entities.ResponseParser
 import com.aldebaran.domain.entities.remote.*
 import retrofit2.Response
 import retrofit2.http.GET
@@ -15,16 +15,16 @@ interface MovieServices {
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
         @Query("region") region: String = "US"
-    ) : Response<DataList<MovieResponse>>
+    ) : Response<ResponseParser<MovieResponse>>
 
     @GET(ApiUrl.POPULAR_MOVIE)
     suspend fun getPopularMovie(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
-    ): Response<DataList<MovieResponse>>
+    ): Response<ResponseParser<MovieResponse>>
 
     @GET(ApiUrl.GENRES)
-    suspend fun getGenres(@Query("api_key") api_key: String): Response<GenreResponse>
+    suspend fun getGenres(@Query("api_key") api_key: String): Response<GenresResponse>
 
     @GET(ApiUrl.DISCOVER_MOVIES)
     suspend fun getDiscoverMovies (
@@ -33,7 +33,7 @@ interface MovieServices {
         @Query("page") page: Int ,
         @Query("primary_release_year") primaryReleaseYear: Int,
         @Query("with_genres") withGenres: String
-    ) : Response<DataList<MovieResponse>>
+    ) : Response<ResponseParser<MovieResponse>>
 
     @GET(ApiUrl.DETAIL_MOVIE)
     suspend fun getMovieDetail(
@@ -46,14 +46,14 @@ interface MovieServices {
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
-    ) : Response<DataList<MovieResponse>>
+    ) : Response<ResponseParser<MovieResponse>>
 
     @GET(ApiUrl.REVIEWS)
     suspend fun getReviewsMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
-    ) : Response<DataList<ReviewsResponse>>
+    ) : Response<ResponseParser<ReviewsResponse>>
 
     @GET(ApiUrl.CREDITS)
     suspend fun getCreditsMovie(
@@ -65,12 +65,12 @@ interface MovieServices {
     suspend fun getTrailerMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String
-    ) : Response<VideoResponse>
+    ) : Response<VideosResponse>
 
     @GET(ApiUrl.SEARCH_MOVIE)
     suspend fun getSearchMovie(
         @Query("api_key") api_key: String,
         @Query("query") query: String,
         @Query("page") page: Int
-    ) : Response<DataList<MovieResponse>>
+    ) : Response<ResponseParser<MovieResponse>>
 }
