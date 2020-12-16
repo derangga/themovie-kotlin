@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".ui.genres.GenresFragment">
 
     <data>
@@ -28,7 +29,10 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/header"
                 android:layout_marginStart="@dimen/extra_small_space"
-                android:layout_marginEnd="@dimen/extra_small_space"/>
+                android:layout_marginEnd="@dimen/extra_small_space"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                app:gridSize="@{2}"/>
 
     </RelativeLayout>
 

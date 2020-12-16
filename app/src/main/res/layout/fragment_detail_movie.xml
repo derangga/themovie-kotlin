@@ -7,10 +7,14 @@
     <data>
         <variable
                 name="movies"
-                type="com.aldebaran.domain.entities.remote.DetailMovieResponse"/>
+                type="com.aldebaran.domain.entities.ui.DetailMovie"/>
+        <variable
+                name="vm"
+                type="com.themovie.ui.detail.viewmodel.DetailMovieViewModel" />
         <import type="android.view.View"/>
         <import type="com.aldebaran.data.network.ApiUrl"/>
         <import type="com.themovie.helper.ExtensionKt"/>
+        <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -22,17 +26,13 @@
         <!-- TODO: Update blank fragment layout -->
         <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <include
-                    android:id="@+id/dt_shimmer"
-                    layout="@layout/shimmer_content_main"/>
+                android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/dt_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone">
+                    android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}">
 
                 <ImageView
                         android:id="@+id/detail_img"
@@ -43,7 +43,8 @@
                         app:loadImage="@{ApiUrl.IMG_BACK + movies.backdropPath}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                 <View
                         android:layout_width="match_parent"
@@ -63,11 +64,11 @@
                         android:layout_marginEnd="@dimen/small_space"
                         app:cardCornerRadius="@dimen/small_space"
                         app:cardBackgroundColor="@color/colorPrimary"
-                        android:elevation="8dp"
                         app:layout_constraintTop_toBottomOf="@id/detail_img"
                         app:layout_constraintBottom_toBottomOf="@id/detail_img">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/container_title"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
@@ -81,11 +82,15 @@
                                 android:fitsSystemWindows="true"
                                 android:scaleType="centerCrop"
                                 app:loadImage="@{ApiUrl.IMG_POSTER + movies.posterPath}"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
                                 tools:ignore="ContentDescription" />
 
                         <androidx.core.widget.NestedScrollView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                app:layout_constraintStart_toEndOf="@id/poster_img"
+                                app:layout_constraintEnd_toEndOf="parent">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
@@ -130,32 +135,18 @@
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"/>
 
-                                <LinearLayout
-                                        android:id="@+id/rate_layout"
+                                <TextView
+                                        android:id="@+id/rating"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
+                                        android:textColor="@color/colorAccent"
+                                        android:textSize="18sp"
+                                        android:text="@{movies.rate}"
                                         android:layout_marginTop="4dp"
+                                        android:drawablePadding="4dp"
+                                        android:drawableEnd="@drawable/ic_rate"
                                         app:layout_constraintTop_toBottomOf="@id/release"
-                                        app:layout_constraintStart_toStartOf="@id/reviewers"
-                                        app:layout_constraintEnd_toEndOf="@id/reviewers">
-
-                                    <TextView
-                                            android:id="@+id/rating"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="@color/colorAccent"
-                                            android:layout_marginEnd="4dp"
-                                            android:textSize="18sp"
-                                            android:text="@{movies.rate}"/>
-
-                                    <ImageView
-                                            android:id="@+id/start_img"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:src="@drawable/ic_rate"/>
-
-                                </LinearLayout>
+                                        app:layout_constraintStart_toStartOf="@id/reviewers"/>
 
                                 <TextView
                                         android:id="@+id/reviewers"
@@ -166,7 +157,7 @@
                                         android:textColor="@color/colorWhite"
                                         android:textSize="11sp"
                                         android:text="@{movies.voteCount + ` Reviews`}"
-                                        app:layout_constraintTop_toBottomOf="@id/rate_layout"
+                                        app:layout_constraintTop_toBottomOf="@id/rating"
                                         app:layout_constraintStart_toStartOf="parent"
                                         tools:ignore="SmallSp" />
 
@@ -175,7 +166,7 @@
 
                         </androidx.core.widget.NestedScrollView>
 
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.cardview.widget.CardView>
 
@@ -205,122 +196,116 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
-                <androidx.cardview.widget.CardView
-                        android:id="@+id/card_cast"
+                <LinearLayout
+                        android:id="@+id/container_cast"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/colorPrimary"
                         android:layout_marginTop="@dimen/medium_space"
-                        app:cardBackgroundColor="@color/colorPrimary"
                         app:layout_constraintTop_toBottomOf="@id/overview"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 
-                    <LinearLayout
+                    <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:text="@string/detail_title_7"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_margin="@dimen/small_space"
+                            android:textColor="@color/colorAccent"/>
 
-                        <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/detail_title_7"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:layout_margin="@dimen/small_space"
-                                android:textColor="@color/colorAccent"/>
+                    <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="@dimen/small_space"
+                            android:layout_marginStart="@dimen/small_space"
+                            android:layout_marginEnd="@dimen/small_space"
+                            android:background="@color/colorBlue"/>
 
-                        <View
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:layout_marginBottom="@dimen/small_space"
-                                android:layout_marginStart="@dimen/small_space"
-                                android:layout_marginEnd="@dimen/small_space"
-                                android:background="@color/colorBlue"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/dt_castList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:setItemSpacing="@{@dimen/extra_small_space}"
+                            app:firstItemSpacing="@{true}"
+                            app:setOrientation="@{RecyclerView.HORIZONTAL}"/>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/dt_castList"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"/>
+                    <TextView
+                            android:id="@+id/dt_cast_empty"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="@string/detail_title_17"
+                            android:textColor="@color/colorWhite"
+                            android:layout_marginBottom="8dp"
+                            android:textAlignment="center"
+                            android:visibility="gone"/>
 
-                        <TextView
-                                android:id="@+id/dt_cast_empty"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"
-                                android:text="@string/detail_title_17"
-                                android:textColor="@color/colorWhite"
-                                android:layout_marginBottom="8dp"
-                                android:textAlignment="center"
-                                android:visibility="gone"/>
+                </LinearLayout>
 
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                        android:id="@+id/card_video"
+                <LinearLayout
+                        android:id="@+id/container_video"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/colorPrimary"
                         android:layout_marginTop="@dimen/medium_space"
-                        app:cardBackgroundColor="@color/colorPrimary"
-                        app:layout_constraintTop_toBottomOf="@id/card_cast">
+                        app:layout_constraintTop_toBottomOf="@id/container_cast">
 
-                    <LinearLayout
+                    <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:text="@string/detail_title_18"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_margin="@dimen/small_space"
+                            android:textColor="@color/colorAccent"/>
 
-                        <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/detail_title_18"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:layout_margin="@dimen/small_space"
-                                android:textColor="@color/colorAccent"/>
+                    <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="@dimen/small_space"
+                            android:layout_marginStart="@dimen/small_space"
+                            android:layout_marginEnd="@dimen/small_space"
+                            android:background="@color/colorBlue"/>
 
-                        <View
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:layout_marginBottom="@dimen/small_space"
-                                android:layout_marginStart="@dimen/small_space"
-                                android:layout_marginEnd="@dimen/small_space"
-                                android:background="@color/colorBlue"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/dt_video_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:setItemSpacing="@{@dimen/extra_small_space}"
+                            app:firstItemSpacing="@{true}"
+                            app:setOrientation="@{RecyclerView.HORIZONTAL}"/>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/dt_video_list"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"/>
+                    <TextView
+                            android:id="@+id/video_empty"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="@string/detail_title_19"
+                            android:layout_marginBottom="8dp"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:visibility="gone"/>
 
-                        <TextView
-                                android:id="@+id/video_empty"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"
-                                android:text="@string/detail_title_19"
-                                android:layout_marginBottom="8dp"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorWhite"
-                                android:visibility="gone"/>
+                </LinearLayout>
 
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                        android:id="@+id/card_recommended"
+                <LinearLayout
+                        android:id="@+id/container_recommended"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/colorPrimary"
                         android:layout_marginTop="@dimen/medium_space"
-                        app:cardBackgroundColor="@color/colorPrimary"
-                        app:layout_constraintTop_toBottomOf="@id/card_video">
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                        app:layout_constraintTop_toBottomOf="@id/container_video">
 
                         <TextView
                                 android:layout_width="match_parent"
@@ -343,7 +328,12 @@
                                 android:id="@+id/dt_recom_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/extra_small_space}"
+                                app:firstItemSpacing="@{true}"
+                                app:setOrientation="@{RecyclerView.HORIZONTAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 
@@ -360,23 +350,16 @@
 
                     </LinearLayout>
 
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                        android:id="@+id/card_review"
+                <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="@dimen/extra_small_space"
+                        android:paddingEnd="@dimen/extra_small_space"
+                        android:paddingTop="@dimen/extra_small_space"
+                        android:background="@color/colorPrimary"
                         android:layout_marginTop="@dimen/medium_space"
-                        app:cardBackgroundColor="@color/colorPrimary"
-                        app:layout_constraintTop_toBottomOf="@id/card_recommended">
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingStart="@dimen/extra_small_space"
-                            android:paddingEnd="@dimen/extra_small_space"
-                            android:paddingTop="@dimen/extra_small_space">
+                        app:layout_constraintTop_toBottomOf="@id/container_recommended">
 
                         <TextView
                                 android:layout_width="match_parent"
@@ -396,7 +379,11 @@
                         <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/dt_reviewList"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:setItemSpacing="@{@dimen/smallest_space}"
+                                app:firstItemSpacing="@{false}"
+                                app:setOrientation="@{RecyclerView.VERTICAL}">
 
                         </androidx.recyclerview.widget.RecyclerView>
 
@@ -413,9 +400,12 @@
 
                     </LinearLayout>
 
-                </androidx.cardview.widget.CardView>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <include
+                    android:id="@+id/dt_shimmer"
+                    layout="@layout/shimmer_content_main"
+                    app:loading="@{vm.loading}"/>
 
         </RelativeLayout>
 

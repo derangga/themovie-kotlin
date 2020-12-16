@@ -13,7 +13,9 @@
                 android:id="@+id/action_detailTvFragment_to_personFragment2"
                 app:destination="@id/personFragment2"
                 app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_fade_enter"
+                app:popExitAnim="@anim/fragment_fade_exit" />
         <argument
                 android:name="filmId"
                 app:argType="integer"
@@ -24,11 +26,6 @@
             android:name="com.themovie.ui.person.PersonFragment"
             android:label="fragment_person"
             tools:layout="@layout/fragment_person" >
-        <action
-                android:id="@+id/action_personFragment2_to_detailTvFragment"
-                app:destination="@id/detailTvFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit" />
         <argument
                 android:name="personId"
                 app:argType="integer"

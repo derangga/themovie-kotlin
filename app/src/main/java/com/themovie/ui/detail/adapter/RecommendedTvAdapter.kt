@@ -7,21 +7,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.data.network.ApiUrl
-import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.entities.ui.Tv
 import com.themovie.databinding.AdapterRecomendedBinding
 import com.themovie.helper.customview.PortraitView
 
 class RecommendedTvAdapter(
-    private val onItemClick: (TvResponse) -> Unit
-) : ListAdapter<TvResponse, RecommendedTvAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: (Tv) -> Unit
+) : ListAdapter<Tv, RecommendedTvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<TvResponse> = object: DiffUtil.ItemCallback<TvResponse>(){
-            override fun areItemsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Tv> = object: DiffUtil.ItemCallback<Tv>(){
+            override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TvResponse, newItem: TvResponse): Boolean {
+            override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
                 return oldItem.name == newItem.name && oldItem.backdropPath == newItem.backdropPath
             }
         }
@@ -41,12 +41,12 @@ class RecommendedTvAdapter(
         itemView: View,
         private val binding: AdapterRecomendedBinding
     ) : RecyclerView.ViewHolder(itemView){
-        fun bindItem(tv: TvResponse){
+        fun bindItem(tv: Tv){
             val imgUrl = "${ApiUrl.IMG_POSTER}${tv.posterPath.toString()}"
             binding.recItem.apply {
                 setImage(imgUrl)
-                setTitle(tv.name.orEmpty())
-                setRating(tv.voteAverage.orEmpty())
+                setTitle(tv.name)
+                setRating(tv.voteAverage)
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {
                         onItemClick.invoke(tv)

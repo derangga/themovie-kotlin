@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="trend"
-                type="com.aldebaran.domain.entities.local.TrendingEntity" />
+                type="com.aldebaran.domain.entities.ui.Movie" />
         <variable
                 name="vh"
                 type="com.themovie.ui.main.adapter.TrendingAdapter.ViewHolder" />
@@ -15,7 +15,6 @@
             android:id="@+id/v_card"
             android:layout_width="350dp"
             android:layout_height="180dp"
-            android:layout_margin="5dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="1dp"
             android:onClick="@{() -> vh.trendingClick(trend)}">

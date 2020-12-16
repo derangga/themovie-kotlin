@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="tv"
-                type="com.aldebaran.domain.entities.remote.TvResponse" />
+                type="com.aldebaran.domain.entities.ui.Tv" />
 
         <variable
                 name="vh"

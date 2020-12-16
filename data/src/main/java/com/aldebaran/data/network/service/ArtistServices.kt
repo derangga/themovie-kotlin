@@ -2,7 +2,7 @@ package com.aldebaran.data.network.service
 
 import com.aldebaran.data.network.ApiUrl
 import com.aldebaran.domain.entities.remote.person.PersonFilmResponse
-import com.aldebaran.domain.entities.remote.person.PersonImageResponse
+import com.aldebaran.domain.entities.remote.person.ProfilesResponse
 import com.aldebaran.domain.entities.remote.person.PersonResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -26,5 +26,5 @@ interface ArtistServices {
     suspend fun getPersonImages(
         @Path("person_id") personId: Int,
         @Query("api_key") api_key: String
-    ) : Response<PersonImageResponse>
+    ) : Response<ProfilesResponse>
 }

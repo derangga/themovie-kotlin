@@ -1,36 +1,48 @@
 package com.aldebaran.data.local.source
 
-import androidx.lifecycle.LiveData
 import com.aldebaran.data.local.dao.GenresDao
-import com.aldebaran.domain.entities.Genre
 import com.aldebaran.domain.entities.local.GenreEntity
 import com.aldebaran.domain.repository.local.GenreLocalSource
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class GenreLocalSourceImpl(
     private val genresDao: GenresDao
 ): GenreLocalSource {
-    override suspend fun insertGenre(genre: List<GenreEntity>) {
-        genresDao.insertAll(*genre.toTypedArray())
+    override suspend fun insertAll(data: List<GenreEntity>) {
+        withContext(IO) { genresDao.insertAll(*data.toTypedArray()) }
     }
 
-    override suspend fun insertGenre(genre: GenreEntity) {
-        genresDao.insert(genre)
+    override suspend fun insert(data: GenreEntity) {
+        withContext(IO) { genresDao.insert(data) }
     }
 
-    override suspend fun updateGenre(genre: GenreEntity) {
-        genresDao.update(genre)
+    override suspend fun update(data: GenreEntity) {
+        withContext(IO) { genresDao.update(data) }
     }
 
-    override fun getPartOfGenre(): LiveData<List<GenreEntity>> {
-        return genresDao.streamPartOfGenre()
+    override suspend fun deleteAll() {
+        withContext(IO) { genresDao.deleteAllGenre() }
     }
 
-    override fun getAllGenre(): LiveData< List<GenreEntity>> {
+    override suspend fun delete(data: GenreEntity) {
+        withContext(IO) { genresDao.delete(data) }
+    }
+
+    override suspend fun getAll(): List<GenreEntity> {
+        return withContext(IO) { genresDao.getAllGenre() }
+    }
+
+    override fun streamAll(): Flow<List<GenreEntity>> {
         return genresDao.streamAllGenre()
     }
 
-    override suspend fun genreRows(): Int {
-        return genresDao.countRows()
+    override suspend fun isNotEmpty(): Boolean {
+        return withContext(IO) { genresDao.countRows() > 0 }
     }
 
+    override suspend fun getPartOfGenre(): List<GenreEntity> {
+        return withContext(IO) { genresDao.getPartOfGenre() }
+    }
 }

@@ -7,22 +7,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldebaran.data.network.ApiUrl
-import com.aldebaran.domain.entities.local.UpcomingEntity
+import com.aldebaran.domain.entities.ui.Movie
 import com.themovie.databinding.AdapterPortraitUpcomingBinding
 import com.themovie.helper.convertDate
 import com.themovie.helper.customview.PortraitView
 
 class UpcomingAdapter (
-    private val onItemClick: (UpcomingEntity) -> Unit
-) : ListAdapter<UpcomingEntity, UpcomingAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: (Movie) -> Unit
+) : ListAdapter<Movie, UpcomingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<UpcomingEntity> = object: DiffUtil.ItemCallback<UpcomingEntity>(){
-            override fun areItemsTheSame(oldItem: UpcomingEntity, newItem: UpcomingEntity): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Movie> = object: DiffUtil.ItemCallback<Movie>(){
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: UpcomingEntity, newItem: UpcomingEntity): Boolean {
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
             }
         }
@@ -40,11 +40,11 @@ class UpcomingAdapter (
     }
 
     inner class ViewHolder(root: View, val binding: AdapterPortraitUpcomingBinding) : RecyclerView.ViewHolder(root){
-        fun bindItem(upcoming: UpcomingEntity){
+        fun bindItem(upcoming: Movie){
             val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
             binding.upcomingItem.apply {
                 setImage(posterImg)
-                setTitle(upcoming.title.orEmpty())
+                setTitle(upcoming.title)
                 setDateRelease(upcoming.releaseDate.convertDate())
                 setOnClickListener(object: PortraitView.OnClickListener{
                     override fun onClick() {

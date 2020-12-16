@@ -5,8 +5,8 @@ ext {
     androidBuildToolsVersion = "30.0.2"
     androidMinSdkVersion = 21
     androidTargetSdkVersion = 30
-    androidVersionCode = 3
-    androidVersionName = "1.0.2"
+    androidVersionCode = 4
+    androidVersionName = "1.0.3"
 
     // android lib
     androidxVersion = '1.1.0'
@@ -18,22 +18,22 @@ ext {
     archLifecycleVersion = '2.2.0'
 
     // dependencies injection
-    daggerVersion = '2.29.1'
-    daggerHiltVersion = '2.29-alpha'
+    daggerVersion = '2.30.1'
+    daggerHiltVersion = '2.30.1-alpha'
     hiltViewModelInjectorVersion = '1.0.0-alpha02'
 
     // android paging
-    pagingVersion = '3.0.0-alpha07'
+    pagingVersion = '3.0.0-alpha10'
 
     // image cache
     glideVersion = '4.11.0'
 
     // navigation component
-    navVersion = '2.3.0'
+    navVersion = '2.3.2'
 
     // network
     retrofitVersion = '2.9.0'
-    okHttpVersion = '4.8.0'
+    okHttpVersion = '4.9.0'
 
     // database
     roomVersion = '2.2.5'
@@ -49,10 +49,13 @@ ext {
     firebaseCrashlyticsVersion = '17.1.1'
 
     // coroutines
-    coroutinesVersion = '1.3.9'
+    coroutinesVersion = '1.4.2'
 
     // logging
     timberVersion = '4.7.1'
+
+    // multidex
+    multidex_version = "2.0.1"
 
     // test
     androidxTestVersion = '1.2.0'
@@ -151,12 +154,23 @@ ext {
             robolectric:            [group: 'org.robolectric', name: 'robolectric', version: robolectricVersion],
     ]
 
+    def multidex = [
+            multidex: [group: 'androidx.multidex', name: 'multidex', version: multidex_version]
+    ]
+
     coreDependencies = [
             [configuration: "implementation", dependency: loggingLibs.timber],
 
-            [configuration: "implementation", dependency: jetPackLibs.androidViewModel],
-            [configuration: "implementation", dependency: jetPackLibs.androidLiveData],
+            [configuration: "api", dependency: jetPackLibs.androidViewModel],
+            [configuration: "api", dependency: jetPackLibs.androidLiveData],
             [configuration: "kapt", dependency: jetPackLibs.archProcessor],
+
+            [configuration: "api", dependency: networkLibs.retrofit],
+            [configuration: "api", dependency: networkLibs.gsonConverter],
+            [configuration: "api", dependency: networkLibs.okHttp],
+            [configuration: "api", dependency: networkLibs.okHttpLogging],
+
+            [configuration: "api", dependency: coroutines.coroutines],
 
             [configuration: "implementation", dependency: androidLibs.meterialComponent],
     ]
@@ -168,7 +182,8 @@ ext {
             [configuration: "implementation", dependency: androidLibs.legacySupport],
             [configuration: "implementation", dependency: androidLibs.meterialComponent],
 
-            [configuration: "implementation", dependency: coroutines.coroutines],
+            [configuration: "implementation", dependency: multidex.multidex],
+
             [configuration: "testImplementation", dependency: coroutines.coroutinesTest],
             [configuration: "androidTestImplementation", dependency: coroutines.coroutinesTest],
 
@@ -179,26 +194,15 @@ ext {
             [configuration: "kapt", dependency: dependencyInjectionLibs.daggerHiltProcessor],
             [configuration: "kapt", dependency: dependencyInjectionLibs.daggerViewModelProcessor],
 
-            [configuration: "implementation", dependency: jetPackLibs.androidViewModel],
-            [configuration: "implementation", dependency: jetPackLibs.androidLiveData],
             [configuration: "kapt", dependency: jetPackLibs.archProcessor],
 
             [configuration: "implementation", dependency: jetPackLibs.navigationFragment],
             [configuration: "implementation", dependency: jetPackLibs.navigationUI],
 
-            [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
-            [configuration: "implementation", dependency: jetPackLibs.roomExtension],
             [configuration: "kapt", dependency: jetPackLibs.roomProcessor],
-
-            [configuration: "implementation", dependency: jetPackLibs.androidPaging],
 
             [configuration: "implementation", dependency: imageCacheLibs.glide],
             [configuration: "kapt", dependency: imageCacheLibs.glideProcessor],
-
-            [configuration: "implementation", dependency: networkLibs.retrofit],
-            [configuration: "implementation", dependency: networkLibs.gsonConverter],
-            [configuration: "implementation", dependency: networkLibs.okHttp],
-            [configuration: "implementation", dependency: networkLibs.okHttpLogging],
 
             [configuration: "implementation", dependency: crashlyticsLibs.analytics],
             [configuration: "implementation", dependency: crashlyticsLibs.crashlytics],
@@ -229,15 +233,6 @@ ext {
             [configuration: "androidTestImplementation", dependency: testLibs.mockitoAndroid],
     ]
     dataDependencies = [
-            [configuration: "implementation", dependency: networkLibs.retrofit],
-
-            [configuration: "implementation", dependency: networkLibs.okHttp],
-            [configuration: "implementation", dependency: networkLibs.okHttpLogging],
-            [configuration: "implementation", dependency: networkLibs.gsonConverter],
-
-            [configuration: "implementation", dependency: jetPackLibs.androidPaging],
-            [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
-            [configuration: "implementation", dependency: jetPackLibs.roomExtension],
 
             [configuration: "kapt", dependency: jetPackLibs.roomProcessor],
 
@@ -248,21 +243,17 @@ ext {
             [configuration: "kapt", dependency: dependencyInjectionLibs.daggerHiltProcessor],
             [configuration: "kapt", dependency: dependencyInjectionLibs.daggerViewModelProcessor],
 
-            [configuration: "implementation", dependency: jetPackLibs.androidLiveData],
             [configuration: "kapt", dependency: jetPackLibs.archProcessor],
 
             [configuration: "implementation", dependency: loggingLibs.timber],
     ]
 
     domainDependencies = [
-            [configuration: "api", dependency: coroutines.coroutines],
-            [configuration: "implementation", dependency: jetPackLibs.androidPaging],
-            [configuration: "implementation", dependency: jetPackLibs.roomRunTime],
-            [configuration: "implementation", dependency: jetPackLibs.roomExtension],
+            [configuration: "api", dependency: jetPackLibs.androidPaging],
 
+            [configuration: "api", dependency: jetPackLibs.roomRunTime],
+            [configuration: "api", dependency: jetPackLibs.roomExtension],
             [configuration: "kapt", dependency: jetPackLibs.roomProcessor],
-
-            [configuration: "implementation", dependency: networkLibs.gsonConverter],
 
             [configuration: "implementation", dependency: loggingLibs.timber],
     ]

@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="upcoming"
-                type="com.aldebaran.domain.entities.remote.MovieResponse" />
+                type="com.aldebaran.domain.entities.ui.Movie" />
 
         <variable
                 name="vh"

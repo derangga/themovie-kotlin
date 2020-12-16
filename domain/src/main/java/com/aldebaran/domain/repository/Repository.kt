@@ -1,37 +1,34 @@
 package com.aldebaran.domain.repository
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
-import com.aldebaran.domain.Result
-import com.aldebaran.domain.entities.local.*
-import com.aldebaran.domain.entities.remote.MovieResponse
-import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.network.Result
+import com.aldebaran.domain.entities.ui.*
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
     interface GenreRepos {
-        fun getGenreFromLocalOrRemote() : LiveData<Result<List<GenreEntity>>>
+        fun getGenreFromLocalOrRemote() : Flow<Result<List<Genre>>>
     }
 
     interface MovieRepos {
-        fun getDiscoverMovieFromLocalOrRemote(): LiveData<Result<List<MovieEntity>>>
-        fun getDiscoverMoviePaging(genre: String): Flow<PagingData<MovieResponse>>
-        fun searchMoovie(query: String): Flow<PagingData<MovieResponse>>
+        fun getDiscoverMovieFromLocalOrRemote(): Flow<Result<List<Movie>>>
+        fun getDiscoverMoviePaging(genre: String): Flow<PagingData<Movie>>
+        fun searchMoovie(query: String): Flow<PagingData<Movie>>
     }
 
     interface TrendingRepos {
-        fun getPopularMovieFromLocalOrRemote() : LiveData<Result<List<TrendingEntity>>>
+        fun getPopularMovieFromLocalOrRemote() : Flow<Result<List<Movie>>>
     }
 
     interface TvRepos {
-        fun getTvFromLocalOrRemote(): LiveData<Result<List<TvEntity>>>
-        fun getDiscoverTvPaging(): Flow<PagingData<TvResponse>>
-        fun searchTvShow(query: String): Flow<PagingData<TvResponse>>
+        fun getTvFromLocalOrRemote(): Flow<Result<List<Tv>>>
+        fun getDiscoverTvPaging(): Flow<PagingData<Tv>>
+        fun searchTvShow(query: String): Flow<PagingData<Tv>>
     }
 
     interface UpcomingRepos {
-        fun getUpcomingFromLocalOrRemote(): LiveData<Result<List<UpcomingEntity>>>
-        fun getUpcomingMoviePaging(): Flow<PagingData<MovieResponse>>
+        fun getUpcomingFromLocalOrRemote(): Flow<Result<List<Movie>>>
+        fun getUpcomingMoviePaging(): Flow<PagingData<Movie>>
     }
 }

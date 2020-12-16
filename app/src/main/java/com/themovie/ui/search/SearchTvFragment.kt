@@ -2,13 +2,12 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.aldebaran.core.BaseFragment
-import com.aldebaran.domain.entities.remote.TvResponse
+import com.aldebaran.domain.entities.ui.Tv
 import com.aldebaran.utils.changeActivity
-import com.aldebaran.utils.initLinearRecycler
 
 import com.themovie.R
 import com.themovie.databinding.FragmentSearchResultBinding
@@ -24,7 +23,7 @@ import kotlinx.coroutines.launch
 class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>() {
 
     private var query: String? = ""
-    private val viewModel by viewModels<SearchTvViewModel>()
+    private val viewModel by activityViewModels<SearchViewModel>()
     private val mAdapter by lazy { TvAdapter(::onTvShowItemClick) }
 
     override fun getLayout(): Int {
@@ -51,7 +50,6 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>() {
     }
 
     private fun setupRecyclerView(){
-        binding.recyclerView.initLinearRecycler(requireContext())
         binding.recyclerView.adapter = mAdapter.withLoadStateHeaderAndFooter(
             header = LoadingStateAdapter { mAdapter.retry() },
             footer = LoadingStateAdapter { mAdapter.retry() }
@@ -67,9 +65,9 @@ class SearchTvFragment : BaseFragment<FragmentSearchResultBinding>() {
         }
     }
 
-    private fun onTvShowItemClick(tv: TvResponse) {
+    private fun onTvShowItemClick(tv: Tv) {
         val bundle = Bundle().apply {
-            putInt("filmId", tv.id ?: 0)
+            putInt("filmId", tv.id)
             putString("type", Constant.TV)
         }
         changeActivity<DetailActivity>(bundle)

@@ -8,21 +8,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.aldebaran.domain.entities.local.TrendingEntity
+import com.aldebaran.domain.entities.ui.Movie
 import com.themovie.databinding.ItemHeaderMainBinding
 
 class TrendingAdapter (
-    private val onItemClick: (TrendingEntity) -> Unit,
+    private val onItemClick: (Movie) -> Unit,
     private val onItemTouch: (motionEvent: MotionEvent?) -> Unit
-) : ListAdapter<TrendingEntity, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
+) : ListAdapter<Movie, TrendingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object{
-        val DIFF_CALLBACK: DiffUtil.ItemCallback<TrendingEntity> = object: DiffUtil.ItemCallback<TrendingEntity>(){
-            override fun areItemsTheSame(oldItem: TrendingEntity, newItem: TrendingEntity): Boolean {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Movie> = object: DiffUtil.ItemCallback<Movie>(){
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TrendingEntity, newItem: TrendingEntity): Boolean {
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.title == newItem.title && oldItem.backdropPath == newItem.backdropPath
             }
         }
@@ -46,7 +46,7 @@ class TrendingAdapter (
     }
 
     inner class ViewHolder(root: View, val binding: ItemHeaderMainBinding) : RecyclerView.ViewHolder(root) {
-        fun trendingClick(trending: TrendingEntity){
+        fun trendingClick(trending: Movie){
             onItemClick.invoke(trending)
         }
     }
