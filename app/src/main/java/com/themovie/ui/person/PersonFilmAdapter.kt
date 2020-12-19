@@ -39,17 +39,10 @@ class PersonFilmAdapter(
 
     inner class ViewHolder(itemView: View, private val binding: AdapterRecomendedBinding) : RecyclerView.ViewHolder(itemView){
         fun bindItem(item: ArtistFilm){
-            val imgUrl = "${ApiUrl.IMG_POSTER}${item.posterPath}"
-            binding.recItem.apply {
-                setImage(imgUrl)
-                setTitle(item.title)
-                setRating(item.rating)
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {
-                        onItemClick.invoke(item)
-                    }
-                })
-            }
+            binding.recItem.image("${ApiUrl.IMG_POSTER}${item.posterPath}")
+                .title(item.title)
+                .rating(item.rating)
+                .setOnClickListener { onItemClick.invoke(item) }
         }
     }
 }

@@ -50,15 +50,13 @@ class UpcomingFragment : BaseFragment<FragmentUpcomingBinding>() {
     }
 
     private fun setupUIComponent() {
-        binding.header.apply {
-            setLogoVisibility(View.GONE)
-            setSearchVisibility(View.GONE)
-            setBackButtonVisibility(View.VISIBLE)
-            setTitleText(resources.getString(R.string.home_title_2))
-            setBackButtonOnClickListener {
+        binding.header.logoVisibility(false)
+            .searchIconVisibility(false)
+            .backButtonVisibility(true)
+            .titleText(resources.getString(R.string.home_title_2))
+            .backButtonOnClickListener {
                 activity?.onBackPressed()
             }
-        }
     }
 
     private fun recyclerViewSetup(){

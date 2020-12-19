@@ -39,17 +39,10 @@ class RecommendedAdapter (
 
     inner class ViewHolder(root: View, val binding: AdapterRecomendedBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(movies: Movie){
-            val imgUrl = "${ApiUrl.IMG_POSTER}${movies.posterPath.toString()}"
-            binding.recItem.apply {
-                setImage(imgUrl)
-                setTitle(movies.title)
-                setRating(movies.voteAverage)
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {
-                        onItemClick.invoke(movies)
-                    }
-                })
-            }
+            binding.recItem.image("${ApiUrl.IMG_POSTER}${movies.posterPath}")
+                .title(movies.title)
+                .rating(movies.voteAverage)
+                .setOnClickListener { onItemClick.invoke(movies) }
         }
     }
 }

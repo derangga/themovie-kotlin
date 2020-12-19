@@ -4,6 +4,7 @@ package com.themovie.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 
@@ -29,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
-    private val viewModel by viewModels<DetailMovieViewModel>()
+    private val viewModel by activityViewModels<DetailMovieViewModel>()
     private val creditsAdapter by lazy { CreditsAdapter(::onClickCreditItem) }
     private val recommendedAdapter by lazy { RecommendedAdapter(::onClickRecommendationItem) }
     private val reviewsAdapter by lazy { ReviewsAdapter(::onClickReviewItem) }
@@ -52,8 +53,10 @@ class DetailMovieFragment : BaseFragment<FragmentDetailMovieBinding>() {
 
     override fun onMain(savedInstanceState: Bundle?) {
         initRecyclerView()
+        viewModel.loading.value?.takeIf { it }?.run {
+            viewModel.getDetailMovieRequest(filmId)
+        }
         subscribeUI()
-        viewModel.getDetailMovieRequest(filmId)
     }
 
     private fun subscribeUI() {

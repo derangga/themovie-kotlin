@@ -7,19 +7,17 @@ import com.aldebaran.data.network.ApiUrl
 
 @BindingAdapter("loadImage")
 fun loadImage(view: ImageView, imageUrl: String?){
-    cacheImage(view.context, imageUrl.toString(), view)
+    view.cacheImage("$imageUrl")
 }
 
 @BindingAdapter("backdrop_image")
 fun setBackdropImage(view: ImageView, path: String?){
-    val url = "${ApiUrl.IMG_BACK}${path.orEmpty()}"
-    cacheImage(view.context, url, view)
+    view.cacheImage("${ApiUrl.IMG_BACK}$path")
 }
 
 @BindingAdapter("poster_image")
 fun setPosterImage(view: ImageView, path: String?){
-    val url = "${ApiUrl.IMG_POSTER}${path.orEmpty()}"
-    cacheImage(view.context, url, view)
+    view.cacheImage("${ApiUrl.IMG_POSTER}$path")
 }
 
 @BindingAdapter("date_release")
@@ -30,7 +28,7 @@ fun setDateRelease(view: TextView, date: String?){
 @BindingAdapter("thumbnail")
 fun setThumbnail(view: ImageView, key: String?){
     val url = ApiUrl.THUMBNAIL.replace("key", key.orEmpty())
-    cacheImage(view.context, url, view)
+    view.cacheImage(url)
 }
 
 @BindingAdapter(value = ["birthDate", "birthPlace"], requireAll = true)

@@ -3,7 +3,6 @@ package com.themovie.ui.search
 
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.aldebaran.core.BaseFragment
 
 import com.themovie.R
@@ -16,7 +15,7 @@ import com.themovie.ui.search.adapter.SuggestTvAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.TvSearchFragmentListener {
+class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(){
 
     private val viewModel by activityViewModels<SuggestViewModel>()
     private val mAdapter by lazy { SuggestTvAdapter(::onTvShowItemClick) }
@@ -30,7 +29,6 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        SuggestActivity.setTextListener(this)
         setupRecyclerView()
         observeSuggestData()
     }
@@ -44,10 +42,9 @@ class SuggestTvFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivit
         viewModel.tvSearch.observe(viewLifecycleOwner, {
             mAdapter.submitList(it)
         })
-    }
-
-    override fun textChange(text: String) {
-        viewModel.fetchSuggestTv(text)
+        viewModel.searchText.observe(viewLifecycleOwner, {
+            viewModel.fetchSuggestTv(it)
+        })
     }
 
     private fun onTvShowItemClick(tv: Tv) {

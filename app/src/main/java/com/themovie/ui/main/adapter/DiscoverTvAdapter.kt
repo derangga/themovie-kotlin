@@ -40,18 +40,11 @@ class DiscoverTvAdapter (
 
 
     inner class ViewHolder(root: View, val binding: AdapterPortraitTvBinding) : RecyclerView.ViewHolder(root){
-        fun bindItem(tvLocal: Tv){
-            val imgPoster = "${ApiUrl.IMG_POSTER}${tvLocal.posterPath}"
-            binding.tvItem.apply {
-                setTitle(tvLocal.name)
-                setImage(imgPoster)
-                setRating(tvLocal.voteAverage)
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {
-                        onItemClick.invoke(tvLocal)
-                    }
-                })
-            }
+        fun bindItem(tv: Tv){
+            binding.tvItem.image("${ApiUrl.IMG_POSTER}${tv.posterPath}")
+                .title(tv.name)
+                .rating(tv.voteAverage)
+                .setOnClickListener { onItemClick.invoke(tv) }
         }
     }
 }

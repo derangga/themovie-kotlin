@@ -4,6 +4,7 @@ package com.themovie.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.aldebaran.core.BaseFragment
@@ -26,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
-    private val viewModel by viewModels<DetailTvViewModel>()
+    private val viewModel by activityViewModels<DetailTvViewModel>()
     private val seasonAdapter by lazy { SeasonAdapter() }
     private val creditsAdapter by lazy { CreditsAdapter(::onClickCreditItem) }
     private val recommendedTvAdapter by lazy { RecommendedTvAdapter(::onClickRecommendationItem) }
@@ -45,13 +46,14 @@ class DetailTvFragment : BaseFragment<FragmentDetailTvBinding>() {
 
         binding.vm = viewModel
         binding.lifecycleOwner = this
-
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
         setupRecycler()
+        viewModel.loading.value?.takeIf { it }?.run {
+            viewModel.getDetailTvRequest(filmId)
+        }
         subscribeUI()
-        viewModel.getDetailTvRequest(filmId)
     }
 
     private fun setupRecycler(){

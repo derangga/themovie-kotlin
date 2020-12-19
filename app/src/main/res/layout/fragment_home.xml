@@ -29,8 +29,7 @@
 
             <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
                 <include
                         android:id="@+id/shimmer_home"
@@ -81,6 +80,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/medium_space"
                             android:paddingTop="@dimen/medium_space"
                             android:paddingBottom="@dimen/medium_space"
                             android:layout_marginBottom="@dimen/medium_space"
@@ -228,7 +228,6 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/medium_space"
                             android:paddingTop="@dimen/medium_space"
                             android:paddingBottom="@dimen/medium_space"
                             android:background="@color/colorPrimary">

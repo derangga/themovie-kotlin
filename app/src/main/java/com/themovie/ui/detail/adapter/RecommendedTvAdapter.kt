@@ -42,17 +42,10 @@ class RecommendedTvAdapter(
         private val binding: AdapterRecomendedBinding
     ) : RecyclerView.ViewHolder(itemView){
         fun bindItem(tv: Tv){
-            val imgUrl = "${ApiUrl.IMG_POSTER}${tv.posterPath.toString()}"
-            binding.recItem.apply {
-                setImage(imgUrl)
-                setTitle(tv.name)
-                setRating(tv.voteAverage)
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {
-                        onItemClick.invoke(tv)
-                    }
-                })
-            }
+            binding.recItem.image("${ApiUrl.IMG_POSTER}${tv.posterPath}")
+                .title(tv.name)
+                .rating(tv.voteAverage)
+                .setOnClickListener { onItemClick.invoke(tv) }
         }
     }
 }

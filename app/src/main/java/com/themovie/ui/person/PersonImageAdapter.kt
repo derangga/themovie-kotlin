@@ -9,7 +9,6 @@ import com.aldebaran.data.network.ApiUrl
 import com.aldebaran.domain.entities.ui.ArtistPict
 import com.themovie.databinding.AdapterProfilePictBinding
 import com.themovie.helper.cacheImage
-import kotlinx.android.synthetic.main.adapter_profile_pict.view.*
 
 class PersonImageAdapter: ListAdapter<ArtistPict, PersonImageAdapter.ViewHolder>(comparator) {
 
@@ -36,7 +35,7 @@ class PersonImageAdapter: ListAdapter<ArtistPict, PersonImageAdapter.ViewHolder>
         val imageUrl = getItem(position)?.let { pict ->
             "${ApiUrl.IMG_BACK}${pict.filePath}"
         }.orEmpty()
-        cacheImage(holder.binding.photo.context, imageUrl, holder.itemView.photo)
+        holder.binding.photo.cacheImage(imageUrl)
     }
 
     class ViewHolder(val binding: AdapterProfilePictBinding) : RecyclerView.ViewHolder(binding.root)

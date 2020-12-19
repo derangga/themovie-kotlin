@@ -20,7 +20,7 @@ class GenreRepository(
             remoteSource = { remoteSource.getGenreMovie() },
             saveData = { body ->
                 if (localSource.isNotEmpty()) {
-                    body.forEachIndexed { index, genre -> localSource.update(genre.toGenreEntity(index)) }
+                    body.forEachIndexed { index, genre -> localSource.update(genre.toGenreEntity(index + 1)) }
                 } else {
                     val entity = body.map { it.toGenreEntity() }
                     localSource.insertAll(entity)

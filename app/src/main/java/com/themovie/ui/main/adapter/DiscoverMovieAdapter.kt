@@ -40,17 +40,10 @@ class DiscoverMovieAdapter (
 
     inner class ViewHolder(root: View, val binding: AdapterPortraitMovieBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(movies: Movie){
-            val imgPoster = "${ApiUrl.IMG_POSTER}${movies.posterPath}"
-            binding.movieItem.apply {
-                setImage(imgPoster)
-                setTitle(movies.title)
-                setRating(movies.voteAverage)
-                setOnClickListener(object : PortraitView.OnClickListener{
-                    override fun onClick() {
-                        onItemClick.invoke(movies)
-                    }
-                })
-            }
+            binding.movieItem.image("${ApiUrl.IMG_POSTER}${movies.posterPath}")
+                .title(movies.title)
+                .rating(movies.voteAverage)
+                .setOnClickListener { onItemClick.invoke(movies) }
         }
     }
 }

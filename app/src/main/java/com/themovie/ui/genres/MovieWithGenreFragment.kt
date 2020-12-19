@@ -52,15 +52,13 @@ class MovieWithGenreFragment : BaseFragment<FragmentMoviesBinding>() {
     }
 
     private fun setupUIComponent() {
-        binding.header.apply {
-            setLogoVisibility(View.GONE)
-            setBackButtonVisibility(View.VISIBLE)
-            setSearchVisibility(View.GONE)
-            setTitleText("Genres: $title")
-            setBackButtonOnClickListener {
+        binding.header.logoVisibility(false)
+            .backButtonVisibility(true)
+            .searchIconVisibility(false)
+            .titleText("Genres: $title")
+            .backButtonOnClickListener {
                 activity?.onBackPressed()
             }
-        }
     }
 
     private fun observeDiscoverMovie() {

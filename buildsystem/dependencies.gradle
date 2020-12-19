@@ -5,8 +5,8 @@ ext {
     androidBuildToolsVersion = "30.0.2"
     androidMinSdkVersion = 21
     androidTargetSdkVersion = 30
-    androidVersionCode = 4
-    androidVersionName = "1.0.3"
+    androidVersionCode = 5
+    androidVersionName = "1.0.4"
 
     // android lib
     androidxVersion = '1.1.0'

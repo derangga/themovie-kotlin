@@ -2,7 +2,6 @@ package com.themovie.ui.main
 
 import android.os.Bundle
 import android.view.MotionEvent
-import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -54,10 +53,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun onMain(savedInstanceState: Bundle?) {
 
-        binding.header.setSearchVisibility(View.GONE)
+        binding.header.searchIconVisibility(false)
         recyclerViewSetup()
         onClick()
-        subscribeUI()
+        viewModel.loading.value?.takeIf { it }?.run {
+            subscribeUI()
+        }
     }
 
     override fun onResume() {
@@ -204,7 +205,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun onGenreItemClick(genre: Genre) {
         val action = HomeFragmentDirections
             .actionHomeFragmentToMovieWithGenreFragment(genre.id, genre.name)
-        view?.navigateFragment { Navigation.findNavController(it).navigate(action) }
+        view.navigateFragment { Navigation.findNavController(it).navigate(action) }
     }
 
     private fun onDiscoverTvItemClick(tv: Tv) {

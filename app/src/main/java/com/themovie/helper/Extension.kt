@@ -24,12 +24,12 @@ fun String?.convertDate(): String {
     }
 }
 
-fun <T:ImageView> cacheImage(context: Context, url: String, imageView: T){
+fun ImageView.cacheImage(url: String){
     Glide.with(context)
         .load(url)
         .placeholder(R.drawable.no_image)
         .error(R.drawable.no_image)
-        .into(imageView)
+        .into(this)
 }
 
 fun List<Genre>?.concatListGenres(): String {

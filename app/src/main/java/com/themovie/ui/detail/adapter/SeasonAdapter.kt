@@ -39,11 +39,8 @@ class SeasonAdapter : ListAdapter<SeasonTv, SeasonAdapter.ViewHolder>(DIFF_CALLB
         private val binding: AdapterSeasonBinding
     ) : RecyclerView.ViewHolder(root){
         fun bindItem(seasonResponse: SeasonTv){
-            val imgUrl = "${ApiUrl.IMG_POSTER}${seasonResponse.posterPath.toString()}"
-            binding.seasonItem.apply {
-                setImage(imgUrl)
-                setTitle(seasonResponse.name)
-            }
+            binding.seasonItem.image("${ApiUrl.IMG_POSTER}${seasonResponse.posterPath}")
+                .title(seasonResponse.name)
         }
     }
 }

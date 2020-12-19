@@ -28,7 +28,7 @@ class MovieRepository(
             remoteSource = { remoteSource.getDiscoverMovie("", calendar.get(Calendar.YEAR), 1) },
             saveData = { body ->
                 if (localSource.isNotEmpty()) {
-                    body.forEachIndexed { index, movie -> localSource.update(movie.toMovieEntity(index)) }
+                    body.forEachIndexed { index, movie -> localSource.update(movie.toMovieEntity(index + 1)) }
                 } else {
                     val entity = body.map { it.toMovieEntity() }
                     localSource.insertAll(entity)
