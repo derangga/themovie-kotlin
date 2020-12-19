@@ -34,15 +34,13 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
     override fun onMain(savedInstanceState: Bundle?) {
         setupRecycler()
         getGenreList()
-        binding.header.apply {
-            setLogoVisibility(View.GONE)
-            setTitleText(resources.getString(R.string.home_title_3))
-            setBackButtonVisibility(View.VISIBLE)
-            setSearchVisibility(View.GONE)
-            setBackButtonOnClickListener {
+        binding.header.logoVisibility(false)
+            .backButtonVisibility(true)
+            .searchIconVisibility(false)
+            .titleText(resources.getString(R.string.home_title_3))
+            .backButtonOnClickListener {
                 activity?.onBackPressed()
             }
-        }
     }
 
     private fun setupRecycler(){
@@ -56,6 +54,6 @@ class GenresFragment : BaseFragment<FragmentGenresBinding>() {
     private fun onGenreItemClick(genre: Genre) {
         val action = GenresFragmentDirections
             .actionGenresFragmentToMovieWithGenreFragment(genre.id, genre.name, "genreList")
-        view?.navigateFragment { Navigation.findNavController(it).navigate(action) }
+        view.navigateFragment { Navigation.findNavController(it).navigate(action) }
     }
 }

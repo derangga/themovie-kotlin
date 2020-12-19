@@ -22,6 +22,9 @@ class SuggestViewModel @ViewModelInject constructor(
     private val _tvSearch: MutableLiveData<List<Tv>> by lazy { MutableLiveData<List<Tv>>() }
     val tvSearch: LiveData<List<Tv>> get() = _tvSearch
 
+    private val _searchText by lazy { MutableLiveData<String>() }
+    val searchText: LiveData<String> get() = _searchText
+
     fun fetchSuggestTv(query: String) {
         viewModelScope.launch {
             when (val result = tvRemoteSource.searchTv(query, 1)) {
@@ -39,5 +42,9 @@ class SuggestViewModel @ViewModelInject constructor(
                 is Error -> Unit
             }
         }
+    }
+
+    fun searchMovieAndTv(query: String) {
+        _searchText.value = query
     }
 }

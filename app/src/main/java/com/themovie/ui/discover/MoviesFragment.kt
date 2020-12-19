@@ -42,16 +42,11 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
     }
 
     private fun setupUIComponent() {
-        binding.header.apply {
-            setLogoVisibility(View.GONE)
-            setBackButtonVisibility(View.VISIBLE)
-            setTitleText(resources.getString(R.string.home_title_5))
-            setBackButtonOnClickListener {
-                activity?.onBackPressed()
-            }
-
-            setSearchButtonOnClickListener { changeActivity<SuggestActivity>() }
-        }
+        binding.header.logoVisibility(false)
+            .backButtonVisibility(true)
+            .titleText(resources.getString(R.string.home_title_5))
+            .backButtonOnClickListener { activity?.onBackPressed() }
+            .searchButtonOnClickListener { changeActivity<SuggestActivity>() }
     }
 
     private fun observeDiscoverMovie() {

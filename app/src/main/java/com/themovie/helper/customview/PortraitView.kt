@@ -6,17 +6,24 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.themovie.R
 import com.themovie.helper.cacheImage
-import kotlinx.android.synthetic.main.adapter_portrait.view.*
 
 class PortraitView @JvmOverloads constructor (context: Context,
                    attrs: AttributeSet? = null,
                    defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr), CompoundView {
 
-    private var listener: OnClickListener? = null
+    private val posterContainer by lazy { findViewById<CardView>(R.id.poster_container) }
+    private val posterTitle by lazy { findViewById<TextView>(R.id.poster_title) }
+    private val posterSubtitle by lazy { findViewById<TextView>(R.id.poster_subtitle) }
+    private val posterRate by lazy { findViewById<TextView>(R.id.poster_rate) }
+    private val posterDate by lazy { findViewById<TextView>(R.id.poster_date) }
+    private val posterImage by lazy { findViewById<ImageView>(R.id.poster_img) }
 
     init {
         inflateView()
@@ -31,66 +38,58 @@ class PortraitView @JvmOverloads constructor (context: Context,
         //val params = poster_item.layoutParams
         when(attrs?.getInt(R.styleable.PortraitView_type, 0)){
             0 -> {
-                val params = poster_item.layoutParams
+                val params = posterContainer.layoutParams
                 params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
-                poster_subtitle.visibility = View.GONE
+                posterSubtitle.visibility = View.GONE
             }
             1 -> {
-                val params = poster_item.layoutParams
+                val params = posterContainer.layoutParams
                 params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
-                poster_rate_l.visibility = View.GONE
+                posterRate.visibility = View.GONE
             }
             2 -> {
-                val params = poster_item.layoutParams
+                val params = posterContainer.layoutParams
                 params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240.toFloat(), resources.displayMetrics).toInt()
-                poster_rate_l.visibility = View.GONE
-                poster_subtitle.visibility = View.GONE
+                posterRate.visibility = View.GONE
+                posterSubtitle.visibility = View.GONE
             }
             3 -> {
-                val params = poster_item.layoutParams
+                val params = posterContainer.layoutParams
                 params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
-                poster_subtitle.visibility = View.GONE
-                poster_rate_l.visibility = View.GONE
-                poster_date.visibility = View.VISIBLE
+                posterSubtitle.visibility = View.GONE
+                posterRate.visibility = View.GONE
+                posterDate.visibility = View.VISIBLE
             }
             else -> {
-                val params = poster_item.layoutParams
+                val params = posterContainer.layoutParams
                 params.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 272.toFloat(), resources.displayMetrics).toInt()
-                poster_subtitle.visibility = View.GONE
+                posterSubtitle.visibility = View.GONE
             }
         }
-
-        poster_item.setOnClickListener {
-            listener?.onClick()
-        }
     }
 
-    fun setImage(url: String){
-        cacheImage(context, url, poster_img)
+    fun image(url: String) : PortraitView {
+        posterImage.cacheImage(url)
+        return this
     }
 
-    fun setTitle(title: String){
-        poster_title.text = title
+    fun title(title: String) : PortraitView {
+        posterTitle.text = title
+        return this
     }
 
-    fun setSubtitle(subtitle: String){
-        poster_subtitle.text= subtitle
+    fun subtitle(subtitle: String) : PortraitView {
+        posterSubtitle.text = subtitle
+        return this
     }
 
-    fun setRating(rating: String){
-        poster_rate.text = rating
+    fun rating(rating: String) : PortraitView {
+        posterRate.text = rating
+        return this
     }
 
-    fun setDateRelease(date: String){
-        poster_date.text = date
+    fun dateRelease(date: String) : PortraitView {
+        posterDate.text = date
+        return this
     }
-
-    fun setOnClickListener(onClickListener: OnClickListener){
-        this.listener = onClickListener
-    }
-
-    interface OnClickListener {
-        fun onClick()
-    }
-
 }

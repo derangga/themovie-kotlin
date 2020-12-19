@@ -41,17 +41,10 @@ class UpcomingAdapter (
 
     inner class ViewHolder(root: View, val binding: AdapterPortraitUpcomingBinding) : RecyclerView.ViewHolder(root){
         fun bindItem(upcoming: Movie){
-            val posterImg = "${ApiUrl.IMG_POSTER}${upcoming.posterPath}"
-            binding.upcomingItem.apply {
-                setImage(posterImg)
-                setTitle(upcoming.title)
-                setDateRelease(upcoming.releaseDate.convertDate())
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {
-                        onItemClick.invoke(upcoming)
-                    }
-                })
-            }
+            binding.upcomingItem.image("${ApiUrl.IMG_POSTER}${upcoming.posterPath}")
+                .title(upcoming.title)
+                .dateRelease(upcoming.releaseDate.convertDate())
+                .setOnClickListener { onItemClick.invoke(upcoming) }
         }
     }
 }

@@ -26,7 +26,7 @@ class UpcomingRepository(
             remoteSource = { remoteSource.getUpcomingMovie(1) },
             saveData = { body ->
                 if (localSource.isNotEmpty()) {
-                    body.forEachIndexed { index, movie -> localSource.update(movie.toUpcomingEntity(index)) }
+                    body.forEachIndexed { index, movie -> localSource.update(movie.toUpcomingEntity(index + 1)) }
                 } else {
                     val entity = body.map { it.toUpcomingEntity() }
                     localSource.insertAll(entity)

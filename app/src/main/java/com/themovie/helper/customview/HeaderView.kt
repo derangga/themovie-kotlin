@@ -4,9 +4,12 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import com.aldebaran.utils.visibleIf
 import com.google.android.material.appbar.AppBarLayout
 import com.themovie.R
-import kotlinx.android.synthetic.main.header.view.*
 
 class HeaderView(
     context: Context,
@@ -14,6 +17,11 @@ class HeaderView(
 ): AppBarLayout(context, attrs), CompoundView {
 
     constructor(context: Context): this(context, null)
+
+    private val backButton by lazy { findViewById<ImageButton>(R.id.h_back) }
+    private val tmdbLogo by lazy { findViewById<ImageView>(R.id.h_logo) }
+    private val searchButton by lazy { findViewById<ImageButton>(R.id.h_search) }
+    private val titleText by lazy { findViewById<TextView>(R.id.h_title) }
 
     init {
         inflateView()
@@ -27,27 +35,33 @@ class HeaderView(
 
     }
 
-    fun setBackButtonVisibility(status: Int){
-        h_back.visibility = status
+    fun backButtonVisibility(isVisible: Boolean): HeaderView {
+        backButton.visibleIf { isVisible }
+        return this
     }
 
-    fun setLogoVisibility(status: Int){
-        h_logo.visibility = status
+    fun logoVisibility(isVisible: Boolean): HeaderView {
+        tmdbLogo.visibleIf { isVisible }
+        return this
     }
 
-    fun setSearchVisibility(status: Int){
-        h_search.visibility = status
+    fun searchIconVisibility(isVisible: Boolean): HeaderView {
+        searchButton.visibleIf { isVisible }
+        return this
     }
 
-    fun setTitleText(title: String){
-        h_title.text = title
+    fun titleText(title: String): HeaderView {
+        titleText.text = title
+        return this
     }
 
-    fun setBackButtonOnClickListener(listener: OnClickListener){
-        h_back.setOnClickListener(listener)
+    fun backButtonOnClickListener(listener: OnClickListener) : HeaderView{
+        backButton.setOnClickListener(listener)
+        return this
     }
 
-    fun setSearchButtonOnClickListener(listener: OnClickListener){
-        h_search.setOnClickListener(listener)
+    fun searchButtonOnClickListener(listener: OnClickListener) : HeaderView {
+        searchButton.setOnClickListener(listener)
+        return this
     }
 }

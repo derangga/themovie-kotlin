@@ -21,7 +21,7 @@ class TrendingRepository (
             remoteSource = { remoteSource.getPopularMovie(1) },
             saveData = { body ->
                 if (localSource.isNotEmpty()) {
-                    body.forEachIndexed { index, movie -> localSource.update(movie.toTrendingEntity(index)) }
+                    body.forEachIndexed { index, movie -> localSource.update(movie.toTrendingEntity(index + 1)) }
                 } else {
                     val entity = body.map { it.toTrendingEntity() }
                     localSource.insertAll(entity)

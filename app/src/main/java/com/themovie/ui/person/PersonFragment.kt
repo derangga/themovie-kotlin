@@ -1,7 +1,6 @@
 package com.themovie.ui.person
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.viewModels
 import com.aldebaran.core.BaseFragment
 import com.aldebaran.domain.entities.ui.ArtistFilm
@@ -38,7 +37,7 @@ class PersonFragment : BaseFragment<FragmentPersonBinding>() {
     override fun onMain(savedInstanceState: Bundle?) {
         setupRecycler()
         subscribeUI()
-        binding.header.setSearchVisibility(View.GONE)
+        binding.header.searchIconVisibility(false)
         viewModel.getDetailPersonRequest(personId)
     }
 

@@ -42,15 +42,11 @@ class TvFragment : BaseFragment<FragmentTvBinding>() {
     }
 
     private fun setupUIComponent() {
-        binding.header.apply {
-            setLogoVisibility(View.GONE)
-            setTitleText(resources.getString(R.string.home_title_4))
-            setBackButtonVisibility(View.VISIBLE)
-            setBackButtonOnClickListener {
-                activity?.onBackPressed()
-            }
-            setSearchButtonOnClickListener { changeActivity<SuggestActivity>() }
-        }
+        binding.header.logoVisibility(false)
+            .backButtonVisibility(true)
+            .titleText(resources.getString(R.string.home_title_4))
+            .backButtonOnClickListener { activity?.onBackPressed() }
+            .searchButtonOnClickListener { changeActivity<SuggestActivity>() }
     }
 
     private fun observeDiscoverTv() {

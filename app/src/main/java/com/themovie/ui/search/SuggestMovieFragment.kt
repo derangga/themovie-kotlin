@@ -15,7 +15,7 @@ import com.themovie.ui.search.adapter.SuggestMoviesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActivity.MoviesSearchFragmentListener {
+class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>() {
 
     private val viewModel by activityViewModels<SuggestViewModel>()
     private val mAdapter by lazy { SuggestMoviesAdapter(::onMovieItemClick) }
@@ -29,7 +29,6 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
     }
 
     override fun onMain(savedInstanceState: Bundle?) {
-        SuggestActivity.setTextListener(this)
         setupRecyclerView()
         observeSuggestData()
     }
@@ -43,10 +42,10 @@ class SuggestMovieFragment : BaseFragment<FragmentSuggestBinding>(), SuggestActi
         viewModel.movieSearch.observe(viewLifecycleOwner, {
             mAdapter.submitList(it)
         })
-    }
 
-    override fun textChange(text: String) {
-        viewModel.fetchSuggestMovie(text)
+        viewModel.searchText.observe(viewLifecycleOwner, {
+            viewModel.fetchSuggestMovie(it)
+        })
     }
 
     private fun onMovieItemClick(movie: Movie) {

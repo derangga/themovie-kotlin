@@ -26,7 +26,7 @@ class TvRepository(
             remoteSource = { remoteSource.getDiscoverTv(1) },
             saveData = { body ->
                 if (localSource.isNotEmpty()) {
-                    body.forEachIndexed { index, tv -> localSource.update(tv.toTvEntity(index)) }
+                    body.forEachIndexed { index, tv -> localSource.update(tv.toTvEntity(index + 1)) }
                 } else {
                     val entity = body.map { it.toTvEntity() }
                     localSource.insertAll(entity)

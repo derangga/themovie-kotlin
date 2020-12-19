@@ -3,12 +3,13 @@ package com.themovie.ui.search
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.aldebaran.core.BaseActivity
+import com.aldebaran.utils.TextChangeWatcher
 import com.aldebaran.utils.changeActivity
 import com.aldebaran.utils.gone
 import com.aldebaran.utils.visible
@@ -23,22 +24,22 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
 
     private lateinit var imm: InputMethodManager
 
+    private val viewModel by viewModels<SuggestViewModel>()
+
     override fun getLayout(): Int {
         return R.layout.activity_search
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        initTab()
-        binding.hSearch.requestFocus()
-
-        binding.hBack.setOnClickListener { onBackPressed() }
-
-        searchSoftKeyboardAction()
-        textStream()
+    private val searchTextWatcher by lazy {
+        TextChangeWatcher(afterTextChanged =  this::afterTextChanged)
     }
 
-    private fun initTab(){
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        setupView()
+    }
+
+    private fun setupView(){
         binding.apply {
             tabLayout.apply {
                 addTab(this.newTab().setText("Movies"))
@@ -56,7 +57,13 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
             tabLayout.setupWithViewPager(viewPager)
             pagerAdapter.notifyDataSetChanged()
         }
+        binding.hSearch.addTextChangedListener(searchTextWatcher)
 
+        binding.hSearch.requestFocus()
+
+        binding.hBack.setOnClickListener { onBackPressed() }
+
+        searchSoftKeyboardAction()
     }
 
     private fun showSoftKeyboard(view: View?){
@@ -67,45 +74,30 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
-    private fun textStream(){
-        binding.hSearch.addTextChangedListener(object: TextWatcher {
-            private var searchFor = ""
+    private fun afterTextChanged(text: Editable?) {
+        val searchText = text.toString().trim()
 
-            override fun afterTextChanged(s: Editable?) {
-
+        binding.apply {
+            if(binding.hSearch.text.toString().isEmpty()){
+                tabLayout.gone()
+                viewPager.gone()
+            } else{
+                tabLayout.visible()
+                viewPager.visible()
             }
+        }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        if(searchText == searchTextWatcher.searchFor) return
 
-            }
+        searchTextWatcher.searchFor = searchText
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val searchText = s.toString().trim()
+        lifecycleScope.launchWhenStarted {
+            delay(500)
+            if(searchText != searchTextWatcher.searchFor)
+                return@launchWhenStarted
 
-                binding.apply {
-                    if(binding.hSearch.text.toString().isEmpty()){
-                        tabLayout.gone()
-                        viewPager.gone()
-                    } else{
-                        tabLayout.visible()
-                        viewPager.visible()
-                    }
-                }
-
-                if(searchText == searchFor) return
-
-                searchFor = searchText
-
-                lifecycleScope.launchWhenStarted {
-                    delay(500)
-                    if(searchText != searchFor)
-                        return@launchWhenStarted
-
-                    movieListener?.textChange(s.toString())
-                    tvListener?.textChange(s.toString())
-                }
-            }
-        })
+            viewModel.searchMovieAndTv(searchText)
+        }
     }
 
     private fun searchSoftKeyboardAction(){
@@ -117,24 +109,5 @@ class SuggestActivity : BaseActivity<ActivitySearchBinding>() {
             } else showToastMessage(resources.getString(R.string.suggest_search_1))
             true
         }
-    }
-
-    companion object{
-        private var movieListener: MoviesSearchFragmentListener? = null
-        private var tvListener: TvSearchFragmentListener? = null
-        fun setTextListener(listener: MoviesSearchFragmentListener?){
-            movieListener = listener
-        }
-        fun setTextListener(listener: TvSearchFragmentListener?){
-            tvListener = listener
-        }
-    }
-
-    interface MoviesSearchFragmentListener {
-        fun textChange(text: String)
-    }
-
-    interface TvSearchFragmentListener {
-        fun textChange(text: String)
     }
 }

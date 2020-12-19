@@ -38,18 +38,11 @@ class CreditsAdapter (
     }
 
     inner class ViewHolder(root: View, val binding: AdapterCreditsBinding) : RecyclerView.ViewHolder(root){
-        fun bindItem(Credit: Credit){
-            val imgUrl = "${ApiUrl.IMG_POSTER}${Credit.profilePath.toString()}"
-            binding.castPortrait.apply {
-                setTitle(Credit.name)
-                setSubtitle(Credit.character)
-                setImage(imgUrl)
-                setOnClickListener(object: PortraitView.OnClickListener{
-                    override fun onClick() {
-                        onItemClick.invoke(Credit)
-                    }
-                })
-            }
+        fun bindItem(credit: Credit){
+            binding.castPortrait.image("${ApiUrl.IMG_POSTER}${credit.profilePath.toString()}")
+                .title(credit.name)
+                .subtitle(credit.character)
+                .setOnClickListener { onItemClick.invoke(credit) }
         }
     }
 }

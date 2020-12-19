@@ -15,10 +15,14 @@ fun View.invisible(){
     this.visibility = View.INVISIBLE
 }
 
-fun View?.navigateFragment(action: (View) -> Unit) {
+inline fun View?.navigateFragment(action: (View) -> Unit) {
     this?.run { action(this) }
 }
 
 fun View.getDimensionRes(@DimenRes dimens: Int): Int {
     return resources.getDimension(dimens).toInt()
+}
+
+inline fun View.visibleIf(invisible: Boolean = false, block: () -> Boolean) {
+    this.visibility = if (block()) View.VISIBLE else (if (invisible) View.INVISIBLE else View.GONE)
 }

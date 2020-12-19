@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,14 +29,16 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_arrow"
                     android:visibility="gone"
-                    style="@style/Widget.AppCompat.ActionButton"/>
+                    style="@style/Widget.AppCompat.ActionButton"
+                    tools:ignore="ContentDescription" />
 
             <ImageView
                     android:id="@+id/h_logo"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/tmdb"/>
+                    android:src="@drawable/tmdb"
+                    tools:ignore="ContentDescription" />
 
             <TextView
                     android:id="@+id/h_title"
@@ -46,7 +49,8 @@
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold"
                     android:textSize="@dimen/extra_medium_font"
-                    android:layout_marginStart="@dimen/medium_space"/>
+                    android:layout_marginStart="@dimen/medium_space"
+                    tools:ignore="RelativeOverlap" />
 
 
             <ImageButton
@@ -56,7 +60,8 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_search"
-                    style="@style/Widget.AppCompat.ActionButton" />
+                    style="@style/Widget.AppCompat.ActionButton"
+                    tools:ignore="ContentDescription" />
 
         </RelativeLayout>
 
