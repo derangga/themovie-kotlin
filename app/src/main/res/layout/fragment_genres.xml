@@ -7,7 +7,7 @@
     <data>
         <variable
                 name="vm"
-                type="com.themovie.ui.genres.GenreViewModel" />
+                type="com.themovie.tmdb.ui.genres.GenreViewModel" />
         <import type="android.view.View"/>
     </data>
 
@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark">
 
-        <com.themovie.helper.customview.HeaderView
+        <com.themovie.tmdb.helper.customview.HeaderView
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
