@@ -5,10 +5,10 @@
     <data>
         <variable
                 name="trend"
-                type="com.aldebaran.domain.entities.ui.Movie" />
+                type="com.themovie.datasource.entities.ui.Movie" />
         <variable
                 name="vh"
-                type="com.themovie.ui.main.adapter.TrendingAdapter.ViewHolder" />
+                type="com.themovie.tmdb.ui.main.adapter.TrendingAdapter.ViewHolder" />
     </data>
 
     <androidx.cardview.widget.CardView

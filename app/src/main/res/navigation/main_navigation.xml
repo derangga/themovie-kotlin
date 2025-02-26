@@ -7,75 +7,75 @@
 
     <fragment
             android:id="@+id/upcomingFragment"
-            android:name="com.themovie.ui.discover.UpcomingFragment"
+            android:name="com.themovie.tmdb.ui.discover.UpcomingFragment"
             android:label="fragment_upcoming"
             tools:layout="@layout/fragment_upcoming" />
     <fragment
             android:id="@+id/homeFragment"
-            android:name="com.themovie.ui.main.HomeFragment"
+            android:name="com.themovie.tmdb.ui.main.HomeFragment"
             android:label="HomeFragment" >
         <action
-                android:id="@+id/action_homeFragment_to_upcomingFragment"
-                app:destination="@id/upcomingFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit"
-                app:popEnterAnim="@anim/fragment_fade_enter"
-                app:popExitAnim="@anim/fragment_fade_exit" />
+            android:id="@+id/action_homeFragment_to_upcomingFragment"
+            app:destination="@id/upcomingFragment"
+            app:enterAnim="@android:animator/fade_in"
+            app:exitAnim="@android:animator/fade_out"
+            app:popEnterAnim="@android:animator/fade_in"
+            app:popExitAnim="@android:animator/fade_out" />
         <action
                 android:id="@+id/action_homeFragment_to_genresFragment"
                 app:destination="@id/genresFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit"
-                app:popEnterAnim="@anim/fragment_fade_enter"
-                app:popExitAnim="@anim/fragment_fade_exit" />
+                app:enterAnim="@android:animator/fade_in"
+                app:exitAnim="@android:animator/fade_out"
+                app:popEnterAnim="@android:animator/fade_in"
+                app:popExitAnim="@android:animator/fade_out" />
         <action
                 android:id="@+id/action_homeFragment_to_tvFragment"
                 app:destination="@id/tvFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit"
-                app:popEnterAnim="@anim/fragment_fade_enter"
-                app:popExitAnim="@anim/fragment_fade_exit" />
+                app:enterAnim="@android:animator/fade_in"
+                app:exitAnim="@android:animator/fade_out"
+                app:popEnterAnim="@android:animator/fade_in"
+                app:popExitAnim="@android:animator/fade_out" />
         <action
                 android:id="@+id/action_homeFragment_to_moviesFragment"
                 app:destination="@id/moviesFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit"
-                app:popEnterAnim="@anim/fragment_fade_enter"
-                app:popExitAnim="@anim/fragment_fade_exit" />
+                app:enterAnim="@android:animator/fade_in"
+                app:exitAnim="@android:animator/fade_out"
+                app:popEnterAnim="@android:animator/fade_in"
+                app:popExitAnim="@android:animator/fade_out" />
         <action
                 android:id="@+id/action_homeFragment_to_movieWithGenreFragment"
                 app:destination="@id/movieWithGenreFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit"
-                app:popEnterAnim="@anim/fragment_fade_enter"
-                app:popExitAnim="@anim/fragment_fade_exit" />
+                app:enterAnim="@android:animator/fade_in"
+                app:exitAnim="@android:animator/fade_out"
+                app:popEnterAnim="@android:animator/fade_in"
+                app:popExitAnim="@android:animator/fade_out" />
     </fragment>
     <fragment
             android:id="@+id/genresFragment"
-            android:name="com.themovie.ui.genres.GenresFragment"
+            android:name="com.themovie.tmdb.ui.genres.GenresFragment"
             android:label="fragment_genres"
             tools:layout="@layout/fragment_genres" >
         <action
                 android:id="@+id/action_genresFragment_to_movieWithGenreFragment"
                 app:destination="@id/movieWithGenreFragment"
-                app:enterAnim="@anim/fragment_fade_enter"
-                app:exitAnim="@anim/fragment_fade_exit"
-                app:popEnterAnim="@anim/fragment_fade_enter"
-                app:popExitAnim="@anim/fragment_fade_exit" />
+                app:enterAnim="@android:animator/fade_in"
+                app:exitAnim="@android:animator/fade_out"
+                app:popEnterAnim="@android:animator/fade_in"
+                app:popExitAnim="@android:animator/fade_out" />
     </fragment>
     <fragment
             android:id="@+id/tvFragment"
-            android:name="com.themovie.ui.discover.TvFragment"
+            android:name="com.themovie.tmdb.ui.discover.TvFragment"
             android:label="fragment_tv"
             tools:layout="@layout/fragment_tv" />
     <fragment
             android:id="@+id/moviesFragment"
-            android:name="com.themovie.ui.discover.MoviesFragment"
+            android:name="com.themovie.tmdb.ui.discover.MoviesFragment"
             android:label="fragment_movies"
             tools:layout="@layout/fragment_movies" />
     <fragment
             android:id="@+id/movieWithGenreFragment"
-            android:name="com.themovie.ui.genres.MovieWithGenreFragment"
+            android:name="com.themovie.tmdb.ui.genres.MovieWithGenreFragment"
             android:label="MovieWithGenreFragment" >
 
         <argument

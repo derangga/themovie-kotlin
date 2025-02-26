@@ -5,11 +5,11 @@
     <data>
         <variable
                 name="tv"
-                type="com.aldebaran.domain.entities.ui.Tv" />
+                type="com.themovie.datasource.entities.ui.Tv" />
 
         <variable
                 name="vh"
-                type="com.themovie.ui.discover.adapter.TvAdapter.TvViewHolder" />
+                type="com.themovie.tmdb.ui.discover.adapter.TvAdapter.TvViewHolder" />
     </data>
 
     <RelativeLayout

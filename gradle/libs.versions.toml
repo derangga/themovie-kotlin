@@ -1,0 +1,106 @@
+[versions]
+agp = "8.7.2"
+kotlin = "2.1.0"
+coreKtx = "1.15.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.10.0"
+constraintlayout = "2.2.0"
+
+daggerHiilt = "2.55"
+
+circleIndicator = "2.1.6"
+
+glide = "4.16.0"
+
+# coroutine
+kotlinCoroutine = "1.10.1"
+kotlinxSerialization = "1.7.3"
+
+# jetpack
+jetpackLifecycle = "2.8.7"
+jetpackRoom = "2.7.0-alpha13"
+jetpackPaging = "3.3.5"
+jetpackNavigation = "2.8.6"
+jetpackNavigationPlugin = "2.0.21"
+
+# network
+retrofit = "2.11.0"
+okhttp = "4.12.0"
+
+roundedImageView = "2.3.0"
+
+shimer = "0.5.0"
+
+multidex = "2.0.1"
+
+ksp = "2.0.21-1.0.27"
+kotlinxMetadata = "0.9.0"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
+circle-indicator-slider = { group = "me.relex", name = "circleindicator", version.ref = "circleIndicator" }
+glide-image = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+
+# network
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gsonConverter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+# jetpack lifecycle
+android-viewModel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "jetpackLifecycle" }
+android-viewModel-savedState = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "jetpackLifecycle" }
+androidx-lifecycle-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx",  version.ref = "jetpackLifecycle" }
+androidx-lifecycle-kapt = { group = "androidx.lifecycle", name = "lifecycle-compiler",  version.ref = "jetpackLifecycle" }
+
+coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutine" }
+
+hilt-dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHiilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHiilt" }
+
+# Room
+jetpack-room-db = { group = "androidx.room", name = "room-runtime",  version.ref = "jetpackRoom" }
+jetpack-room-compiler = { group = "androidx.room", name = "room-compiler",  version.ref = "jetpackRoom" }
+jetpack-room-ext = { group = "androidx.room", name = "room-ktx",  version.ref = "jetpackRoom" }
+
+jetpack-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "jetpackPaging" }
+
+jetpack-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "jetpackNavigation" }
+jetpack-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "jetpackNavigation" }
+
+kotlin-lang = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-metadata = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinxMetadata" }
+
+rounded-image = { group = "com.makeramen", name = "roundedimageview", version.ref = "roundedImageView"}
+
+shimer = {group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimer"}
+
+multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-parcelize = { id = "kotlin-parcelize" }
+hilt-dagger = { id = "com.google.dagger.hilt.android", version.ref = "daggerHiilt"}
+jetpack-navigation = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "jetpackNavigationPlugin" }
+jetpack-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin" }
+jetpack-room = { id = "androidx.room", version.ref = "jetpackRoom" }
+app-versions = { id = "versions.gradle" }
