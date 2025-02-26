@@ -7,13 +7,13 @@
     <data>
         <variable
                 name="movies"
-                type="com.aldebaran.domain.entities.ui.DetailMovie"/>
+                type="com.themovie.datasource.entities.ui.DetailMovie"/>
         <variable
                 name="vm"
-                type="com.themovie.ui.detail.viewmodel.DetailMovieViewModel" />
+                type="com.themovie.tmdb.ui.detail.viewmodel.DetailMovieViewModel" />
         <import type="android.view.View"/>
-        <import type="com.aldebaran.data.network.ApiUrl"/>
-        <import type="com.themovie.helper.ExtensionKt"/>
+        <import type="com.themovie.datasource.repository.remote.ApiUrl"/>
+        <import type="com.themovie.tmdb.helper.ExtensionKt"/>
         <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
 

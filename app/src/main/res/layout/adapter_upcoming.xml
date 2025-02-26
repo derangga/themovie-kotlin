@@ -5,11 +5,11 @@
     <data>
         <variable
                 name="upcoming"
-                type="com.aldebaran.domain.entities.ui.Movie" />
+                type="com.themovie.datasource.entities.ui.Movie" />
 
         <variable
                 name="vh"
-                type="com.themovie.ui.discover.adapter.UpcomingAdapter.UpcomingViewHolder" />
+                type="com.themovie.tmdb.ui.discover.adapter.UpcomingAdapter.UpcomingViewHolder" />
 
     </data>
 

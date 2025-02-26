@@ -5,11 +5,11 @@
     <data>
         <variable
                 name="review"
-                type="com.aldebaran.domain.entities.ui.Review" />
+                type="com.themovie.datasource.entities.ui.Review" />
 
         <variable
                 name="vh"
-                type="com.themovie.ui.detail.adapter.ReviewsAdapter.ViewHolder" />
+                type="com.themovie.tmdb.ui.detail.adapter.ReviewsAdapter.ViewHolder" />
 
     </data>
     
