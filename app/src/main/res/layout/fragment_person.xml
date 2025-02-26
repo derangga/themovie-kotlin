@@ -7,12 +7,12 @@
     <data>
         <variable
                 name="cast"
-                type="com.themovie.datasource.entities.ui.Artist" />
+                type="com.aldebaran.domain.entities.ui.Artist" />
         <variable
                 name="vm"
-                type="com.themovie.tmdb.ui.person.PersonViewModel" />
+                type="com.themovie.ui.person.PersonViewModel" />
         <import type="android.view.View"/>
-        <import type="com.themovie.datasource.repository.remote.ApiUrl"/>
+        <import type="com.aldebaran.data.network.ApiUrl"/>
         <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
 
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <com.themovie.tmdb.helper.customview.HeaderView
+            <com.themovie.helper.customview.HeaderView
                     android:id="@+id/header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

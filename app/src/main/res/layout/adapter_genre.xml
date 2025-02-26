@@ -5,11 +5,11 @@
     <data>
         <variable
                 name="genre"
-                type="com.themovie.datasource.entities.ui.Genre" />
+                type="com.aldebaran.domain.entities.ui.Genre" />
 
         <variable
                 name="vh"
-                type="com.themovie.tmdb.ui.main.adapter.GenreAdapter.ViewHolder" />
+                type="com.themovie.ui.main.adapter.GenreAdapter.ViewHolder" />
     </data>
 
     <androidx.cardview.widget.CardView

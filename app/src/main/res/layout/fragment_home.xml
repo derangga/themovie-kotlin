@@ -7,7 +7,7 @@
     <data>
         <variable
                 name="vm"
-                type="com.themovie.tmdb.ui.main.HomeViewModel" />
+                type="com.themovie.ui.main.HomeViewModel" />
         <import type="android.view.View"/>
         <import type="androidx.recyclerview.widget.RecyclerView"/>
     </data>
@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark">
 
-        <com.themovie.tmdb.helper.customview.HeaderView
+        <com.themovie.helper.customview.HeaderView
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

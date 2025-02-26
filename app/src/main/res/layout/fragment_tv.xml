@@ -10,7 +10,7 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark">
 
-        <com.themovie.tmdb.helper.customview.HeaderView
+        <com.themovie.helper.customview.HeaderView
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -5,10 +5,10 @@
     <data>
         <variable
                 name="video"
-                type="com.themovie.datasource.entities.ui.Video" />
+                type="com.aldebaran.domain.entities.ui.Video" />
         <variable
                 name="vh"
-                type="com.themovie.tmdb.ui.detail.adapter.VideoAdapter.ViewHolder" />
+                type="com.themovie.ui.detail.adapter.VideoAdapter.ViewHolder" />
     </data>
 
     <LinearLayout
